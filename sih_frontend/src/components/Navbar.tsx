@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const NAV_LINKS = ['Home', 'About', 'How It Works', 'Contact']
 
@@ -25,14 +26,13 @@ function Navbar() {
               {link}
             </a>
           ))}
-          <button className="btn btn-primary navbar-login navbar-login-mobile">
-            Login
-          </button>
         </nav>
 
         <div className="navbar-actions">
-          <button className="btn btn-primary navbar-login">Login</button>
-          <button
+        <Link to="/login" className="btn btn-primary navbar-login">
+          Login
+        </Link>          
+        <button
             className="navbar-toggle"
             aria-label="Toggle navigation menu"
             aria-expanded={open}
