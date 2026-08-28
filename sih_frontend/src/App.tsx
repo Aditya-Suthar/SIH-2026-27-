@@ -1,9 +1,7 @@
+import Home from './pages/Home.tsx'
+
 function App() {
-  return (
-    <div>
-      SIH 2026
-    </div>
-  )
+  return <Home />
 }
 
 export default App
