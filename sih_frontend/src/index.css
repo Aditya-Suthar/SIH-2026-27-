@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 212 45% 97%;
@@ -37,8 +36,6 @@
     --danger-foreground: 0 0% 100%;
 
     --radius: 0.9rem;
-
-    
   }
 
   .dark {
@@ -90,6 +87,13 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
 
 h1,
 h2,

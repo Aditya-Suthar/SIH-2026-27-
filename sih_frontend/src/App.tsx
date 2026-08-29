@@ -6,6 +6,7 @@ import AuthorityDashboard from "../pages/AuthorityDashboard";
 import ComingSoon from "../pages/ComingSoon";
 import VictimDashboard from "../pages/VictimDashboard";
 import CounsellorDashboard from "../pages/CounsellorDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -16,9 +17,32 @@ function App() {
       
 
       <Route element={<DashboardLayout />}>
-        <Route path="/victim" element={<VictimDashboard />} />
-        <Route path="/authority" element={<AuthorityDashboard />} />
-        <Route path="/counsellor" element={<CounsellorDashboard />} />
+        <Route
+  path="/victim"
+  element={
+    <ProtectedRoute allowedRole="victim">
+      <VictimDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+              <Route
+        path="/authority"
+        element={
+          <ProtectedRoute allowedRole="authority">
+  <AuthorityDashboard />
+</ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/counsellor"
+        element={
+         <ProtectedRoute allowedRole="counsellor">
+      <CounsellorDashboard />
+    </ProtectedRoute>
+        }
+      />
 
         <Route path="/cases" element={<ComingSoon section="Cases" />} />
         <Route path="/alerts" element={<ComingSoon section="Alerts" />} />
