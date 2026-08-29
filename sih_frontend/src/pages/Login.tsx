@@ -3,8 +3,11 @@ import "./Login.css"
 import logImage from "../assets/log.svg"
 import registerImage from "../assets/register.svg"
 
+
 function Login() {
   const [signUpMode, setSignUpMode] = useState(false)
+  const [loginRole, setLoginRole] = useState("")
+  const [signupRole, setSignupRole] = useState("")
 
   return (
     <div className={`login-container ${signUpMode ? "sign-up-mode" : ""}`}>
@@ -22,6 +25,20 @@ function Login() {
             <div className="input-field">
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-users"></i>
+              <select
+                value={loginRole}
+                onChange={(e) => setLoginRole(e.target.value)}
+                required
+              >
+                <option value="">Select Role</option>
+                <option value="victim">Victim</option>
+                <option value="counsellor">Counsellor</option>
+                <option value="authority">Authority</option>
+              </select>
             </div>
 
             <input
@@ -69,6 +86,20 @@ function Login() {
             <div className="input-field">
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-users"></i>
+              <select
+                value={signupRole}
+                onChange={(e) => setSignupRole(e.target.value)}
+                required
+              >
+                <option value="">Select Role</option>
+                <option value="victim">Victim</option>
+                <option value="counsellor">Counsellor</option>
+                <option value="authority">Authority</option>
+              </select>
             </div>
 
             <input
@@ -124,7 +155,7 @@ function Login() {
             src={logImage}
             className="image"
             alt="Login illustration"
-            />
+          />
         </div>
 
         <div className="panel right-panel">
@@ -147,7 +178,7 @@ function Login() {
             src={registerImage}
             className="image"
             alt="Register illustration"
-            />
+          />
         </div>
 
       </div>

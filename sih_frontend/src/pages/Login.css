@@ -522,6 +522,27 @@
   }
 }
 
+/* ROLE SELECT */
+
+.login-container .input-field select {
+  width: 100%;
+  height: 100%;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+
+  color: #17213d;
+
+  cursor: pointer;
+
+  padding-right: 18px;
+}
+
 /* ============================= */
 /* MOBILE                        */
 /* ============================= */
