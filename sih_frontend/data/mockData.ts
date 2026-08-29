@@ -6,7 +6,7 @@ import type {
   RiskDistributionItem,
   TrendPoint,
   TrendRange,
-} from "@/types";
+}  from "../types";;
 
 export const navSections: NavSection[] = [
   {
@@ -138,3 +138,36 @@ export const counsellorAvailability: CounsellorAvailability = {
   inSession: 7,
   unavailable: 3,
 };
+
+export const counsellorNavSections: NavSection[] = [
+  {
+    title: "Overview",
+    items: [
+      { label: "Dashboard", path: "/counsellor", icon: "LayoutDashboard" },
+    ],
+  },
+  {
+    title: "Work",
+    items: [
+      { label: "Cases", path: "/cases", icon: "FolderKanban" },
+      { label: "Sessions", path: "/sessions", icon: "CalendarClock" },
+      { label: "Resources", path: "/resources", icon: "Library" },
+    ],
+  },
+];
+
+export const victimNavSections: NavSection[] = [
+  {
+    title: "Overview",
+    items: [
+      { label: "Dashboard", path: "/victim", icon: "LayoutDashboard" },
+    ],
+  },
+  {
+    title: "Support",
+    items: [
+      { label: "Sessions", path: "/sessions", icon: "CalendarClock" },
+      { label: "Resources", path: "/resources", icon: "Library" },
+    ],
+  },
+];
