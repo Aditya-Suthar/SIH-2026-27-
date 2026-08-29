@@ -1,19 +1,25 @@
 import Home from "./pages/Home"
 import Login from "./pages/Login"
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import AuthorityDashboard from "../pages/AuthorityDashboard";
 import ComingSoon from "../pages/ComingSoon";
-
+import VictimDashboard from "../pages/VictimDashboard";
+import CounsellorDashboard from "../pages/CounsellorDashboard";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+
+      
+
       <Route element={<DashboardLayout />}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<AuthorityDashboard />} />
+        <Route path="/victim" element={<VictimDashboard />} />
+        <Route path="/authority" element={<AuthorityDashboard />} />
+        <Route path="/counsellor" element={<CounsellorDashboard />} />
+
         <Route path="/cases" element={<ComingSoon section="Cases" />} />
         <Route path="/alerts" element={<ComingSoon section="Alerts" />} />
         <Route path="/counsellors" element={<ComingSoon section="Counsellors" />} />
@@ -21,8 +27,6 @@ function App() {
         <Route path="/analytics" element={<ComingSoon section="Analytics" />} />
         <Route path="/reports" element={<ComingSoon section="Reports" />} />
         <Route path="/resources" element={<ComingSoon section="Resources" />} />
-        <Route path="/settings" element={<ComingSoon section="Settings" />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>
   )
