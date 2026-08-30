@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -30,6 +30,14 @@ import { Button } from "../src/components/ui/button";
 import { cn } from "../lib/utils";
 
 type RiskLevel = "Low" | "Moderate" | "High" | "Critical";
+
+type ApiCase = {
+  caseId: string;
+  riskLevel: RiskLevel;
+  assignedCounsellor: string;
+  lastAssessment: string;
+  interventionStatus: string;
+};
 type Trend = "up" | "down" | "flat";
 type EscalationStatus = "None" | "Requested" | "In Progress";
 
@@ -46,12 +54,6 @@ const escalationBadgeVariant: Record<EscalationStatus, "default" | "warning" | "
   "In Progress": "danger",
 };
 
-const kpis = [
-  { id: "assigned", label: "Assigned Cases", value: "24", icon: ClipboardList, tone: "neutral" as const },
-  { id: "high-risk", label: "High Risk Cases", value: "5", helper: "Require close attention", icon: AlertOctagon, tone: "danger" as const },
-  { id: "sessions", label: "Today's Sessions", value: "6", helper: "2 completed so far", icon: HeartHandshake, tone: "neutral" as const },
-  { id: "followups", label: "Pending Follow-ups", value: "9", helper: "Due this week", icon: CalendarClock, tone: "neutral" as const },
-];
 
 const priorityQueue = [
   {
@@ -131,6 +133,76 @@ const flagSignals = [
 
 export default function CounsellorDashboard() {
   const [selectedCase, setSelectedCase] = useState(priorityQueue[0].caseId);
+  const [cases, setCases] = useState<ApiCase[]>([]);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) return;
+
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/cases",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          console.error("Failed to fetch cases:", response.status);
+          return;
+        }
+
+        const data: ApiCase[] = await response.json();
+        setCases(data);
+      } catch (error) {
+        console.error("Could not fetch cases:", error);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
+  const highRiskCases = cases.filter(
+    (c) => c.riskLevel === "High" || c.riskLevel === "Critical"
+  ).length;
+
+  const kpis = [
+    {
+      id: "assigned",
+      label: "Assigned Cases",
+      value: String(cases.length),
+      icon: ClipboardList,
+      tone: "neutral" as const,
+    },
+    {
+      id: "high-risk",
+      label: "High Risk Cases",
+      value: String(highRiskCases),
+      helper: "Require close attention",
+      icon: AlertOctagon,
+      tone: "danger" as const,
+    },
+    {
+      id: "sessions",
+      label: "Today's Sessions",
+      value: "6",
+      helper: "2 completed so far",
+      icon: HeartHandshake,
+      tone: "neutral" as const,
+    },
+    {
+      id: "followups",
+      label: "Pending Follow-ups",
+      value: "9",
+      helper: "Due this week",
+      icon: CalendarClock,
+      tone: "neutral" as const,
+    },
+  ];
 
   return (
     <div className="space-y-6">
