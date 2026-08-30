@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -32,9 +32,15 @@ import { cn } from "../lib/utils";
 type WellbeingMood = "Stable" | "Anxious" | "Distressed" | "Unsafe";
 type RiskLevel = "Low" | "Moderate" | "High" | "Critical";
 type SupportStatus = "Active" | "Available" | "Not Requested";
+type VictimDashboardData = {
+  caseId: string;
+  riskLevel: RiskLevel;
+  distressScore: number;
+  assignedCounsellor: string;
+  caseStage: string;
+};
 
 const caseStages = ["Complaint", "Investigation", "Trial", "Rehabilitation", "Compensation"] as const;
-const currentStageIndex = 1;
 
 const moodOptions: { value: WellbeingMood; tone: string }[] = [
   { value: "Stable", tone: "border-success/40 text-success hover:bg-success/10" },
@@ -100,9 +106,56 @@ const statusBadgeVariant: Record<SupportStatus, "success" | "primary" | "default
 };
 
 export default function VictimDashboard() {
+  const [dashboardData, setDashboardData] =
+  useState<VictimDashboardData | null>(null);
+
+const currentStageIndex = dashboardData
+  ? caseStages.indexOf(
+      dashboardData.caseStage as typeof caseStages[number]
+    )
+  : 0;
   const [selectedMood, setSelectedMood] = useState<WellbeingMood | null>(null);
   const [note, setNote] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+
+useEffect(() => {
+  const fetchDashboard = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) return;
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/victim/dashboard",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error(
+          "Failed to fetch victim dashboard:",
+          response.status
+        );
+        return;
+      }
+
+      const data: VictimDashboardData =
+        await response.json();
+
+      setDashboardData(data);
+    } catch (error) {
+      console.error(
+        "Could not fetch victim dashboard:",
+        error
+      );
+    }
+  };
+
+  fetchDashboard();
+}, []);
 
   return (
     <div className="space-y-6">
@@ -112,7 +165,7 @@ export default function VictimDashboard() {
             Hello, you're in a safe space
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Case ID <span className="font-medium text-foreground">SAH-VC-7741</span> · Your details stay
+            Case ID <span className="font-medium text-foreground">{dashboardData?.caseId ?? "..."}</span> · Your details stay
             anonymised in every check-in
           </p>
         </div>
@@ -175,7 +228,7 @@ export default function VictimDashboard() {
         <Card>
           <CardContent className="space-y-1.5 pt-5">
             <p className="text-xs font-medium text-muted-foreground">Dynamic Distress Score</p>
-            <p className="text-2xl font-bold tracking-tight text-foreground">42 / 100</p>
+            <p className="text-2xl font-bold tracking-tight text-foreground">{dashboardData?.distressScore ?? 0} / 100</p>
             <p className="text-xs font-medium text-muted-foreground">Based on your recent check-ins</p>
           </CardContent>
         </Card>
@@ -183,7 +236,15 @@ export default function VictimDashboard() {
           <CardContent className="space-y-1.5 pt-5">
             <p className="text-xs font-medium text-muted-foreground">Current Risk Level</p>
             <div className="pt-0.5">
-              <Badge variant={riskBadgeVariant[currentRisk]}>{currentRisk}</Badge>
+              <Badge
+  variant={
+    riskBadgeVariant[
+      dashboardData?.riskLevel ?? "Low"
+    ]
+  }
+>
+  {dashboardData?.riskLevel ?? "Loading"}
+</Badge>
             </div>
             <p className="text-xs font-medium text-muted-foreground">Reviewed by your counsellor</p>
           </CardContent>
@@ -199,7 +260,7 @@ export default function VictimDashboard() {
           <CardContent className="flex items-start justify-between gap-3 pt-5">
             <div className="space-y-1.5">
               <p className="text-xs font-medium text-muted-foreground">Assigned Counsellor</p>
-              <p className="text-lg font-bold tracking-tight text-foreground">Dr. Meera Sharma</p>
+              <p className="text-lg font-bold tracking-tight text-foreground">{dashboardData?.assignedCounsellor ?? "..."}</p>
               <p className="text-xs font-medium text-success">Available today</p>
             </div>
             <Avatar className="h-10 w-10">
