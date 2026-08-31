@@ -2,7 +2,7 @@ import { AlertOctagon, ClipboardList, HeartHandshake, ListChecks } from "lucide-
 
 import { Card, CardContent } from "../ui/card";
 
-import { cn } from "../../../lib/utils";
+import { cn } from "../../../lib/utils";;
 
 import type { KpiStat } from "../../../types";
 

@@ -208,7 +208,7 @@ export default function CounsellorDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Good Morning, Dr. Meera Sharma
+          Good Morning, {localStorage.getItem("name")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Your assigned victims, priority alerts and today's schedule.

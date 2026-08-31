@@ -47,7 +47,9 @@ function Login() {
 
       localStorage.setItem("access_token", data.access_token)
       localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("role", data.role) 
+      localStorage.setItem("role", data.role)
+      localStorage.setItem("name", data.name)
+      localStorage.setItem("email", data.email)
 
       if (data.role === "victim") {
         navigate("/victim")

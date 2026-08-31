@@ -1,21 +1,67 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { Bell, Moon, Search, Sun } from "lucide-react";
 
 import { Input } from "../ui/input";
-
 import { Button } from "../ui/button";
-
 import { Avatar, AvatarFallback } from "../ui/avatar";
-
 import { Separator } from "../ui/separator";
 
 export function Topbar() {
   const [isDark, setIsDark] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
+
+const authorityName =
+  localStorage.getItem("name") || "District Welfare Officer";
+
+let user = {
+  initials: authorityName
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase(),
+
+  name: authorityName,
+  access: "Authority Access",
+};
+
+  if (location.pathname.startsWith("/counsellor")) {
+  const name = localStorage.getItem("name") || "Counsellor";
+
+  user = {
+    initials: name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase(),
+
+    name: name,
+    access: "Counsellor Access",
+  };
+}
+
+if (location.pathname.startsWith("/victim")) {
+  const name = localStorage.getItem("name") || "Anonymous Survivor";
+
+  user = {
+    initials: name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase(),
+
+    name: name,
+    access: "Victim Access",
+  };
+}
 
   return (
     <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-card/80 px-4 py-3 backdrop-blur sm:px-6">
@@ -48,13 +94,14 @@ export function Topbar() {
 
         <div className="flex items-center gap-2.5">
           <Avatar>
-            <AvatarFallback>DW</AvatarFallback>
+            <AvatarFallback>{user.initials}</AvatarFallback>
           </Avatar>
+
           <div className="hidden text-left sm:block">
             <p className="text-sm font-semibold leading-tight text-foreground">
-              District Welfare Officer
+              {user.name}
             </p>
-            <p className="text-xs text-muted-foreground">Authority Access</p>
+            <p className="text-xs text-muted-foreground">{user.access}</p>
           </div>
         </div>
       </div>

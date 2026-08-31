@@ -167,6 +167,7 @@ def login_user(
 
     access_token = create_access_token({
         "user_id": user.id,
+        "name": user.name,
         "email": user.email,
         "role": user.role
     })
@@ -174,5 +175,7 @@ def login_user(
     return {
         "access_token": access_token,
         "token_type": "bearer",
+        "name": user.name,
+        "email": user.email,
         "role": user.role
     }

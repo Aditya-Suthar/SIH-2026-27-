@@ -14,7 +14,7 @@ type ApiCase = {
   assignedCounsellor: string;
   lastAssessment: string;
   interventionStatus: string;
-};
+};          
 
 export default function AuthorityDashboard() {
   const [cases, setCases] = useState<ApiCase[]>([]);
