@@ -9,11 +9,29 @@ function ProtectedRoute({
 }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
 
-  if (!isLoggedIn) {
+  // Not properly authenticated
+  if (!isLoggedIn || !token) {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("role");
+    localStorage.removeItem("name");
+    localStorage.removeItem("token");
+
     return <Navigate to="/login" replace />;
   }
 
+  // Invalid stored role
+  if (
+    role !== "victim" &&
+    role !== "authority" &&
+    role !== "counsellor"
+  ) {
+    localStorage.clear();
+    return <Navigate to="/login" replace />;
+  }
+
+  // Logged in, but trying to access another role's dashboard
   if (role !== allowedRole) {
     return <Navigate to={`/${role}`} replace />;
   }
