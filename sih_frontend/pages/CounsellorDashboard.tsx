@@ -38,66 +38,12 @@ type ApiCase = {
   lastAssessment: string;
   interventionStatus: string;
 };
-type Trend = "up" | "down" | "flat";
-type EscalationStatus = "None" | "Requested" | "In Progress";
 
 const riskBadgeVariant: Record<RiskLevel, "danger" | "orange" | "warning" | "success"> = {
   Critical: "danger",
   High: "orange",
   Moderate: "warning",
   Low: "success",
-};
-
-const escalationBadgeVariant: Record<EscalationStatus, "default" | "warning" | "danger"> = {
-  None: "default",
-  Requested: "warning",
-  "In Progress": "danger",
-};
-
-
-const priorityQueue = [
-  {
-    caseId: "SAH-1042",
-    distress: 78,
-    risk: "Critical" as RiskLevel,
-    trend: "up" as Trend,
-    lastInteraction: "2 hours ago",
-    nextSession: "Today, 4:30 PM",
-    escalation: "In Progress" as EscalationStatus,
-  },
-  {
-    caseId: "SAH-1037",
-    distress: 61,
-    risk: "High" as RiskLevel,
-    trend: "up" as Trend,
-    lastInteraction: "Yesterday",
-    nextSession: "Tomorrow, 11:00 AM",
-    escalation: "Requested" as EscalationStatus,
-  },
-  {
-    caseId: "SAH-1028",
-    distress: 44,
-    risk: "Moderate" as RiskLevel,
-    trend: "down" as Trend,
-    lastInteraction: "2 days ago",
-    nextSession: "Fri, 2:00 PM",
-    escalation: "None" as EscalationStatus,
-  },
-  {
-    caseId: "SAH-1019",
-    distress: 28,
-    risk: "Low" as RiskLevel,
-    trend: "flat" as Trend,
-    lastInteraction: "5 days ago",
-    nextSession: "Next Mon",
-    escalation: "None" as EscalationStatus,
-  },
-];
-
-const trendIcon: Record<Trend, typeof TrendingUp> = {
-  up: TrendingUp,
-  down: TrendingDown,
-  flat: TrendingUp,
 };
 
 const alerts = [
@@ -131,8 +77,11 @@ const flagSignals = [
   "Threat-related response detected in text check-in",
 ];
 
+
+
 export default function CounsellorDashboard() {
-  const [selectedCase, setSelectedCase] = useState(priorityQueue[0].caseId);
+  const [sortBy, setSortBy] = useState("priority");
+const [selectedCase, setSelectedCase] = useState("");
   const [cases, setCases] = useState<ApiCase[]>([]);
 
   useEffect(() => {
@@ -156,8 +105,13 @@ export default function CounsellorDashboard() {
           return;
         }
 
-        const data: ApiCase[] = await response.json();
-        setCases(data);
+          const data: ApiCase[] = await response.json();
+
+          setCases(data);
+
+          if (data.length > 0) {
+            setSelectedCase(data[0].caseId);
+          }
       } catch (error) {
         console.error("Could not fetch cases:", error);
       }
@@ -167,8 +121,67 @@ export default function CounsellorDashboard() {
   }, []);
 
   const highRiskCases = cases.filter(
-    (c) => c.riskLevel === "High" || c.riskLevel === "Critical"
-  ).length;
+  (c) => c.riskLevel === "High" || c.riskLevel === "Critical"
+).length;
+
+  const riskScore: Record<RiskLevel, number> = {
+  Critical: 100,
+  High: 70,
+  Moderate: 40,
+  Low: 10,
+};
+
+const recencyScore: Record<string, number> = {
+  Today: 20,
+  Yesterday: 18,
+  "2 days ago": 16,
+  "3 days ago": 14,
+  "4 days ago": 12,
+  "5 days ago": 10,
+  "6 days ago": 8,
+  "1 week ago": 6,
+  "2 weeks ago": 3,
+  "3 weeks ago": 1,
+};
+
+const sortedCases = [...cases].sort((a, b) => {
+
+  // DEFAULT: our priority algorithm
+  if (sortBy === "priority") {
+    const priorityA =
+      riskScore[a.riskLevel] +
+      (recencyScore[a.lastAssessment] ?? 0);
+
+    const priorityB =
+      riskScore[b.riskLevel] +
+      (recencyScore[b.lastAssessment] ?? 0);
+
+    return priorityB - priorityA;
+  }
+
+  // Counsellor manually chooses risk
+  if (sortBy === "risk") {
+    return riskScore[b.riskLevel] - riskScore[a.riskLevel];
+  }
+
+  // Counsellor manually chooses recent activity
+  if (sortBy === "recent") {
+    return (
+      (recencyScore[b.lastAssessment] ?? 0) -
+      (recencyScore[a.lastAssessment] ?? 0)
+    );
+  }
+
+  // Counsellor manually chooses oldest first
+  if (sortBy === "oldest") {
+    return (
+      (recencyScore[a.lastAssessment] ?? 0) -
+      (recencyScore[b.lastAssessment] ?? 0)
+    );
+  }
+
+  return 0;
+});
 
   const kpis = [
     {
@@ -203,6 +216,13 @@ export default function CounsellorDashboard() {
       tone: "neutral" as const,
     },
   ];
+
+  const maxCaseload = 30;
+
+const caseloadPercentage = Math.min(
+  (cases.length / maxCaseload) * 100,
+  100
+);
 
   return (
     <div className="space-y-6">
@@ -309,57 +329,73 @@ export default function CounsellorDashboard() {
 
       {/* Priority queue */}
       <Card>
-        <CardHeader>
+              <CardHeader className="flex-row items-center justify-between space-y-0">
+        <div>
           <CardTitle>Priority Victim Queue</CardTitle>
-          <p className="text-xs text-muted-foreground">Cases sorted by risk and recent activity</p>
-        </CardHeader>
+          <p className="text-xs text-muted-foreground">
+            Cases sorted by priority by default
+          </p>
+        </div>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+        >
+          <option value="priority">Priority</option>
+          <option value="risk">Risk Level</option>
+          <option value="recent">Recent Activity</option>
+          <option value="oldest">Oldest Pending</option>
+        </select>
+      </CardHeader>
         <CardContent className="pt-0">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  <th className="py-2.5 pr-4">Case ID</th>
-                  <th className="py-2.5 pr-4">Distress Score</th>
-                  <th className="py-2.5 pr-4">Risk Level</th>
-                  <th className="py-2.5 pr-4">Trend</th>
-                  <th className="py-2.5 pr-4">Last Interaction</th>
-                  <th className="py-2.5 pr-4">Next Session</th>
-                  <th className="py-2.5 pr-4">Escalation</th>
-                  <th className="py-2.5 pr-0 text-right">Action</th>
-                </tr>
-              </thead>
+  <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+    <th className="py-2.5 pr-4">Case ID</th>
+    <th className="py-2.5 pr-4">Risk Level</th>
+    <th className="py-2.5 pr-4">Last Assessment</th>
+    <th className="py-2.5 pr-4">Intervention Status</th>
+    <th className="py-2.5 pr-0 text-right">Action</th>
+  </tr>
+</thead>
               <tbody>
-                {priorityQueue.map((c) => {
-                  const TrendIcon = trendIcon[c.trend];
-                  return (
-                    <tr key={c.caseId} className="border-b border-border last:border-0">
-                      <td className="py-3 pr-4 font-medium text-foreground">{c.caseId}</td>
-                      <td className="py-3 pr-4 text-muted-foreground">{c.distress} / 100</td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={riskBadgeVariant[c.risk]}>{c.risk}</Badge>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <TrendIcon
-                          className={cn(
-                            "h-4 w-4",
-                            c.trend === "up" ? "text-danger" : c.trend === "down" ? "text-success" : "text-muted-foreground"
-                          )}
-                        />
-                      </td>
-                      <td className="py-3 pr-4 text-muted-foreground">{c.lastInteraction}</td>
-                      <td className="py-3 pr-4 text-muted-foreground">{c.nextSession}</td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={escalationBadgeVariant[c.escalation]}>{c.escalation}</Badge>
-                      </td>
-                      <td className="py-3 pr-0 text-right">
-                        <Button variant="outline" size="sm" onClick={() => setSelectedCase(c.caseId)}>
-                          View
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
+          {sortedCases.map((c) => (
+            <tr
+              key={c.caseId}
+              className="border-b border-border last:border-0"
+            >
+              <td className="py-3 pr-4 font-medium text-foreground">
+                {c.caseId}
+              </td>
+
+              <td className="py-3 pr-4">
+                <Badge variant={riskBadgeVariant[c.riskLevel]}>
+                  {c.riskLevel}
+                </Badge>
+              </td>
+
+              <td className="py-3 pr-4 text-muted-foreground">
+                {c.lastAssessment}
+              </td>
+
+              <td className="py-3 pr-4 text-muted-foreground">
+                {c.interventionStatus}
+              </td>
+
+              <td className="py-3 pr-0 text-right">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedCase(c.caseId)}
+                >
+                  View
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
             </table>
           </div>
         </CardContent>
@@ -395,11 +431,20 @@ export default function CounsellorDashboard() {
           <CardContent className="space-y-4">
             <div>
               <div className="mb-1.5 flex items-center justify-between text-sm">
-                <span className="font-medium text-foreground">Active Caseload</span>
-                <span className="text-muted-foreground">24 / 30</span>
+                <span className="font-medium text-foreground">
+                  Active Caseload
+                </span>
+
+                <span className="text-muted-foreground">
+                  {cases.length} / {maxCaseload}
+                </span>
               </div>
+
               <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-                <div className="h-full rounded-full bg-primary" style={{ width: "80%" }} />
+                <div
+                  className="h-full rounded-full bg-primary"
+                  style={{ width: `${caseloadPercentage}%` }}
+                />
               </div>
             </div>
             <div className="flex items-center justify-between text-sm">

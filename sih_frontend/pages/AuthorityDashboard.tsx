@@ -6,6 +6,7 @@ import { RiskDistributionCard } from "../src/components/dashboard/RiskDistributi
 import { HighPriorityCasesTable } from "../src/components/dashboard/HighPriorityCasesTable";
 import { CounsellorAvailabilityCard } from "../src/components/dashboard/CounsellorAvailabilityCard";
 
+
 type RiskLevel = "Low" | "Moderate" | "High" | "Critical";
 
 type ApiCase = {
@@ -73,6 +74,25 @@ export default function AuthorityDashboard() {
     },
   ];
 
+  const riskCounts = {
+  Low: cases.filter((c) => c.riskLevel === "Low").length,
+  Moderate: cases.filter((c) => c.riskLevel === "Moderate").length,
+  High: cases.filter((c) => c.riskLevel === "High").length,
+  Critical: cases.filter((c) => c.riskLevel === "Critical").length,
+};
+
+const assignedCounsellors = cases
+  .map((c) => c.assignedCounsellor)
+  .filter((name) => name && name !== "Unassigned");
+
+const uniqueCounsellors = [...new Set(assignedCounsellors)];
+
+const counsellorAvailability = {
+  available: uniqueCounsellors.length,
+  inSession: 0,
+  unavailable: 0,
+};
+
   return (
     <div className="space-y-6">
       <div>
@@ -93,7 +113,10 @@ export default function AuthorityDashboard() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <DistressTrendCard />
-        <RiskDistributionCard />
+        <RiskDistributionCard
+      totalCases={cases.length}
+      riskCounts={riskCounts}
+    />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -101,7 +124,9 @@ export default function AuthorityDashboard() {
           <HighPriorityCasesTable />
         </div>
 
-        <CounsellorAvailabilityCard />
+        <CounsellorAvailabilityCard
+  availability={counsellorAvailability}
+/>
       </div>
     </div>
   );

@@ -26,7 +26,6 @@ def get_cases(
     query = db.query(models.Case)
 
     if role == "counsellor":
-        # Filter by the stable user id from the JWT, not by name matching.
         query = query.filter(
             models.Case.assigned_counsellor_id == current_user.get("user_id")
         )
@@ -45,6 +44,8 @@ def get_cases(
         )
         for c in cases
     ]
+
+
 @router.get(
     "/victim/dashboard",
     response_model=schemas.VictimDashboardOut
@@ -59,32 +60,39 @@ def get_victim_dashboard(
             detail="Access forbidden for this role"
         )
 
-    return schemas.VictimDashboardOut(
-        caseId="SAH-VC-7741",
-        riskLevel="Moderate",
-        distressScore=42,
-        assignedCounsellor="Dr. Meera Sharma",
-        caseStage="Investigation",
+    victim_user_id = current_user.get("user_id")
+
+    case = (
+        db.query(models.Case)
+        .filter(models.Case.victim_id == victim_user_id)
+        .first()
     )
 
-@router.get(
-    "/victim/dashboard",
-    response_model=schemas.VictimDashboardOut
-)
-def get_victim_dashboard(
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    if current_user.get("role") != "victim":
+    if not case:
         raise HTTPException(
-            status_code=403,
-            detail="Access forbidden for this role"
+            status_code=404,
+            detail="No case found for this victim"
         )
 
+    counsellor_name = "Not Assigned"
+
+    if case.assigned_counsellor_id:
+        counsellor = (
+            db.query(models.User)
+            .filter(
+                models.User.id == case.assigned_counsellor_id,
+                models.User.role == "counsellor",
+            )
+            .first()
+        )
+
+        if counsellor:
+            counsellor_name = counsellor.name
+
     return schemas.VictimDashboardOut(
-        caseId="SAH-VC-7741",
-        riskLevel="Moderate",
+        caseId=case.case_id,
+        riskLevel=case.risk_level,
         distressScore=42,
-        assignedCounsellor="Dr. Meera Sharma",
+        assignedCounsellor=counsellor_name,
         caseStage="Investigation",
     )

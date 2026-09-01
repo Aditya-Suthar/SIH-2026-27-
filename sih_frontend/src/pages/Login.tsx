@@ -40,6 +40,9 @@ function Login() {
       const data = await response.json()
 
       console.log("RESPONSE:", data)
+      console.log("ROLE:", data.role)
+      console.log("TOKEN:", data.access_token)
+      console.log("NAME:", data.name)
       if (!response.ok) {
         alert(data.detail || "Login failed")
         return
