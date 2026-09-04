@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr
-from pydantic import BaseModel
 
 
 class VictimDashboardOut(BaseModel):
@@ -23,6 +22,16 @@ class UserLogin(BaseModel):
     role: str
 
 
+class UserOut(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    role: str
+
+    class Config:
+        from_attributes = True
+
+
 class CaseOut(BaseModel):
     caseId: str
     riskLevel: str
@@ -32,10 +41,3 @@ class CaseOut(BaseModel):
 
     class Config:
         from_attributes = True
-
-    class VictimDashboardOut(BaseModel):
-        caseId: str
-        riskLevel: str
-        distressScore: int
-        assignedCounsellor: str
-        caseStage: str

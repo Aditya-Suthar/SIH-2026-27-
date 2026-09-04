@@ -21,6 +21,8 @@ def get_cases(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
+
+
     # Get the role of the currently authenticated user
     role = current_user.get("role")
 
@@ -57,6 +59,26 @@ def get_cases(
         for c in cases
     ]
 
+# ---------------------------------------------------------
+# GET USERS
+# Returns all registered users to authority users only
+# ---------------------------------------------------------
+@router.get("/users", response_model=List[schemas.UserOut])
+def get_users(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    # Only authority users should be able to view all users
+    if current_user.get("role") != "authority":
+        raise HTTPException(
+            status_code=403,
+            detail="Access forbidden for this role"
+        )
+
+    # Retrieve all registered users
+    users = db.query(models.User).all()
+
+    return users
 
 # ---------------------------------------------------------
 # VICTIM DASHBOARD

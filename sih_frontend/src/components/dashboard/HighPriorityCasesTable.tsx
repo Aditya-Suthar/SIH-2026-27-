@@ -47,7 +47,7 @@ export function HighPriorityCasesTable() {
 
         const data: PriorityCase[] = await response.json()
 
-        setCases(data)
+      setCases(data)
       } catch (err) {
         console.error(err)
         setError("Could not load cases")

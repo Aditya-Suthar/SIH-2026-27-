@@ -15,41 +15,78 @@ type ApiCase = {
   assignedCounsellor: string;
   lastAssessment: string;
   interventionStatus: string;
-};          
+}; 
+
+type ApiUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: "victim" | "authority" | "counsellor";
+};
+
 
 export default function AuthorityDashboard() {
   const [cases, setCases] = useState<ApiCase[]>([]);
+  const [users, setUsers] = useState<ApiUser[]>([]);
 
-  useEffect(() => {
-    const fetchCases = async () => {
-      try {
-        const token = localStorage.getItem("access_token");
+ useEffect(() => {
+  const fetchCases = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
 
-        if (!token) return;
+      if (!token) return;
 
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/cases",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          console.error("Failed to fetch cases:", response.status);
-          return;
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/cases",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
 
-        const data: ApiCase[] = await response.json();
-        setCases(data);
-      } catch (error) {
-        console.error("Could not fetch cases:", error);
+      if (!response.ok) {
+        console.error("Failed to fetch cases:", response.status);
+        return;
       }
-    };
 
-    fetchCases();
-  }, []);
+      const data: ApiCase[] = await response.json();
+      setCases(data);
+    } catch (error) {
+      console.error("Could not fetch cases:", error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) return;
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/users",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Failed to fetch users:", response.status);
+        return;
+      }
+
+      const data: ApiUser[] = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Could not fetch users:", error);
+    }
+  };
+
+  fetchCases();
+  fetchUsers();
+}, []);
 
   const highRiskCases = cases.filter(
     (c) =>
@@ -57,11 +94,19 @@ export default function AuthorityDashboard() {
       c.riskLevel === "Critical"
   ).length;
 
+  const registeredVictims = users.filter(
+    (user) => user.role === "victim"
+  ).length;
+
+  const registeredCounsellors = users.filter(
+  (user) => user.role === "counsellor"
+).length;
+
   const kpiStats = [
     {
       id: "registered",
-      label: "Registered Cases",
-      value: String(cases.length),
+      label: "Registered Victims",
+      value: String(registeredVictims),
       icon: "cases" as const,
     },
     {
@@ -81,14 +126,9 @@ export default function AuthorityDashboard() {
   Critical: cases.filter((c) => c.riskLevel === "Critical").length,
 };
 
-const assignedCounsellors = cases
-  .map((c) => c.assignedCounsellor)
-  .filter((name) => name && name !== "Unassigned");
-
-const uniqueCounsellors = [...new Set(assignedCounsellors)];
 
 const counsellorAvailability = {
-  available: uniqueCounsellors.length,
+  available: registeredCounsellors,
   inSession: 0,
   unavailable: 0,
 };
