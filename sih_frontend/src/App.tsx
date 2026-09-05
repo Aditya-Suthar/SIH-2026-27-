@@ -7,6 +7,8 @@ import ComingSoon from "../pages/ComingSoon";
 import VictimDashboard from "../pages/VictimDashboard";
 import CounsellorDashboard from "../pages/CounsellorDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Cases from "./pages/Cases";
+
 
 function App() {
   return (
@@ -44,7 +46,7 @@ function App() {
         }
       />
 
-        <Route path="/cases" element={<ComingSoon section="Cases" />} />
+<Route path="/cases" element={<Cases />} />
         <Route path="/alerts" element={<ComingSoon section="Alerts" />} />
         <Route path="/counsellors" element={<ComingSoon section="Counsellors" />} />
         <Route path="/sessions" element={<ComingSoon section="Sessions" />} />
