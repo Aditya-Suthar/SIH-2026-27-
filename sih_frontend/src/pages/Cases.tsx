@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -25,6 +26,7 @@ const riskFilterOptions: Array<"All" | RiskLevel> = [
 ];
 
 export default function Cases() {
+  const navigate = useNavigate();
   const [cases, setCases] = useState<PriorityCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -217,14 +219,7 @@ export default function Cases() {
                         <Button
                           variant="outline"
                           size="sm"
-                          title="Case detail view is not yet implemented"
-                          onClick={() =>
-                            console.log(
-                              "View case:",
-                              c.caseId,
-                              "— wire this up once a case-detail endpoint exists"
-                            )
-                          }
+                          onClick={() => navigate(`/cases/${c.caseId}`)}
                         >
                           View
                         </Button>

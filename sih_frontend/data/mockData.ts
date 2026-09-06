@@ -11,7 +11,7 @@ import type {
 export const navSections: NavSection[] = [
   {
     title: "Overview",
-    items: [{ label: "Dashboard", path: "/dashboard", icon: "LayoutDashboard" }],
+    items: [{ label: "Dashboard", path: "/authority", icon: "LayoutDashboard" }],
   },
   {
     title: "Management",

@@ -41,3 +41,11 @@ class CaseOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+class AssessmentCreate(BaseModel):
+    mood: int
+    anxiety: int
+    sleep: int
+    hopelessness: int
+    social_withdrawal: int
+    self_harm_thoughts: int

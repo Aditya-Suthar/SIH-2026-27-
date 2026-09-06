@@ -6,6 +6,9 @@ from .cases import router as cases_router
 from .database import engine, Base
 from . import models
 
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
 app.add_middleware(
@@ -21,8 +24,6 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(cases_router)
-
-Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")

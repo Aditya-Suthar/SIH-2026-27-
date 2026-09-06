@@ -117,6 +117,71 @@ const currentStageIndex = dashboardData
   const [selectedMood, setSelectedMood] = useState<WellbeingMood | null>(null);
   const [note, setNote] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  
+const [assessment, setAssessment] = useState({
+  mood: 0,
+  anxiety: 0,
+  sleep: 0,
+  hopelessness: 0,
+  social_withdrawal: 0,
+  self_harm_thoughts: 0,
+});
+
+const updateAssessment = (
+  field: keyof typeof assessment,
+  value: number
+) => {
+  setAssessment((prev) => ({
+    ...prev,
+    [field]: value,
+  }));
+};
+
+const submitAssessment = async () => {
+  try {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      alert("You are not logged in");
+      return;
+    }
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/victim/assessment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(assessment),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Assessment failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    setDashboardData((prev) =>
+  prev
+    ? {
+        ...prev,
+        distressScore: result.distressScore,
+        riskLevel: result.riskLevel,
+      }
+    : prev
+);
+
+    alert(
+      `Assessment submitted. Distress Score: ${result.distressScore}, Risk: ${result.riskLevel}`
+    );
+  } catch (error) {
+    console.error(error);
+    alert("Could not submit assessment");
+  }
+};
+
 
 useEffect(() => {
   const fetchDashboard = async () => {
@@ -352,7 +417,159 @@ useEffect(() => {
             This is a private check-in. Answer only if you feel comfortable.
           </p>
         </CardHeader>
-        <CardContent className="space-y-5">
+
+            <CardContent className="space-y-5">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">
+                  How low or distressed has your mood felt today?
+                </p>
+
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3, 4].map((value) => (
+                    <Button
+                      key={value}
+                      type="button"
+                      variant={assessment.mood === value ? "default" : "outline"}
+                      onClick={() => updateAssessment("mood", value)}
+                    >
+                      {value}
+                    </Button>
+                  ))}
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  0 = Not at all · 4 = Extremely
+                </p>
+              </div>
+            <div className="space-y-2">
+  <p className="text-sm font-medium text-foreground">
+    How anxious or worried have you felt today?
+  </p>
+
+  <div className="flex gap-2">
+    {[0, 1, 2, 3, 4].map((value) => (
+      <Button
+        key={value}
+        type="button"
+        variant={assessment.anxiety === value ? "default" : "outline"}
+        onClick={() => updateAssessment("anxiety", value)}
+      >
+        {value}
+      </Button>
+    ))}
+  </div>
+
+  <p className="text-xs text-muted-foreground">
+    0 = Not at all · 4 = Extremely
+  </p>
+</div>
+
+<div className="space-y-2">
+  <p className="text-sm font-medium text-foreground">
+    How much has your sleep been disturbed recently?
+  </p>
+
+  <div className="flex gap-2">
+    {[0, 1, 2, 3, 4].map((value) => (
+      <Button
+        key={value}
+        type="button"
+        variant={assessment.sleep === value ? "default" : "outline"}
+        onClick={() => updateAssessment("sleep", value)}
+      >
+        {value}
+      </Button>
+    ))}
+  </div>
+
+  <p className="text-xs text-muted-foreground">
+    0 = Not at all · 4 = Extremely
+  </p>
+</div>
+
+<div className="space-y-2">
+  <p className="text-sm font-medium text-foreground">
+    How hopeless or discouraged have you felt recently?
+  </p>
+
+  <div className="flex gap-2">
+    {[0, 1, 2, 3, 4].map((value) => (
+      <Button
+        key={value}
+        type="button"
+        variant={
+          assessment.hopelessness === value ? "default" : "outline"
+        }
+        onClick={() => updateAssessment("hopelessness", value)}
+      >
+        {value}
+      </Button>
+    ))}
+  </div>
+
+  <p className="text-xs text-muted-foreground">
+    0 = Not at all · 4 = Extremely
+  </p>
+</div>
+
+<div className="space-y-2">
+  <p className="text-sm font-medium text-foreground">
+    How much have you avoided people or social interaction recently?
+  </p>
+
+  <div className="flex gap-2">
+    {[0, 1, 2, 3, 4].map((value) => (
+      <Button
+        key={value}
+        type="button"
+        variant={
+          assessment.social_withdrawal === value
+            ? "default"
+            : "outline"
+        }
+        onClick={() =>
+          updateAssessment("social_withdrawal", value)
+        }
+      >
+        {value}
+      </Button>
+    ))}
+  </div>
+
+  <p className="text-xs text-muted-foreground">
+    0 = Not at all · 4 = Extremely
+  </p>
+</div>
+
+<div className="space-y-2">
+  <p className="text-sm font-medium text-foreground">
+    Have you had thoughts of harming yourself recently?
+  </p>
+
+  <div className="flex gap-2">
+    {[0, 1, 2, 3, 4].map((value) => (
+      <Button
+        key={value}
+        type="button"
+        variant={
+          assessment.self_harm_thoughts === value
+            ? "default"
+            : "outline"
+        }
+        onClick={() =>
+          updateAssessment("self_harm_thoughts", value)
+        }
+      >
+        {value}
+      </Button>
+    ))}
+  </div>
+
+  <p className="text-xs text-muted-foreground">
+    0 = Never · 1 = Rarely · 2 = Sometimes · 3 = Often · 4 = Very often
+  </p>
+</div>
+
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {moodOptions.map((mood) => (
               <button
@@ -410,7 +627,12 @@ useEffect(() => {
             </div>
           </div>
 
-          <Button className="w-full sm:w-auto">Submit Check-in</Button>
+          <Button
+          className="w-full sm:w-auto"
+          onClick={submitAssessment}
+        >
+          Submit Check-in
+        </Button>
         </CardContent>
       </Card>
 

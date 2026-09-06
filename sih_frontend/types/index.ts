@@ -34,6 +34,8 @@ export interface PriorityCase {
   assignedCounsellor: string;
   lastAssessment: string;
   interventionStatus: InterventionStatus;
+  district: string;
+  state: string;
 }
 
 export interface CounsellorAvailability {

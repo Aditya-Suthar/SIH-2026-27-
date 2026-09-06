@@ -22,6 +22,13 @@ class User(Base):
 
 
 class Case(Base):
+
+    victim_id = Column(
+    Integer,
+    ForeignKey("users.id"),
+    nullable=True,
+    index=True,
+)
     __tablename__ = "cases"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -51,3 +58,28 @@ class Case(Base):
     district = Column(String(100), nullable=False)
 
     state = Column(String(100), nullable=False)
+
+class Assessment(Base):
+    __tablename__ = "assessments"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    case_id = Column(
+        Integer,
+        ForeignKey("cases.id"),
+        nullable=False,
+        index=True,
+    )
+
+    mood = Column(Integer, nullable=False)
+    anxiety = Column(Integer, nullable=False)
+    sleep = Column(Integer, nullable=False)
+    hopelessness = Column(Integer, nullable=False)
+    social_withdrawal = Column(Integer, nullable=False)
+    self_harm_thoughts = Column(Integer, nullable=False)
+
+    distress_score = Column(Integer, nullable=False)
+
+    risk_level = Column(String(20), nullable=False)
+
+    created_at = Column(String(50), nullable=False)

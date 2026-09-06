@@ -8,6 +8,7 @@ import VictimDashboard from "../pages/VictimDashboard";
 import CounsellorDashboard from "../pages/CounsellorDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cases from "./pages/Cases";
+import CaseDetails from "./pages/CaseDetails";
 
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
     </ProtectedRoute>
   }
 />
+
+      <Route path="/cases/:caseId" element={<CaseDetails />} />
 
               <Route
         path="/authority"
