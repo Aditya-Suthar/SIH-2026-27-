@@ -106,6 +106,12 @@ def register_user(
     data: schemas.UserRegister,
     db: Session = Depends(get_db)
 ):
+    if data.role != "victim":
+        raise HTTPException(
+            status_code=403,
+            detail="Public registration is available for victim accounts only."
+        )
+
     existing_user = db.query(models.User).filter(
         models.User.email == data.email
     ).first()
@@ -120,7 +126,7 @@ def register_user(
         name=data.name,
         email=data.email,
         password_hash=pwd_context.hash(data.password),
-        role=data.role
+        role="victim"
     )
 
     db.add(new_user)

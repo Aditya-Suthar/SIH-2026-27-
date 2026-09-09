@@ -1,0 +1,11 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+SQLAlchemy==2.0.40
+psycopg2-binary==2.9.10
+pydantic==2.11.4
+email-validator==2.2.0
+PyJWT==2.10.1
+passlib==1.7.4
+# Keep bcrypt compatible with the existing Passlib hashing implementation.
+bcrypt==4.0.1
+python-dotenv==1.1.0

@@ -1,5 +1,8 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import SQLAlchemyError
 
 from .auth import router as auth_router
 from .cases import router as cases_router
@@ -7,9 +10,22 @@ from .database import engine, Base
 from . import models
 
 
-Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        try:
+            Base.metadata.create_all(bind=engine)
+        except SQLAlchemyError:
+            raise RuntimeError(
+                "Database initialization failed. Check DATABASE_URL, start PostgreSQL, "
+                "and ensure the target database exists and is accessible."
+            ) from None
+        yield
+    finally:
+        engine.dispose()
 
-app = FastAPI()
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
