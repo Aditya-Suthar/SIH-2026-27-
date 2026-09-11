@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 fastapi==0.115.12
 uvicorn==0.34.2
 SQLAlchemy==2.0.40
@@ -9,3 +10,10 @@ passlib==1.7.4
 # Keep bcrypt compatible with the existing Passlib hashing implementation.
 bcrypt==4.0.1
 python-dotenv==1.1.0
+=======
+fastapi
+uvicorn[standard]
+sqlalchemy
+python-dotenv
+httpx
+>>>>>>> eb3a4af (Complete working Sahas SIH demo)

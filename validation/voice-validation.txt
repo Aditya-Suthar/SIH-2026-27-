@@ -1,0 +1,11 @@
+Voice continuation validation
+============================
+
+PASS: Python syntax compilation for app/*.py and tests/*.py.
+PASS: voice_service transcription assembly tested with a mocked local Whisper model.
+PASS: VictimDashboard.tsx parsed successfully with TypeScript 5.8.3 transpileModule.
+PASS: New voice endpoint tests added for victim access, live-account enforcement, MIME handling, empty/no-speech handling and controlled failure.
+
+Environment note: the container used for this continuation does not have the project's pre-existing passlib dependency installed, so the full backend suite cannot import app.auth here. The uploaded SIH_FINAL_COMPLETE package already contains its captured 59-test passing output before this voice-only continuation. Run `python -m pip install -r requirements.txt` and then `python -m unittest discover -s tests -v` in the target Windows environment for full final verification.
+
+Frontend npm dependency installation could not be completed in the isolated container, so a full rebuilt Vite bundle was not produced here. The modified TSX file passed TypeScript syntax parsing; run `npm ci && npm run build` locally for final bundle verification.

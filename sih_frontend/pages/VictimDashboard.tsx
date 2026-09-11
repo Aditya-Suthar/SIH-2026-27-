@@ -40,6 +40,7 @@ type VictimDashboardData = {
   caseStage: string;
 };
 
+
 const caseStages = ["Complaint", "Investigation", "Trial", "Rehabilitation", "Compensation"] as const;
 
 const moodOptions: { value: WellbeingMood; tone: string }[] = [
@@ -56,7 +57,6 @@ const riskBadgeVariant: Record<RiskLevel, "danger" | "orange" | "warning" | "suc
   Low: "success",
 };
 
-const currentRisk: RiskLevel = "Moderate";
 
 const trendData = [
   { label: "Week 1", wellbeing: 58 },
@@ -106,6 +106,9 @@ const statusBadgeVariant: Record<SupportStatus, "success" | "primary" | "default
 };
 
 export default function VictimDashboard() {
+  const [showCounsellorChat, setShowCounsellorChat] = useState(false);
+  const [chatMessage, setChatMessage] = useState(""); 
+  const [chatMessages, setChatMessages] = useState<string[]>([]);  
   const [dashboardData, setDashboardData] =
   useState<VictimDashboardData | null>(null);
 
@@ -680,11 +683,90 @@ useEffect(() => {
         <CardHeader>
           <CardTitle>Quick Support Actions</CardTitle>
         </CardHeader>
+
+        {showCounsellorChat && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Talk to your Counsellor</CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Assigned counsellor: {dashboardData?.assignedCounsellor ?? "Counsellor"}
+                </p>
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCounsellorChat(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <div className="rounded-lg border border-border bg-secondary/40 p-4 min-h-[150px] space-y-3">
+
+              {/* Counsellor message */}
+              <div className="flex justify-start">
+                <div className="max-w-[75%] rounded-lg bg-card border border-border px-3 py-2">
+                  <p className="text-sm">
+                    Hello. I'm here to support you. How are you feeling today?
+                  </p>
+                </div>
+              </div>
+
+              {/* Victim messages */}
+              {chatMessages.map((message, index) => (
+                <div key={index} className="flex justify-end">
+                  <div className="max-w-[75%] rounded-lg bg-primary text-primary-foreground px-3 py-2">
+                    <p className="text-sm">
+                      {message}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+
+            <div className="flex gap-2">
+              <Input
+                placeholder="Type your message..."
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    console.log(chatMessage);
+                    setChatMessage("");
+                  }
+                }}
+              />
+
+              <Button
+            onClick={() => {
+              if (!chatMessage.trim()) return;
+
+              setChatMessages((prev) => [...prev, chatMessage]);
+              setChatMessage("");
+            }}
+          >
+            Send
+          </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
         <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <Button variant="outline" className="justify-start gap-2 h-auto py-3">
+          <Button
+            variant="outline"
+            className="justify-start gap-2 h-auto py-3"
+            onClick={() => setShowCounsellorChat(true)}
+          >
             <MessageCircle className="h-4 w-4 text-primary" />
             Talk to Counsellor
           </Button>
+          
           <Button variant="outline" className="justify-start gap-2 h-auto py-3">
             <Phone className="h-4 w-4 text-primary" />
             Request Call Back
