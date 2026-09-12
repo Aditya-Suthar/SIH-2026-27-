@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel, ConfigDict, field_serializer
+from pydantic import BaseModel, ConfigDict, field_serializer, computed_field
 from sqlalchemy.orm import Session
 
 from .auth import get_current_user
@@ -27,6 +27,13 @@ class AnalysisOut(BaseModel):
     provider: Literal['gemini', 'groq', 'openrouter'] | None
     created_at: datetime
     finished_at: datetime | None
+
+    @computed_field
+    @property
+    def error_message(self) -> str | None:
+        if self.status == 'failed':
+            return 'Analysis failed: no valid AI result could be saved. Check provider availability, configuration and backend storage logs. The source remains saved.'
+        return None
 
     @field_serializer('created_at', 'finished_at')
     def utc_timestamp(self, value):

@@ -41,19 +41,26 @@ def transcribe_audio(audio_path: str) -> dict:
         raise VoiceTranscriptionError("Audio recording is unavailable.")
 
     model = get_whisper_model()
+
     try:
         segments, info = model.transcribe(
             str(path),
+            language="en",
+            task="transcribe",
             beam_size=5,
             vad_filter=True,
-            condition_on_previous_text=True,
+            condition_on_previous_text=False,
         )
+
         parts = []
+
         for segment in segments:
             text = segment.text.strip()
             if text:
                 parts.append(text)
+
         transcript = " ".join(parts).strip()
+
     except Exception as exc:
         raise VoiceTranscriptionError("Voice transcription failed.") from exc
 

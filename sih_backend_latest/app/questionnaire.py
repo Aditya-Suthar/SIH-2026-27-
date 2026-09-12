@@ -91,7 +91,7 @@ def record_safety_signal(data: schemas.QuestionnaireSafetySignal, db: Session = 
                          current_user: dict = Depends(get_current_user)):
     """Persist a concerning selected safety answer without waiting for the full form."""
     user, case = victim_context(db, current_user)
-    session = db.get(models.QuestionnaireSession, data.questionnaire_id)
+    session = db.query(models.QuestionnaireSession).filter_by(id=data.questionnaire_id).with_for_update().first()
     question = BY_ID.get(data.question_id)
     if session is None or session.victim_id != user.id or session.case_id != case.id:
         raise HTTPException(404, "Questionnaire not found")
@@ -122,10 +122,23 @@ def record_safety_signal(data: schemas.QuestionnaireSafetySignal, db: Session = 
 def submit_questionnaire(data: schemas.QuestionnaireSubmit, db: Session = Depends(get_db),
                          current_user: dict = Depends(get_current_user)):
     user, case = victim_context(db, current_user)
-    session = db.get(models.QuestionnaireSession, data.questionnaire_id)
+    session = db.query(models.QuestionnaireSession).filter_by(id=data.questionnaire_id).with_for_update().first()
     if session is None or session.victim_id != user.id or session.case_id != case.id:
         raise HTTPException(404, "Questionnaire not found")
-    if session.status == "completed": raise HTTPException(409, "Questionnaire is already complete")
+    if session.status == "completed":
+        assessment = db.get(models.Assessment, session.assessment_id)
+        if any(session.answers.get(key) != value for key, value in data.answers.items()) or (data.note is not None and data.note != assessment.note):
+            raise HTTPException(409, "Questionnaire is already complete")
+        result = score_answers(session.answers)
+        analysis = db.query(models.AIAnalysis).filter_by(assessment_id=session.assessment_id).first()
+        response = {**result, "questionnaire_id":session.id, "questionnaire_version":VERSION,
+                    "scoring_version":SCORING_VERSION, "age_group":session.age_group,
+                    "triggered_followups":[], "complete":True,
+                    "distress_metadata":{"source":"adaptive_questionnaire", "top_contributors":result["top_contributors"]}}
+        if analysis is not None:
+            response["ai_analysis"] = {"id":analysis.id, "status":analysis.status}
+        db.commit()
+        return response
     allowed = set(session.selected_question_ids) | set(session.triggered_follow_up_ids or [])
     unknown = set(data.answers) - allowed
     if unknown: raise HTTPException(422, f"Answers include questions not selected: {sorted(unknown)}")
@@ -157,11 +170,14 @@ def submit_questionnaire(data: schemas.QuestionnaireSubmit, db: Session = Depend
         for key,value in values.items(): setattr(assessment,key,value)
         assessment.distress_score = round(result["questionnaire_score"])
         assessment.risk_level = result["risk_level"]
+        if data.note is not None and not db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first():
+            assessment.note = data.note
     update_from_assessment(case, assessment)
     case.last_assessment = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
     ensure_indicator(db, case)
     analysis_id = None
-    if data.note and session.status in ("followup","completed") and not db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first():
+    note = (assessment.note or '').strip()
+    if note and session.status in ("followup","completed") and not db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first():
         analysis = models.AIAnalysis(assessment_id=assessment.id, case_id=case.id,
                                      victim_id=user.id, status="pending")
         db.add(analysis); db.flush(); analysis_id = analysis.id
@@ -174,5 +190,9 @@ def submit_questionnaire(data: schemas.QuestionnaireSubmit, db: Session = Depend
                 "complete":not waiting,
                 "distress_metadata":{"source":"adaptive_questionnaire", "top_contributors":result["top_contributors"]}}
     if analysis_id is not None:
-        response["ai_analysis"] = {"id":analysis_id, "status":analyze_saved_check_in(db, analysis_id, data.note)}
+        response["ai_analysis"] = {"id":analysis_id, "status":analyze_saved_check_in(db, analysis_id, note)}
+    else:
+        analysis = db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first()
+        if analysis is not None:
+            response["ai_analysis"] = {"id":analysis.id, "status":analysis.status}
     return response

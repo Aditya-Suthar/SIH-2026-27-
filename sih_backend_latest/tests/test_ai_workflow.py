@@ -112,11 +112,12 @@ class WorkflowTests(unittest.TestCase):
         self.assertTrue(result['created_at'].endswith('+00:00'))
         self.assertIsNotNone(result['finished_at'])
         self.assertNotIn(NOTE,json.dumps(result))
-        # Existing questionnaire score/risk are not silently replaced by AI values.
+        # The immutable questionnaire record remains; the case projection advances.
         self.assertEqual(response.json()['distressScore'],25)
         self.assertEqual(response.json()['riskLevel'],'Moderate')
         with self.Session() as db:
-            self.assertEqual(db.get(models.Case,10).risk_level,'Moderate')
+            self.assertEqual(db.get(models.Case,10).risk_level,'High')
+            self.assertEqual(db.get(models.Case,10).latest_analysis_id,result['id'])
             self.assertEqual(db.query(models.Assessment).one().distress_score,25)
 
     def test_client_cannot_override_victim_case_or_source(self):
@@ -178,8 +179,14 @@ class WorkflowTests(unittest.TestCase):
         for note in (None,'',' \t\n '):
             response = self.submit(note=note)
             self.assertEqual(response.status_code,200)
-            self.assertEqual(response.json(),{'message':'Assessment submitted successfully',
-                                              'distressScore':25,'riskLevel':'Moderate'})
+            self.assertEqual(response.json()['message'], 'Assessment submitted successfully')
+            self.assertEqual(response.json()['distressScore'], 25)
+            self.assertEqual(response.json()['riskLevel'], 'Moderate')
+            self.assertEqual(response.json()['distressMetadata']['currentScore'], 25)
+            if note is None:
+                self.assertIsNone(response.json()['distressMetadata']['historicalScore'])
+            else:
+                self.assertEqual(response.json()['distressMetadata']['historicalScore'], 25.0)
         response = self.client.post('/api/victim/assessment',json=QUESTIONNAIRE,headers=self.headers())
         self.assertEqual(response.status_code,200)
         self.ai.assert_not_awaited()

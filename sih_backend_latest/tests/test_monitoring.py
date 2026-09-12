@@ -217,14 +217,71 @@ class ChatMonitoringTests(unittest.TestCase):
         self.detail();self.client.get('/api/monitoring/cases',headers=self.headers(3,'counsellor'))
         self.ai.assert_not_awaited()
 
+    def test_questionnaire_state_drives_cases_summary_queue_and_acknowledgement(self):
+        critical = dict(mood=4, anxiety=4, sleep=4, hopelessness=4,
+                        social_withdrawal=4, self_harm_thoughts=4, note=None)
+        response = self.client.post('/api/victim/assessment', json=critical, headers=self.headers())
+        self.assertEqual(response.status_code, 200, response.text)
+
+        cases = self.client.get('/api/cases', headers=self.headers(5, 'authority')).json()
+        case = next(row for row in cases if row['caseId'] == 'CASE-10')
+        self.assertEqual(case['riskLevel'], 'Critical')
+
+        summary = self.client.get('/api/monitoring/summary', headers=self.headers(5, 'authority')).json()
+        self.assertEqual(summary['risk_distribution']['critical'], 1)
+        queue = self.client.get('/api/monitoring/cases', headers=self.headers(5, 'authority')).json()['items']
+        current = next(row for row in queue if row['case_id'] == 'CASE-10')
+        self.assertEqual((current['current_risk'], current['current_score'], current['category']),
+                         ('critical', 100, 'URGENT'))
+        self.assertTrue(current['needs_review'])
+
+        indicators = self.client.get('/api/monitoring/indicators', headers=self.headers(5, 'authority')).json()['items']
+        indicator = next(row for row in indicators if row['case_id'] == 'CASE-10')
+        reviewed = self.client.post(f"/api/monitoring/indicators/{indicator['id']}/review",
+                                    headers=self.headers(5, 'authority'))
+        self.assertEqual(reviewed.status_code, 200)
+        remaining = self.client.get('/api/monitoring/indicators', headers=self.headers(5, 'authority')).json()['items']
+        self.assertNotIn('CASE-10', [row['case_id'] for row in remaining])
+        after = self.client.get('/api/cases', headers=self.headers(5, 'authority')).json()
+        self.assertEqual(next(row for row in after if row['caseId'] == 'CASE-10')['riskLevel'], 'Critical')
+
+    def test_moderate_questionnaire_is_assessed_in_distribution(self):
+        moderate = dict(mood=1, anxiety=1, sleep=1, hopelessness=1,
+                        social_withdrawal=1, self_harm_thoughts=1, note=None)
+        response = self.client.post('/api/victim/assessment', json=moderate, headers=self.headers())
+        self.assertEqual(response.status_code, 200, response.text)
+        summary = self.client.get('/api/monitoring/summary', headers=self.headers(5, 'authority')).json()
+        self.assertEqual(summary['risk_distribution']['medium'], 1)
+        self.assertEqual(summary['risk_distribution']['unassessed'], 1)
+
     def test_failed_latest_retains_success_without_fabrication(self):
         self.send();self.ai.side_effect=ai_service.AIServiceUnavailable();self.send('Another distress message.')
         detail=self.detail().json();self.assertEqual(detail['latest_attempt_status'],'failed')
         self.assertEqual(detail['latest_analysis']['distress_score'],78)
+        self.assertIn('Analysis failed', detail['latest_attempt']['error_message'])
+        self.assertIsNone(detail['latest_attempt']['distress_score'])
         self.assertEqual([x['status'] for x in detail['history']],['completed','failed'])
         empty=self.detail(4,case='CASE-20').json()
         self.assertIsNone(empty['score']);self.assertIsNone(empty['latest_analysis'])
         self.assertEqual(empty['category'],'UNASSESSED')
+
+    def test_questionnaire_source_is_read_when_projection_is_missing(self):
+        response = self.client.post('/api/victim/assessment', json=dict(
+            mood=1, anxiety=1, sleep=1, hopelessness=1, social_withdrawal=1,
+            self_harm_thoughts=1, note=None), headers=self.headers())
+        self.assertEqual(response.status_code, 200)
+        with self.Session() as db:
+            case = db.get(models.Case, 10)
+            case.latest_distress_score = None
+            case.latest_risk_source = None
+            case.latest_state_at = None
+            db.commit()
+        detail = self.detail().json()
+        self.assertEqual(detail['current_source'], 'questionnaire')
+        self.assertEqual(detail['current_score'], detail['questionnaire_score'])
+        self.assertIsNotNone(detail['questionnaire_score'])
+        self.assertIsNone(detail['latest_analysis'])
+        self.assertEqual(detail['latest_attempt_status'], 'none')
 
     def test_mixed_sources_in_same_history(self):
         response=self.client.post('/api/victim/assessment',json=dict(mood=1,anxiety=1,sleep=1,hopelessness=1,social_withdrawal=1,self_harm_thoughts=1,note='I feel very scared.'),headers=self.headers())

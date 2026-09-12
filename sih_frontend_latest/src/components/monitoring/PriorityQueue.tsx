@@ -21,14 +21,17 @@ export function PriorityQueue({ items, onRefresh, emptyMessage = "No cases are a
           <Link className="inline-flex items-center gap-1 text-sm font-medium text-primary" to={`/cases/${encodeURIComponent(item.case_id)}`}>Open workspace <ArrowUpRight className="h-4 w-4" /></Link>
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          <div><p className="text-xs text-muted-foreground">Latest distress indicator</p><p className="mt-1 text-2xl font-semibold">{item.current_score ?? "—"}<span className="text-sm font-normal text-muted-foreground">{item.current_score !== null ? " / 100" : " Score unavailable"}</span></p></div>
+          <div><p className="text-xs text-muted-foreground">{item.current_source === "questionnaire" ? "Questionnaire score" : "Latest distress indicator"}</p><p className="mt-1 text-2xl font-semibold">{item.current_score ?? "—"}<span className="text-sm font-normal text-muted-foreground">{item.current_score !== null ? " / 100" : " Score unavailable"}</span></p></div>
           <div><p className="text-xs text-muted-foreground">Risk / trend</p><div className="mt-1 flex flex-wrap gap-2"><Badge variant={riskTone(item.current_risk)}>{item.current_risk ?? "Unassessed"}</Badge><span className="text-sm capitalize">{words(item.trend.state)}</span></div></div>
           <div><p className="text-xs text-muted-foreground">Recent emotions</p><p className="mt-1 text-sm capitalize">{item.latest_analysis?.emotions?.join(", ") || "None recorded"}</p></div>
           <div><p className="text-xs text-muted-foreground">Latest analysis activity</p><p className="mt-1 text-sm">{dateTime(item.latest_activity)}</p></div>
         </div>
         <div className="mt-4 border-t border-border/70 pt-3"><p className="text-xs font-semibold text-muted-foreground">WHY THIS PRIORITY</p><p className="mt-1 text-sm text-muted-foreground">{item.reasons.join(" ")}</p></div>
-        {item.latest_attempt_status === "failed" && <p className="mt-2 text-xs text-warning">Latest analysis unavailable. Any score shown is from the last successful analysis.</p>}
-        {item.latest_attempt_status === "pending" && <p className="mt-2 text-xs text-muted-foreground">Latest analysis is pending; its result is not included yet.</p>}
+        <p className="mt-2 text-xs text-muted-foreground">{item.current_source === "questionnaire" ? "Questionnaire score" : item.current_source === "text_ai" ? "Text AI score" : "No scored source available"}{item.current_source === "text_ai" && item.questionnaire_score != null ? ` · Questionnaire score: ${item.questionnaire_score} / 100` : ""}</p>
+        {item.latest_analysis?.reason && <p className="mt-2 text-sm text-muted-foreground">{item.latest_analysis.reason}</p>}
+        {item.latest_analysis && item.current_source !== "text_ai" && <p className="mt-2 text-sm">Latest text AI score: {item.latest_analysis.distress_score} / 100 · Risk: {item.latest_analysis.risk_level}</p>}
+        {item.latest_attempt_status === "failed" && <p role="status" className="mt-2 text-xs text-warning">{item.latest_attempt?.error_message || "Analysis failed. The source remains saved; no AI score was produced for this attempt."}</p>}
+        {item.latest_attempt_status === "pending" && <p role="status" className="mt-2 text-xs text-muted-foreground">Analysis pending; its result is not included yet.</p>}
       </article>)}
     </CardContent>
   </Card>;

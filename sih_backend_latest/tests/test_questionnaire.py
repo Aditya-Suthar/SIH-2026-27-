@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import tempfile
 import unittest
+from unittest.mock import AsyncMock, patch
 
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
@@ -129,6 +130,45 @@ class QuestionnaireMigrationTests(unittest.TestCase):
 
 
 class QuestionnaireApiTests(unittest.TestCase):
+    def test_note_after_safety_signal_is_saved_and_failure_is_durable(self):
+        from app.ai_service import AIServiceUnavailable
+        payload = self.client.get('/api/victim/questionnaire').json()
+        self.client.post('/api/victim/questionnaire/safety-signal', json={
+            'questionnaire_id':payload['questionnaire_id'], 'question_id':'Q064', 'answer':1})
+        answers = neutral_answers([BY_ID[q['id']] for q in payload['questions']])
+        answers['Q064'] = 1
+        with patch('app.ai_service.analyze_distress', new=AsyncMock(side_effect=AIServiceUnavailable())) as analyze:
+            response = self.client.post('/api/victim/questionnaire/submit', json={
+                'questionnaire_id':payload['questionnaire_id'], 'answers':answers, 'note':'  I feel worried.  '})
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['ai_analysis']['status'], 'failed')
+        analyze.assert_awaited_once_with('I feel worried.')
+        with self.Session() as db:
+            assessment = db.query(models.Assessment).one()
+            analysis = db.query(models.AIAnalysis).one()
+            self.assertEqual(assessment.note, 'I feel worried.')
+            self.assertEqual((analysis.assessment_id, analysis.case_id, analysis.victim_id), (assessment.id, 1, 1))
+            self.assertIsNone(analysis.distress_score)
+
+    def test_completed_submission_retry_returns_same_analysis(self):
+        payload = self.client.get('/api/victim/questionnaire').json()
+        request = {'questionnaire_id':payload['questionnaire_id'],
+                   'answers':neutral_answers([BY_ID[q['id']] for q in payload['questions']]),
+                   'note':'I feel worried.'}
+        result = dict(distress_score=30, risk_level='medium', emotions=['worry'],
+                      requires_attention=False, reason='Worry is expressed.', provider='groq')
+        with patch('app.ai_service.analyze_distress', new=AsyncMock(return_value=result)) as analyze:
+            first = self.client.post('/api/victim/questionnaire/submit', json=request)
+            second = self.client.post('/api/victim/questionnaire/submit', json=request)
+        self.assertEqual(first.status_code, 200, first.text)
+        self.assertEqual(second.status_code, 200, second.text)
+        self.assertEqual(first.json()['ai_analysis'], second.json()['ai_analysis'])
+        self.assertEqual(first.json()['ai_analysis']['status'], 'completed')
+        self.assertEqual(analyze.await_count, 1)
+        with self.Session() as db:
+            self.assertEqual(db.query(models.Assessment).count(), 1)
+            self.assertEqual(db.query(models.AIAnalysis).count(), 1)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         self.engine = create_engine("sqlite:///" + str(Path(self.temp.name)/"api.db"), connect_args={"check_same_thread":False})

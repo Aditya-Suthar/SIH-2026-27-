@@ -3,10 +3,12 @@ export type Analysis = {
   source_type: "assessment" | "message"; status: "completed" | "failed" | "pending";
   distress_score: number | null; risk_level: string | null; emotions: string[] | null;
   requires_attention: boolean | null; reason: string | null; created_at: string;
+  error_message?: string | null;
 };
 export type MonitoringCase = {
   case_id: string; assigned_counsellor: string; category: "URGENT" | "HIGH" | "MEDIUM" | "NORMAL" | "UNASSESSED";
   score: number | null; reasons: string[]; alerts: string[]; latest_analysis: Analysis | null;
+  latest_attempt?: Analysis | null; questionnaire_score?: number | null;
   current_risk: "low" | "medium" | "high" | "critical" | null; current_score: number | null;
   current_source: "questionnaire" | "text_ai" | "legacy_case" | null; current_state_at: string | null;
   latest_attempt_status: string; latest_activity: string | null; needs_review: boolean; stale: boolean;

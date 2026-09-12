@@ -11,6 +11,7 @@ from .database import get_db
 from . import models
 from .ai_history import authenticated_account, valid_source_query, AnalysisOut
 from .monitoring_rules import prioritize, valid, utc
+from .case_state import current_state, ensure_indicator, normalized_risk, utc as state_utc
 
 router = APIRouter(prefix='/api', tags=['AI monitoring'])
 
@@ -42,19 +43,35 @@ def source_rows(db, case_ids, now):
     )).order_by(models.AIAnalysis.created_at,models.AIAnalysis.id).all()
 
 
-def case_view(case, rows, reviews, now):
-    result = prioritize(rows, now)
+def case_view(case, rows, reviews, indicators, now, assessment=None):
+    state = current_state(case)
+    # Read preserved sources even when the historical case projection is empty.
+    if state['score'] is None:
+        successful = max((r for r in rows if valid(r)), key=lambda r:(utc(r.created_at), r.id), default=None)
+        if successful is not None:
+            state.update(score=successful.distress_score, risk=successful.risk_level,
+                         source='text_ai', observed_at=utc(successful.finished_at or successful.created_at))
+        elif assessment is not None:
+            state.update(score=assessment.distress_score, risk=normalized_risk(assessment.risk_level),
+                         source='questionnaire', observed_at=state_utc(assessment.created_at))
+    result = prioritize(rows, now, state if state['risk'] is not None else None)
     latest = result.pop('latest')
     attempt = max(rows,key=lambda r:(utc(r.created_at),r.id),default=None)
     reviewed = next((r for r in reviews if latest is not None and r.analysis_id==latest.id
                      and r.reviewer_id==case.assigned_counsellor_id),None)
+    active_indicator = next((row for row in indicators if row.reviewed_at is None), None)
     return dict(result, case_id=case.case_id, assigned_counsellor=case.assigned_counsellor,
+                current_risk=state['risk'], current_score=state['score'],
+                current_source=state['source'],
+                current_state_at=state['observed_at'].isoformat() if state['observed_at'] else None,
                 latest_analysis=AnalysisOut.model_validate(latest).model_dump(mode='json') if latest else None,
                 latest_attempt_status=attempt.status if attempt else 'none',
+                latest_attempt=AnalysisOut.model_validate(attempt).model_dump(mode='json') if attempt else None,
+                questionnaire_score=assessment.distress_score if assessment else None,
                 latest_activity=utc(attempt.created_at).isoformat() if attempt else None,
                 review={'analysis_id':reviewed.analysis_id,'reviewer_id':reviewed.reviewer_id,
                         'reviewed_at':utc(reviewed.reviewed_at).isoformat()} if reviewed else None,
-                needs_review=bool(result['alerts']) and reviewed is None)
+                needs_review=bool(result['alerts']) and reviewed is None and active_indicator is not None)
 
 
 def all_views(db, cases):
@@ -65,9 +82,39 @@ def all_views(db, cases):
     grouped = {cid:[] for cid in ids}
     for row in rows: grouped[row.case_id].append(row)
     reviews = db.query(models.AnalysisReview).join(models.AIAnalysis).filter(models.AIAnalysis.case_id.in_(ids)).all()
-    items = [case_view(c,grouped[c.id],reviews,now) for c in cases]
+    indicator_rows = db.query(models.MonitoringIndicator).filter(models.MonitoringIndicator.case_id.in_(ids)).all()
+    indicators = {cid: [] for cid in ids}
+    for row in indicator_rows: indicators[row.case_id].append(row)
+    assessment_ids = db.query(func.max(models.Assessment.id)).filter(models.Assessment.case_id.in_(ids)).group_by(models.Assessment.case_id)
+    assessments = {a.case_id:a for a in db.query(models.Assessment).filter(models.Assessment.id.in_(assessment_ids)).all()}
+    items = [case_view(c,grouped[c.id],reviews,indicators[c.id],now,assessments.get(c.id)) for c in cases]
     rank = {'URGENT':0,'HIGH':1,'MEDIUM':2,'NORMAL':3,'UNASSESSED':4}
     return sorted(items,key=lambda x:(rank[x['category']],-(x['score'] or 0),x['case_id']))
+
+
+def refresh_questionnaire_indicators(db, cases):
+    """Compatibility refresh; normal writes create authoritative indicators."""
+    for case in cases:
+        ensure_indicator(db, case)
+    db.commit()
+
+
+@router.get('/monitoring/indicators')
+def monitoring_indicators(db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
+    _, query = professional_cases(db,current_user); cases=query.all(); refresh_questionnaire_indicators(db,cases)
+    ids=[c.id for c in cases]; lookup={c.id:c.case_id for c in cases}
+    rows=db.query(models.MonitoringIndicator).filter(models.MonitoringIndicator.case_id.in_(ids),models.MonitoringIndicator.reviewed_at.is_(None)).order_by(models.MonitoringIndicator.created_at.desc()).all() if ids else []
+    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
+
+
+@router.post('/monitoring/indicators/{indicator_id}/review')
+def review_indicator(indicator_id:int,db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
+    user,query=professional_cases(db,current_user)
+    row=db.get(models.MonitoringIndicator,indicator_id)
+    if row is None or query.filter(models.Case.id==row.case_id).first() is None: raise HTTPException(404,'Indicator not found')
+    if row.reviewed_at is None:
+        row.reviewed_by=user.id; row.reviewed_at=datetime.now(timezone.utc); db.commit()
+    return {'reviewed_indicator_id':indicator_id}
 
 
 @router.get('/monitoring/cases')
@@ -105,6 +152,11 @@ def review_case(case_id: str,data: ReviewRequest,db: Session=Depends(get_db),cur
     prior=db.query(models.AnalysisReview).filter_by(analysis_id=analysis.id,reviewer_id=user.id).first()
     if prior is None:
         db.add(models.AnalysisReview(analysis_id=analysis.id,reviewer_id=user.id))
+        for indicator in db.query(models.MonitoringIndicator).filter_by(
+            case_id=case.id, analysis_id=analysis.id
+        ).filter(models.MonitoringIndicator.reviewed_at.is_(None)):
+            indicator.reviewed_by=user.id
+            indicator.reviewed_at=datetime.now(timezone.utc)
         try: db.commit()
         except IntegrityError: db.rollback()  # Concurrent identical acknowledgement.
     return {'reviewed_analysis_id':data.analysis_id}
@@ -117,7 +169,7 @@ def monitoring_summary(db: Session=Depends(get_db),current_user: dict=Depends(ge
     items=all_views(db,query.all())
     distribution={risk:0 for risk in ('low','medium','high','critical','unassessed')}
     for item in items:
-        distribution[item['latest_analysis']['risk_level'] if item['latest_analysis'] else 'unassessed']+=1
+        distribution[item['current_risk'] or 'unassessed']+=1
     # Aggregates only: no conversation text, emotions or AI reasoning.
     return {'total_cases':len(items),'risk_distribution':distribution,
             'requiring_attention':sum(bool(x['alerts']) for x in items),

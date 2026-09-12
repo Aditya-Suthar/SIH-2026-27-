@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from . import ai_service, models
+from .case_state import ensure_indicator, update_from_analysis
 
 logger = logging.getLogger(__name__)
 RESULT_FIELDS = ('distress_score', 'risk_level', 'emotions', 'requires_attention', 'reason', 'provider')
@@ -43,6 +44,13 @@ def analyze_saved_check_in(db: Session, analysis_id: int, note: str) -> str:
             setattr(row, name, values[name] if values is not None else None)
         row.status = status
         row.finished_at = datetime.now(timezone.utc)
+        if status == 'completed':
+            db.flush()
+            case = db.get(models.Case, row.case_id)
+            if case is None:
+                raise ValueError('Missing analysis case')
+            update_from_analysis(case, row)
+            ensure_indicator(db, case)
         db.commit()
         return status
     except Exception:

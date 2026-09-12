@@ -41,26 +41,31 @@ def trend(rows, now=None):
             'explanation':f'{len(points)} daily medians over {xs[-1]} days; change {change:+.1f} points; slope {slope:+.2f} points/day.'}
 
 
-def prioritize(rows, now=None):
+def prioritize(rows, now=None, current=None):
     now = utc(now or datetime.now(timezone.utc))
     good = sorted((r for r in rows if valid(r) and utc(r.created_at) <= now), key=lambda r:(utc(r.created_at),r.id))
     movement = trend(good, now)
-    if not good:
+    if not good and not current:
         return {'category':'UNASSESSED','score':None,'reasons':['No successful AI analysis yet.'],
                 'alerts':[],'trend':movement,'latest':None,'stale':False,'recent_high_days':0}
-    latest = good[-1]
-    stale = now - utc(latest.created_at) > timedelta(days=7)
+    latest = good[-1] if good else None
+    state_score = current.get('score') if current else latest.distress_score
+    state_risk = current.get('risk') if current else latest.risk_level
+    state_time = current.get('observed_at') if current else utc(latest.created_at)
+    stale = bool(state_time and now - state_time > timedelta(days=7))
     high_days = len({utc(r.created_at).date() for r in good
                      if r.risk_level in ('high','critical') and now - timedelta(days=7) <= utc(r.created_at)})
-    points = latest.distress_score * .5
-    reasons = [f'Latest distress indicator: {latest.distress_score}/100 (+{points:g}).']
-    risk_points = {'low':0,'medium':8,'high':18,'critical':30}[latest.risk_level]
+    points = (state_score or 0) * .5
+    reasons = ([f'Latest authoritative distress indicator: {state_score}/100 (+{points:g}).']
+               if state_score is not None else ['Current authoritative state has no numeric legacy score.'])
+    risk_points = {'low':0,'medium':8,'high':18,'critical':30}[state_risk]
     points += risk_points
-    reasons.append(f'{latest.risk_level.title()} risk indicator (+{risk_points}).')
+    reasons.append(f'{state_risk.title()} risk indicator (+{risk_points}).')
     alerts = []
-    if latest.risk_level in ('high','critical'):
+    if state_risk in ('high','critical'):
         alerts.append('High distress detected — review recommended')
-    if latest.requires_attention:
+    attention = state_risk in ('high','critical') if current else latest.requires_attention
+    if attention:
         points += 12; reasons.append('Requires attention (+12).'); alerts.append('Requires attention')
     bonus = {'worsening':10,'rapidly_worsening':25}.get(movement['state'],0)
     if bonus:
@@ -71,6 +76,13 @@ def prioritize(rows, now=None):
         alerts.append('Repeated high distress indicators')
     score = min(100, round(points,1))
     category = 'URGENT' if score >= 80 else 'HIGH' if score >= 55 else 'MEDIUM' if score >= 30 else 'NORMAL'
+    floors = {'critical':('URGENT',80),'high':('HIGH',55),'medium':('MEDIUM',30)}
+    if state_risk in floors:
+        floor_category, _ = floors[state_risk]
+        rank = {'NORMAL':0,'MEDIUM':1,'HIGH':2,'URGENT':3}
+        if rank[category] < rank[floor_category]:
+            category = floor_category
+            reasons.append(f'{state_risk.title()} current risk applies a {floor_category} priority floor.')
     if stale:
         reasons.append('Last successful analysis is over 7 days old; current condition is unknown.')
     return {'category':category,'score':score,'reasons':reasons,'alerts':alerts,'trend':movement,
