@@ -21,8 +21,8 @@ export function PriorityQueue({ items, onRefresh, emptyMessage = "No cases are a
           <Link className="inline-flex items-center gap-1 text-sm font-medium text-primary" to={`/cases/${encodeURIComponent(item.case_id)}`}>Open workspace <ArrowUpRight className="h-4 w-4" /></Link>
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          <div><p className="text-xs text-muted-foreground">Latest AI distress indicator</p><p className="mt-1 text-2xl font-semibold">{item.latest_analysis?.distress_score ?? "—"}<span className="text-sm font-normal text-muted-foreground">{item.latest_analysis ? " / 100" : " No successful analysis"}</span></p></div>
-          <div><p className="text-xs text-muted-foreground">Risk / trend</p><div className="mt-1 flex flex-wrap gap-2"><Badge variant={riskTone(item.latest_analysis?.risk_level)}>{item.latest_analysis?.risk_level ?? "Unknown"}</Badge><span className="text-sm capitalize">{words(item.trend.state)}</span></div></div>
+          <div><p className="text-xs text-muted-foreground">Latest distress indicator</p><p className="mt-1 text-2xl font-semibold">{item.current_score ?? "—"}<span className="text-sm font-normal text-muted-foreground">{item.current_score !== null ? " / 100" : " Score unavailable"}</span></p></div>
+          <div><p className="text-xs text-muted-foreground">Risk / trend</p><div className="mt-1 flex flex-wrap gap-2"><Badge variant={riskTone(item.current_risk)}>{item.current_risk ?? "Unassessed"}</Badge><span className="text-sm capitalize">{words(item.trend.state)}</span></div></div>
           <div><p className="text-xs text-muted-foreground">Recent emotions</p><p className="mt-1 text-sm capitalize">{item.latest_analysis?.emotions?.join(", ") || "None recorded"}</p></div>
           <div><p className="text-xs text-muted-foreground">Latest analysis activity</p><p className="mt-1 text-sm">{dateTime(item.latest_activity)}</p></div>
         </div>

@@ -7,6 +7,8 @@ export type Analysis = {
 export type MonitoringCase = {
   case_id: string; assigned_counsellor: string; category: "URGENT" | "HIGH" | "MEDIUM" | "NORMAL" | "UNASSESSED";
   score: number | null; reasons: string[]; alerts: string[]; latest_analysis: Analysis | null;
+  current_risk: "low" | "medium" | "high" | "critical" | null; current_score: number | null;
+  current_source: "questionnaire" | "text_ai" | "legacy_case" | null; current_state_at: string | null;
   latest_attempt_status: string; latest_activity: string | null; needs_review: boolean; stale: boolean;
   review: { analysis_id: number; reviewer_id: number; reviewed_at: string } | null;
   trend: { state: string; days: number; change: number | null; slope_per_day: number | null; explanation: string };

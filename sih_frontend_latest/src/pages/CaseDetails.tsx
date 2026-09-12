@@ -191,7 +191,7 @@ export default function CaseDetails() {
       </Card>
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
         <CaseMonitoring key={`monitor-${caseData.caseId}`} caseId={caseData.caseId} />
-        {localStorage.getItem("role") === "counsellor" && <CaseChat key={`chat-${caseData.caseId}`} caseId={caseData.caseId} />}
+        {(localStorage.getItem("role") === "counsellor" || localStorage.getItem("role") === "victim") && <CaseChat key={`chat-${caseData.caseId}`} caseId={caseData.caseId} />}
       </div>
     </div>
   );
