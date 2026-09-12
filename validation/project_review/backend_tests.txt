@@ -1,0 +1,109 @@
+C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+  warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+test_controlled_503 (test_ai.EndpointTests.test_controlled_503) ... ai_provider=gemini category=http_error status=503
+ai_provider=groq category=http_error status=503
+ai_provider=openrouter category=http_error status=503
+ok
+test_existing_password_hashing (test_ai.EndpointTests.test_existing_password_hashing) ... ok
+test_existing_routes (test_ai.EndpointTests.test_existing_routes) ... ok
+test_invalid_requests (test_ai.EndpointTests.test_invalid_requests) ... ok
+test_protected_and_opt_in (test_ai.EndpointTests.test_protected_and_opt_in) ... ok
+test_success_through_real_service_no_persistence (test_ai.EndpointTests.test_success_through_real_service_no_persistence) ... ok
+test_all_fail_safe_logs (test_ai.ServiceTests.test_all_fail_safe_logs) ... ok
+test_each_provider_normalizes_and_stops (test_ai.ServiceTests.test_each_provider_normalizes_and_stops) ... ai_provider=gemini category=http_error status=429
+ai_provider=gemini category=http_error status=429
+ai_provider=groq category=http_error status=429
+ok
+test_failure_classes_fall_back (test_ai.ServiceTests.test_failure_classes_fall_back) ... ai_provider=gemini category=timeout
+ai_provider=gemini category=connection_error
+ai_provider=gemini category=http_error status=401
+ai_provider=gemini category=http_error status=403
+ai_provider=gemini category=http_error status=429
+ai_provider=gemini category=http_error status=500
+ai_provider=gemini category=http_error status=503
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ai_provider=gemini category=invalid_response
+ok
+test_invalid_client_input_never_calls_providers (test_ai.ServiceTests.test_invalid_client_input_never_calls_providers) ... ok
+test_key_not_in_config_repr (test_ai.ServiceTests.test_key_not_in_config_repr) ... ok
+test_missing_keys_skipped (test_ai.ServiceTests.test_missing_keys_skipped) ... ok
+test_paid_openrouter_override_not_sent (test_ai.ServiceTests.test_paid_openrouter_override_not_sent) ... ai_provider=openrouter category=invalid_response
+ok
+test_strict_schema (test_ai.ServiceTests.test_strict_schema) ... ok
+test_wall_timeout_fallback (test_ai.ServiceTests.test_wall_timeout_fallback) ... ai_provider=gemini category=timeout
+ok
+test_existing_schema_upgrade_is_additive_and_repeatable (test_ai_workflow.MigrationTests.test_existing_schema_upgrade_is_additive_and_repeatable) ... ok
+test_fresh_database_upgrade (test_ai_workflow.MigrationTests.test_fresh_database_upgrade) ... ok
+test_authorization_matrix (test_ai_workflow.WorkflowTests.test_authorization_matrix) ... ok
+test_client_cannot_override_victim_case_or_source (test_ai_workflow.WorkflowTests.test_client_cannot_override_victim_case_or_source) ... ok
+test_existing_case_and_dashboard_routes_still_work (test_ai_workflow.WorkflowTests.test_existing_case_and_dashboard_routes_still_work) ... ok
+test_full_fallback_chain_failure_is_safe (test_ai_workflow.WorkflowTests.test_full_fallback_chain_failure_is_safe) ... ok
+test_history_append_only_and_pagination (test_ai_workflow.WorkflowTests.test_history_append_only_and_pagination) ... ai_check_in category=service_unavailable
+ok
+test_invalid_input_and_unauthorized_submission_do_not_trigger_ai (test_ai_workflow.WorkflowTests.test_invalid_input_and_unauthorized_submission_do_not_trigger_ai) ... ok
+test_numeric_only_and_blank_checkins_preserve_contract (test_ai_workflow.WorkflowTests.test_numeric_only_and_blank_checkins_preserve_contract) ... ok
+test_persistent_result_storage_outage_exposes_pending (test_ai_workflow.WorkflowTests.test_persistent_result_storage_outage_exposes_pending) ... ai_check_in category=result_storage_failed
+ai_check_in category=failure_state_storage_failed
+ok
+test_provider_failure_and_malformed_results_preserve_sources (test_ai_workflow.WorkflowTests.test_provider_failure_and_malformed_results_preserve_sources) ... ai_check_in category=service_unavailable
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ai_check_in category=invalid_or_failed_analysis
+ok
+test_real_checkin_analysis_independent_of_development_endpoint_switch (test_ai_workflow.WorkflowTests.test_real_checkin_analysis_independent_of_development_endpoint_switch) ... ok
+test_reassignment_enforces_current_permissions_and_original_author (test_ai_workflow.WorkflowTests.test_reassignment_enforces_current_permissions_and_original_author) ... ok
+test_result_storage_error_preserves_source_and_marks_failed (test_ai_workflow.WorkflowTests.test_result_storage_error_preserves_source_and_marks_failed) ... ai_check_in category=result_storage_failed
+ok
+test_source_storage_failure_returns_safe_error_and_does_not_call_ai (test_ai_workflow.WorkflowTests.test_source_storage_failure_returns_safe_error_and_does_not_call_ai) ... check_in category=source_storage_failed
+ok
+test_text_saved_before_ai_and_correct_result_persisted (test_ai_workflow.WorkflowTests.test_text_saved_before_ai_and_correct_result_persisted) ... ok
+test_authority_summary_aggregates_and_read_does_not_call_ai (test_monitoring.ChatMonitoringTests.test_authority_summary_aggregates_and_read_does_not_call_ai) ... ok
+test_chat_and_monitoring_authorization (test_monitoring.ChatMonitoringTests.test_chat_and_monitoring_authorization) ... ok
+test_counsellor_and_trivial_messages_not_analyzed (test_monitoring.ChatMonitoringTests.test_counsellor_and_trivial_messages_not_analyzed) ... ok
+test_failed_latest_retains_success_without_fabrication (test_monitoring.ChatMonitoringTests.test_failed_latest_retains_success_without_fabrication) ... ai_check_in category=service_unavailable
+ok
+test_failure_and_malformed_result_do_not_lose_message (test_monitoring.ChatMonitoringTests.test_failure_and_malformed_result_do_not_lose_message) ... ai_check_in category=service_unavailable
+ai_check_in category=invalid_or_failed_analysis
+ok
+test_history_pagination_and_sender_distinction (test_monitoring.ChatMonitoringTests.test_history_pagination_and_sender_distinction) ... ok
+test_invalid_input_and_spoofed_identity_rejected (test_monitoring.ChatMonitoringTests.test_invalid_input_and_spoofed_identity_rejected) ... ok
+test_mixed_sources_in_same_history (test_monitoring.ChatMonitoringTests.test_mixed_sources_in_same_history) ... ok
+test_prompt3_migration_preserves_prompt2_history (test_monitoring.ChatMonitoringTests.test_prompt3_migration_preserves_prompt2_history) ... ok
+test_retry_is_idempotent_no_duplicate_analysis (test_monitoring.ChatMonitoringTests.test_retry_is_idempotent_no_duplicate_analysis) ... ok
+test_review_authorization_and_new_signal_reopens (test_monitoring.ChatMonitoringTests.test_review_authorization_and_new_signal_reopens) ... ok
+test_reviews_cross_case_and_failed_analysis_rejected (test_monitoring.ChatMonitoringTests.test_reviews_cross_case_and_failed_analysis_rejected) ... ai_check_in category=service_unavailable
+ok
+test_victim_chat_saved_before_analysis_and_linked (test_monitoring.ChatMonitoringTests.test_victim_chat_saved_before_analysis_and_linked) ... ok
+test_attention_priority_and_no_data (test_monitoring.RuleTests.test_attention_priority_and_no_data) ... ok
+test_bursts_do_not_create_repeated_high_days (test_monitoring.RuleTests.test_bursts_do_not_create_repeated_high_days) ... ok
+test_failed_null_irregular_and_future_points (test_monitoring.RuleTests.test_failed_null_irregular_and_future_points) ... ok
+test_insufficient_one_or_same_day (test_monitoring.RuleTests.test_insufficient_one_or_same_day) ... ok
+test_rapid_and_stable_examples (test_monitoring.RuleTests.test_rapid_and_stable_examples) ... ok
+test_stale_is_not_current_stability (test_monitoring.RuleTests.test_stale_is_not_current_stability) ... ok
+test_worsening_and_improving (test_monitoring.RuleTests.test_worsening_and_improving) ... ok
+test_assessment_ranges_and_live_account (test_operations.OperationsTests.test_assessment_ranges_and_live_account) ... ok
+test_assignment_authorization_and_real_directory (test_operations.OperationsTests.test_assignment_authorization_and_real_directory) ... ok
+test_booking_confirmation_overlap_and_scope (test_operations.OperationsTests.test_booking_confirmation_overlap_and_scope) ... ok
+test_booking_rejects_spoof_and_past (test_operations.OperationsTests.test_booking_rejects_spoof_and_past) ... ok
+test_legacy_victim_onboarding_idempotent (test_operations.OperationsTests.test_legacy_victim_onboarding_idempotent) ... ok
+test_public_signup_only_victim_and_case_created (test_operations.OperationsTests.test_public_signup_only_victim_and_case_created) ... ok
+test_reassignment_cancels_old_appointments (test_operations.OperationsTests.test_reassignment_cancels_old_appointments) ... ok
+test_support_request_idempotency_and_scope (test_operations.OperationsTests.test_support_request_idempotency_and_scope) ... ok
+test_rejects_bad_type_empty_and_no_speech (test_voice.VoiceEndpointTests.test_rejects_bad_type_empty_and_no_speech) ... ok
+test_transcription_failure_is_controlled (test_voice.VoiceEndpointTests.test_transcription_failure_is_controlled) ... ok
+test_victim_can_transcribe_supported_audio (test_voice.VoiceEndpointTests.test_victim_can_transcribe_supported_audio) ... ok
+test_voice_endpoint_is_victim_only_and_live_account_checked (test_voice.VoiceEndpointTests.test_voice_endpoint_is_victim_only_and_live_account_checked) ... ok
+
+----------------------------------------------------------------------
+Ran 63 tests in 10.108s
+
+OK

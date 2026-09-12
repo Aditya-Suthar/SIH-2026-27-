@@ -1,0 +1,8 @@
+Review verification, 2026-09-12
+
+Latest backend: 63 unittest tests passed in isolated test fixtures; cloud providers and Whisper inference mocked.
+Latest frontend: npm run build exited 0; 2443 modules transformed; Vite built successfully with a main-bundle size advisory (748.40 kB JS).
+SER: recalculated existing Testing 2/3 CSV metrics; no new neural inference or training.
+Testing 3: current script hash and all 200 current WAV hashes match saved run evidence.
+Synthetic questionnaire priority regression reproduced without any real user data or provider calls.
+Original audio and application/model source were not edited by this review. Build verification produced local generated frontend output.

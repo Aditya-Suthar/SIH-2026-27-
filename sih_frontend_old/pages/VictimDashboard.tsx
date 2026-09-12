@@ -121,18 +121,6 @@ const currentStageIndex = dashboardData
   const [selectedMood, setSelectedMood] = useState<WellbeingMood | null>(null);
   const [note, setNote] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [isTranscribing, setIsTranscribing] =
-  useState(false);
-
-  const mediaRecorderRef =
-    useRef<MediaRecorder | null>(null);
-
-  const audioChunksRef =
-    useRef<Blob[]>([]);
-
-  const mediaStreamRef =
-    useRef<MediaStream | null>(null);
-
   
 const [assessment, setAssessment] = useState({
   mood: 0,

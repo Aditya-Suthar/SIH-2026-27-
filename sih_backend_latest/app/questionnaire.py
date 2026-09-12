@@ -37,7 +37,7 @@ def update_victim_profile(data: schemas.VictimProfileUpdate, db: Session = Depen
     return {"date_of_birth": user.date_of_birth.isoformat(), "age_group": age_group(user.date_of_birth)}
 
 
-@router.get("/questionnaire")
+@router.post("/questionnaire")
 def next_questionnaire(db: Session = Depends(get_db),
                        current_user: dict = Depends(get_current_user)):
     user, case = victim_context(db, current_user)
@@ -77,6 +77,16 @@ def next_questionnaire(db: Session = Depends(get_db),
             "notice":"This is a project-specific distress-monitoring check-in, not a medical diagnosis."}
 
 
+@router.get("/questionnaire")
+def read_questionnaire(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    user, case = victim_context(db, current_user)
+    session = db.query(models.QuestionnaireSession).filter_by(victim_id=user.id, case_id=case.id).order_by(
+        models.QuestionnaireSession.created_at.desc()).first()
+    if session is None:
+        raise HTTPException(404, 'No questionnaire started. Start a check-in first.')
+    return {'questionnaire_id':session.id,'status':session.status,'assessment_id':session.assessment_id}
+
+
 def assessment_values(result):
     domains = result["domain_scores"]
     scale = lambda name: min(4, max(0, round(domains.get(name, 0)/25)))
@@ -95,6 +105,8 @@ def record_safety_signal(data: schemas.QuestionnaireSafetySignal, db: Session = 
     question = BY_ID.get(data.question_id)
     if session is None or session.victim_id != user.id or session.case_id != case.id:
         raise HTTPException(404, "Questionnaire not found")
+    if session.status == 'completed':
+        raise HTTPException(409, 'Questionnaire is already complete')
     allowed = set(session.selected_question_ids) | set(session.triggered_follow_up_ids or [])
     if question is None or question.id not in allowed or not question.critical:
         raise HTTPException(422, "This is not an available safety question")
@@ -113,7 +125,7 @@ def record_safety_signal(data: schemas.QuestionnaireSafetySignal, db: Session = 
         assessment = db.get(models.Assessment, session.assessment_id)
         assessment.risk_level = result["risk_level"]
         assessment.self_harm_thoughts = values["self_harm_thoughts"]
-    update_from_assessment(case, assessment); ensure_indicator(db, case); db.commit()
+    update_from_assessment(case, assessment); ensure_indicator(db, case, update_existing=True); db.commit()
     return {"recorded":True, "risk_level":result["risk_level"],
             "safety_flags":result["safety_flags"],
             "triggered_followups":[public_question(q) for q in triggered_followups(merged, session.selected_question_ids)]}
@@ -177,7 +189,7 @@ def submit_questionnaire(data: schemas.QuestionnaireSubmit, db: Session = Depend
             assessment.note = data.note
     update_from_assessment(case, assessment)
     case.last_assessment = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
-    ensure_indicator(db, case)
+    ensure_indicator(db, case, update_existing=True)
     analysis_id = None
     note = (assessment.note or '').strip()
     if note and session.status in ("followup","completed") and not db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first():

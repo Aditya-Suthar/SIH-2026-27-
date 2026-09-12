@@ -1,0 +1,27 @@
+TESTING 2 — LARGE-SAMPLE SPEECH EMOTION RECOGNITION EVALUATION
+
+Model: superb/wav2vec2-base-superb-er
+Total Samples: 200
+Samples per emotion: 50
+
+Overall Accuracy: 44.50%
+Average Confidence: 76.25%
+
+Per-Emotion Accuracy:
+Neutral: 64.00%
+Happy: 16.00%
+Sad: 4.00%
+Angry: 94.00%
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+     neutral       0.60      0.64      0.62        50
+       happy       0.25      0.16      0.20        50
+         sad       1.00      0.04      0.08        50
+       angry       0.42      0.94      0.58        50
+
+    accuracy                           0.45       200
+   macro avg       0.57      0.45      0.37       200
+weighted avg       0.57      0.45      0.37       200

@@ -106,7 +106,7 @@ def indicator_values(case, state=None):
     }
 
 
-def ensure_indicator(db, case):
+def ensure_indicator(db, case, *, update_existing=False):
     values = indicator_values(case)
     if values is None:
         return None
@@ -125,6 +125,8 @@ def ensure_indicator(db, case):
             case_id=case.id, fingerprint=values["fingerprint"]
         ).first()
     if existing is not None:
+        if not update_existing:
+            return existing
         # The same in-progress questionnaire may gain a calculated score after
         # its immediate safety signal. Update its one snapshot atomically.
         for key, value in values.items():

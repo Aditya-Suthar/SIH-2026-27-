@@ -44,27 +44,8 @@ def repair(bind):
             if row.assessment_id is not None:
                 grouped.setdefault((row.case_id, row.assessment_id), []).append(row)
 
-        for (_, assessment_id), rows in grouped.items():
-            assessment = session.get(models.Assessment, assessment_id)
-            if assessment is None:
-                continue
-            matching = [row for row in rows if row.current_score == assessment.distress_score]
-            keep = max(matching or rows, key=lambda row: row.id)
-            for row in rows:
-                if row is not keep:
-                    session.delete(row)
-            session.flush()
-            keep.current_score = assessment.distress_score
-            keep.fingerprint = f"authoritative:questionnaire:{assessment.id}"
-            if keep.severity == "URGENT" and assessment.self_harm_thoughts >= 3:
-                keep.reason = "Critical safety override triggered by the questionnaire response."
-            else:
-                score = f" ({assessment.distress_score}/100)" if assessment.distress_score is not None else ""
-                keep.reason = f"Current authoritative risk is {assessment.risk_level}{score}."
-
-        for row in session.query(models.MonitoringIndicator).filter_by(source="text_ai"):
-            if row.analysis_id is not None:
-                row.fingerprint = f"authoritative:text_ai:{row.analysis_id}"
+        # Existing snapshots and acknowledgements are historical evidence.
+        # Only backfill source links; never delete or rescore history on deploy.
         session.commit()
     except Exception:
         session.rollback()

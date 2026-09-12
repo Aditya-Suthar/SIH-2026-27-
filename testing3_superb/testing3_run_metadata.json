@@ -1,0 +1,39 @@
+{
+  "model": "superb/wav2vec2-base-superb-er",
+  "preprocessing": "none",
+  "seed": 42,
+  "sample_source": "Existing CSV: C:\\Users\\s9416\\OneDrive\\Desktop\\SIH CODE\\SIH-2026-27-\\testing2_results.csv",
+  "same_testing2_filenames": true,
+  "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "script_sha256": "05650b7f9ac3147ece82183448e381cc98817f6dfb69099dc7a69b4903754d2e",
+  "arguments": {
+    "dataset_dir": "datasets",
+    "testing2_csv": null,
+    "new_sample_set": false,
+    "model": "superb",
+    "preprocess": "none",
+    "device": "cpu",
+    "threads": 4,
+    "revision": "main",
+    "base_revision": "main",
+    "output_dir": "testing3_superb",
+    "audit_only": false
+  },
+  "confidence_unit": "percent (0-100)",
+  "software_versions": {
+    "torch": "2.14.0",
+    "torchaudio": "2.11.0",
+    "speechbrain": "1.1.1",
+    "transformers": "5.17.0",
+    "huggingface-hub": "1.31.0",
+    "librosa": "1.0.0",
+    "soundfile": "0.14.0",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.1",
+    "soxr": "1.1.0"
+  },
+  "manifest_sha256": "e5c82ea066511e78f6a6e997116be0374bc017e2b177663a9888c0e503e61e71"
+}

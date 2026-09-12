@@ -1,0 +1,265 @@
+TESTING 3 - CROSS-CORPUS SPEECH EMOTION RECOGNITION
+Model: speechbrain/emotion-recognition-wav2vec2-IEMOCAP
+Preprocessing: none
+Sample source: Existing CSV: C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing2_results.csv
+Same filename set as supplied Testing 2: True
+Filename equality does not prove historical byte identity (no old audio hashes supplied).
+Total samples: 200
+Correct predictions: 61
+Incorrect predictions: 139
+Overall accuracy: 30.50%
+Balanced accuracy (macro recall): 30.50%
+Balanced accuracy equals overall accuracy here because each class has 50 cases.
+
+Emotion       Precision      Recall          F1    Support
+neutral        0.416667    0.100000    0.161290         50
+happy          0.428571    0.120000    0.187500         50
+sad            0.000000    0.000000    0.000000         50
+angry          0.287356    1.000000    0.446429         50
+Macro precision: 0.283149
+Macro recall: 0.305000
+Macro F1: 0.198805
+Weighted F1: 0.198805
+Precision for an unpredicted class is undefined and reported as zero.
+
+Per-emotion accuracy = class recall:
+neutral   : 5/50 = 10.00%
+happy     : 6/50 = 12.00%
+sad       : 0/50 = 0.00%
+angry     : 50/50 = 100.00%
+
+Average confidence: 99.0364%
+Average confidence, correct: 99.0689%
+Average confidence, incorrect: 99.0221%
+Confidence = uncalibrated maximum softmax probability; not probability of being correct.
+
+Prediction distribution:
+neutral   :  12/200 (6.00%)
+happy     :  14/200 (7.00%)
+sad       :   0/200 (0.00%)
+angry     : 174/200 (87.00%)
+
+Confusion matrix: rows actual, columns predicted; neutral, happy, sad, angry
+[[ 5  0  0 45]
+ [ 0  6  0 44]
+ [ 7  8  0 35]
+ [ 0  0  0 50]]
+
+BASELINE TESTING 2
+Accuracy: 44.50%
+Macro F1: 0.37 (rounded reported value)
+
+NEW TEST
+Accuracy: 30.50%
+Macro F1: 0.198805
+Accuracy improvement: -14.00 percentage points
+Macro F1 improvement: -0.171195 (versus rounded 0.37)
+Exact baseline macro F1 from supplied matrix: 0.367523
+Macro F1 improvement versus exact baseline: -0.168718
+Comparison: paired by filename.
+
+Emotion       Old Recall     New Recall
+neutral          64.00%         10.00%
+happy            16.00%         12.00%
+sad               4.00%          0.00%
+angry            94.00%        100.00%
+
+High-confidence errors (>=90%): 134
+Case 016: 03-01-04-02-01-01-14.wav | sad -> angry | 100.000000%
+Case 017: 03-01-01-01-01-01-05.wav | neutral -> angry | 100.000000%
+Case 018: 03-01-03-01-02-02-06.wav | happy -> angry | 100.000000%
+Case 020: 03-01-01-01-01-02-07.wav | neutral -> angry | 100.000000%
+Case 021: 03-01-01-01-02-01-06.wav | neutral -> angry | 100.000000%
+Case 023: 03-01-03-02-02-01-20.wav | happy -> angry | 100.000000%
+Case 028: 03-01-01-01-02-01-10.wav | neutral -> angry | 100.000000%
+Case 029: 03-01-04-02-02-01-13.wav | sad -> angry | 100.000000%
+Case 030: 03-01-03-01-01-02-13.wav | happy -> angry | 100.000000%
+Case 032: 03-01-04-01-01-01-09.wav | sad -> neutral | 100.000000%
+Case 033: 03-01-01-01-02-01-20.wav | neutral -> angry | 100.000000%
+Case 034: 03-01-03-01-02-01-12.wav | happy -> angry | 100.000000%
+Case 039: 03-01-04-02-02-02-18.wav | sad -> angry | 100.000000%
+Case 040: 03-01-03-01-01-01-22.wav | happy -> angry | 100.000000%
+Case 041: 03-01-01-01-01-01-06.wav | neutral -> angry | 100.000000%
+Case 042: 03-01-03-01-02-01-03.wav | happy -> angry | 100.000000%
+Case 044: 03-01-03-01-01-01-08.wav | happy -> angry | 100.000000%
+Case 045: 03-01-03-02-02-01-08.wav | happy -> angry | 100.000000%
+Case 048: 03-01-03-02-01-02-22.wav | happy -> angry | 100.000000%
+Case 052: 03-01-01-01-01-02-16.wav | neutral -> angry | 100.000000%
+Case 054: 03-01-03-02-02-01-07.wav | happy -> angry | 100.000000%
+Case 056: 03-01-01-01-01-01-07.wav | neutral -> angry | 100.000000%
+Case 058: 03-01-04-01-01-01-21.wav | sad -> angry | 100.000000%
+Case 059: 03-01-01-01-02-02-08.wav | neutral -> angry | 100.000000%
+Case 061: 03-01-03-02-01-01-23.wav | happy -> angry | 100.000000%
+Case 062: 03-01-03-01-01-01-02.wav | happy -> angry | 100.000000%
+Case 064: 03-01-01-01-01-02-02.wav | neutral -> angry | 100.000000%
+Case 066: 03-01-03-01-01-01-13.wav | happy -> angry | 100.000000%
+Case 067: 03-01-03-02-01-01-15.wav | happy -> angry | 100.000000%
+Case 069: 03-01-04-02-01-01-09.wav | sad -> happy | 100.000000%
+Case 073: 03-01-03-01-02-02-08.wav | happy -> angry | 100.000000%
+Case 075: 03-01-03-01-02-02-20.wav | happy -> angry | 100.000000%
+Case 077: 03-01-04-02-01-01-12.wav | sad -> angry | 100.000000%
+Case 082: 03-01-03-02-01-02-12.wav | happy -> angry | 100.000000%
+Case 084: 03-01-03-02-01-01-03.wav | happy -> angry | 100.000000%
+Case 087: 03-01-03-02-01-02-07.wav | happy -> angry | 100.000000%
+Case 090: 03-01-01-01-02-02-03.wav | neutral -> angry | 100.000000%
+Case 091: 03-01-03-02-02-01-24.wav | happy -> angry | 100.000000%
+Case 092: 03-01-03-02-01-01-19.wav | happy -> angry | 100.000000%
+Case 094: 03-01-03-01-01-02-04.wav | happy -> angry | 100.000000%
+Case 096: 03-01-03-01-02-02-02.wav | happy -> angry | 100.000000%
+Case 097: 03-01-04-02-02-02-15.wav | sad -> angry | 100.000000%
+Case 098: 03-01-01-01-01-02-05.wav | neutral -> angry | 100.000000%
+Case 099: 03-01-04-02-02-02-16.wav | sad -> angry | 100.000000%
+Case 100: 03-01-01-01-02-01-15.wav | neutral -> angry | 100.000000%
+Case 101: 03-01-03-02-01-01-21.wav | happy -> angry | 100.000000%
+Case 104: 03-01-03-02-02-01-13.wav | happy -> angry | 100.000000%
+Case 105: 03-01-03-02-02-01-12.wav | happy -> angry | 100.000000%
+Case 106: 03-01-01-01-01-02-04.wav | neutral -> angry | 100.000000%
+Case 108: 03-01-01-01-02-01-02.wav | neutral -> angry | 100.000000%
+Case 112: 03-01-03-01-02-01-23.wav | happy -> angry | 100.000000%
+Case 114: 03-01-04-02-02-02-14.wav | sad -> angry | 100.000000%
+Case 115: 03-01-04-02-02-01-16.wav | sad -> angry | 100.000000%
+Case 116: 03-01-03-01-01-01-11.wav | happy -> angry | 100.000000%
+Case 117: 03-01-03-01-02-02-11.wav | happy -> angry | 100.000000%
+Case 119: 03-01-01-01-01-02-06.wav | neutral -> angry | 100.000000%
+Case 122: 03-01-04-02-02-02-21.wav | sad -> angry | 100.000000%
+Case 126: 03-01-01-01-01-02-21.wav | neutral -> angry | 100.000000%
+Case 130: 03-01-04-02-01-02-13.wav | sad -> angry | 100.000000%
+Case 132: 03-01-04-02-01-01-04.wav | sad -> angry | 100.000000%
+Case 137: 03-01-01-01-01-02-14.wav | neutral -> angry | 100.000000%
+Case 139: 03-01-01-01-02-01-14.wav | neutral -> angry | 100.000000%
+Case 141: 03-01-04-02-01-02-14.wav | sad -> angry | 100.000000%
+Case 152: 03-01-01-01-02-02-02.wav | neutral -> angry | 100.000000%
+Case 153: 03-01-03-01-02-01-08.wav | happy -> angry | 100.000000%
+Case 156: 03-01-04-02-01-01-21.wav | sad -> happy | 100.000000%
+Case 158: 03-01-01-01-01-02-15.wav | neutral -> angry | 100.000000%
+Case 163: 03-01-03-02-02-01-02.wav | happy -> angry | 100.000000%
+Case 164: 03-01-04-01-01-02-18.wav | sad -> angry | 100.000000%
+Case 168: 03-01-04-02-01-02-15.wav | sad -> angry | 100.000000%
+Case 171: 03-01-04-02-02-02-03.wav | sad -> happy | 100.000000%
+Case 173: 03-01-04-02-01-01-15.wav | sad -> angry | 100.000000%
+Case 174: 03-01-01-01-01-01-23.wav | neutral -> angry | 100.000000%
+Case 175: 03-01-04-02-01-02-04.wav | sad -> angry | 100.000000%
+Case 176: 03-01-03-01-01-01-21.wav | happy -> angry | 100.000000%
+Case 183: 03-01-03-02-02-01-15.wav | happy -> angry | 100.000000%
+Case 184: 03-01-01-01-02-01-22.wav | neutral -> angry | 100.000000%
+Case 185: 03-01-01-01-01-02-08.wav | neutral -> angry | 100.000000%
+Case 192: 03-01-03-02-01-01-12.wav | happy -> angry | 100.000000%
+Case 194: 03-01-03-01-01-02-07.wav | happy -> angry | 100.000000%
+Case 195: 03-01-04-02-02-02-11.wav | sad -> happy | 100.000000%
+Case 197: 03-01-01-01-01-01-08.wav | neutral -> angry | 100.000000%
+Case 199: 03-01-01-01-02-02-07.wav | neutral -> angry | 100.000000%
+Case 200: 03-01-03-01-02-02-19.wav | happy -> angry | 100.000000%
+Case 055: 03-01-04-02-01-01-02.wav | sad -> angry | 99.999988%
+Case 089: 03-01-04-02-01-02-18.wav | sad -> angry | 99.999988%
+Case 191: 03-01-01-01-02-01-04.wav | neutral -> angry | 99.999988%
+Case 011: 03-01-04-02-01-01-23.wav | sad -> neutral | 99.999976%
+Case 035: 03-01-04-01-01-01-22.wav | sad -> angry | 99.999976%
+Case 050: 03-01-01-01-02-02-05.wav | neutral -> angry | 99.999976%
+Case 159: 03-01-01-01-01-01-02.wav | neutral -> angry | 99.999976%
+Case 095: 03-01-03-01-02-01-10.wav | happy -> angry | 99.999964%
+Case 179: 03-01-03-01-02-01-21.wav | happy -> angry | 99.999964%
+Case 083: 03-01-04-01-01-01-20.wav | sad -> happy | 99.999928%
+Case 024: 03-01-01-01-01-02-18.wav | neutral -> angry | 99.999905%
+Case 118: 03-01-04-01-02-01-13.wav | sad -> angry | 99.999905%
+Case 170: 03-01-03-01-01-02-22.wav | happy -> angry | 99.999893%
+Case 181: 03-01-04-01-01-02-13.wav | sad -> angry | 99.999869%
+Case 003: 03-01-04-01-02-02-09.wav | sad -> neutral | 99.999845%
+Case 166: 03-01-01-01-02-01-23.wav | neutral -> angry | 99.999845%
+Case 146: 03-01-01-01-02-01-12.wav | neutral -> angry | 99.999785%
+Case 160: 03-01-04-01-02-01-17.wav | sad -> angry | 99.999750%
+Case 060: 03-01-04-01-01-01-06.wav | sad -> angry | 99.999523%
+Case 022: 03-01-04-01-02-02-05.wav | sad -> angry | 99.999285%
+Case 025: 03-01-04-01-02-02-21.wav | sad -> angry | 99.999011%
+Case 010: 03-01-04-02-01-02-21.wav | sad -> happy | 99.998629%
+Case 172: 03-01-04-01-01-01-01.wav | sad -> angry | 99.997544%
+Case 187: 03-01-01-01-01-02-22.wav | neutral -> angry | 99.997330%
+Case 180: 03-01-03-01-01-02-03.wav | happy -> angry | 99.996698%
+Case 148: 03-01-01-01-01-01-13.wav | neutral -> angry | 99.989831%
+Case 085: 03-01-01-01-02-02-11.wav | neutral -> angry | 99.986875%
+Case 149: 03-01-04-01-02-02-23.wav | sad -> neutral | 99.984729%
+Case 074: 03-01-03-01-01-01-18.wav | happy -> angry | 99.959415%
+Case 007: 03-01-04-01-01-02-24.wav | sad -> angry | 99.945050%
+Case 076: 03-01-03-01-02-02-10.wav | happy -> angry | 99.941754%
+Case 031: 03-01-04-01-01-01-17.wav | sad -> happy | 99.930239%
+Case 015: 03-01-01-01-01-02-24.wav | neutral -> angry | 99.926883%
+Case 154: 03-01-01-01-01-01-01.wav | neutral -> angry | 99.922013%
+Case 068: 03-01-04-02-01-02-19.wav | sad -> angry | 99.881762%
+Case 142: 03-01-01-01-02-02-24.wav | neutral -> angry | 99.714965%
+Case 123: 03-01-04-01-02-02-10.wav | sad -> angry | 99.686545%
+Case 162: 03-01-04-02-02-02-08.wav | sad -> happy | 99.670702%
+Case 013: 03-01-04-01-01-01-08.wav | sad -> neutral | 99.603915%
+Case 002: 03-01-04-01-01-01-03.wav | sad -> angry | 99.592870%
+Case 009: 03-01-04-02-01-02-23.wav | sad -> neutral | 99.437112%
+Case 026: 03-01-01-01-02-01-01.wav | neutral -> angry | 99.366599%
+Case 177: 03-01-04-02-02-02-05.wav | sad -> angry | 99.257106%
+Case 063: 03-01-01-01-02-02-21.wav | neutral -> angry | 99.206007%
+Case 161: 03-01-04-02-01-01-05.wav | sad -> angry | 99.175596%
+Case 081: 03-01-01-01-01-02-19.wav | neutral -> angry | 98.907530%
+Case 150: 03-01-04-01-02-01-01.wav | sad -> neutral | 98.650324%
+Case 005: 03-01-01-01-02-02-19.wav | neutral -> angry | 97.228426%
+Case 093: 03-01-01-01-02-02-18.wav | neutral -> angry | 96.761483%
+Case 070: 03-01-01-01-01-01-24.wav | neutral -> angry | 96.641088%
+
+INTERPRETATION
+No prediction correction, class-prior adjustment, calibration or sample exclusion was used.
+Domain shift is a plausible explanation, not a demonstrated sole cause.
+Report all attempted models/ablations; do not select a final accuracy on this same set.
+A fresh actor-disjoint evaluation is needed after model/preprocessing selection.
+This experiment does not validate clinical distress prediction.
+
+RUN METADATA
+{
+  "model": "speechbrain/emotion-recognition-wav2vec2-IEMOCAP",
+  "preprocessing": "none",
+  "seed": 42,
+  "sample_source": "Existing CSV: C:\\Users\\s9416\\OneDrive\\Desktop\\SIH CODE\\SIH-2026-27-\\testing2_results.csv",
+  "same_testing2_filenames": true,
+  "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "script_sha256": "801e103fcca01e51197a5c107978897b14af69826190449ed66b2ad840566374",
+  "arguments": {
+    "dataset_dir": "datasets",
+    "testing2_csv": null,
+    "new_sample_set": false,
+    "model": "speechbrain",
+    "preprocess": "none",
+    "device": "cpu",
+    "threads": 4,
+    "revision": "main",
+    "base_revision": "main",
+    "output_dir": "testing3_output",
+    "audit_only": false
+  },
+  "confidence_unit": "percent (0-100)",
+  "software_versions": {
+    "torch": "2.14.0",
+    "torchaudio": "2.11.0",
+    "speechbrain": "1.1.1",
+    "transformers": "5.17.0",
+    "huggingface-hub": "1.31.0",
+    "librosa": "1.0.0",
+    "soundfile": "0.14.0",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.1",
+    "soxr": "1.1.0"
+  },
+  "manifest_sha256": "e5c82ea066511e78f6a6e997116be0374bc017e2b177663a9888c0e503e61e71",
+  "device": "cpu",
+  "threads": 4,
+  "resolved_revision": "117a9c3dff08be81a3628eecf6a66b547ec1659b",
+  "sample_rate": 16000,
+  "training_provenance": "Documented IEMOCAP SER training; no documented RAVDESS training",
+  "base_model_revision": "0b5b8e868dd84f03fd87d01f9c4ff0f080fecfe8",
+  "input_normalization": true,
+  "output_normalization": true,
+  "parameter_count": 94374784,
+  "index_to_label": {
+    "0": "neutral",
+    "1": "angry",
+    "2": "happy",
+    "3": "sad"
+  },
+  "elapsed_seconds": 210.84480529999928
+}

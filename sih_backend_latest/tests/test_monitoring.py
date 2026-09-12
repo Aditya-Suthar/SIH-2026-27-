@@ -171,6 +171,57 @@ class ChatMonitoringTests(unittest.TestCase):
         self.assertEqual(history[0]['distress_score'],78)
         self.assertIsNotNone(history[0]['message_id'])
 
+    def test_questionnaire_and_ai_are_separate_and_null_safety_state_is_preserved(self):
+        self.send()
+        with self.Session.begin() as db:
+            a=models.Assessment(case_id=10,mood=0,anxiety=0,sleep=0,hopelessness=0,
+                social_withdrawal=0,self_harm_thoughts=4,distress_score=None,risk_level='Critical',
+                created_at=datetime.now(timezone.utc).isoformat())
+            db.add(a);db.flush()
+            from app.case_state import update_from_assessment
+            update_from_assessment(db.get(models.Case,10),a)
+        result=self.detail().json()
+        self.assertIsNone(result['current_score'])
+        self.assertEqual(result['current_source'],'questionnaire')
+        self.assertIsNone(result['current_questionnaire']['score'])
+        self.assertTrue(result['current_questionnaire']['safety_override'])
+        self.assertEqual(result['latest_analysis']['distress_score'],78)
+        self.assertNotIn('note',result['current_questionnaire'])
+
+    def test_alert_gets_are_read_only_and_scope_is_enforced(self):
+        self.send()
+        with self.Session() as db:
+            before=[(r.id,r.current_score,r.reviewed_at) for r in db.query(models.MonitoringIndicator)]
+            indicator_id=before[0][0]
+        for _ in range(2):
+            for path in ('/api/support-requests','/api/monitoring/indicators','/api/monitoring/summary'):
+                self.assertEqual(self.client.get(path,headers=self.headers(5,'authority')).status_code,200)
+        self.assertEqual(self.detail(4,indicator_id=indicator_id).status_code,404)
+        self.assertEqual(self.detail(1,'victim',indicator_id=indicator_id).status_code,403)
+        with self.Session() as db:
+            self.assertEqual(before,[(r.id,r.current_score,r.reviewed_at) for r in db.query(models.MonitoringIndicator)])
+        response=self.client.post(f'/api/monitoring/indicators/{indicator_id}/review',headers=self.headers(5,'authority'))
+        self.assertEqual(response.json()['reviewed_indicator_id'],indicator_id)
+        self.assertTrue(self.detail(5,'authority',indicator_id=indicator_id).json()['selected_evidence']['reviewed'])
+
+    def test_abandoned_pending_maintenance_preserves_success_and_active_attempts(self):
+        self.send()
+        with self.Session.begin() as db:
+            for key,minutes in (('old',20),('active',1)):
+                msg=models.CaseMessage(case_id=10,victim_id=1,sender_id=1,sender_role='victim',
+                    client_message_id=str(uuid4()),content='Isolated test message')
+                db.add(msg);db.flush()
+                db.add(models.AIAnalysis(case_id=10,victim_id=1,message_id=msg.id,status='pending',
+                    created_at=datetime.now(timezone.utc)-timedelta(minutes=minutes)))
+        from app.ai_workflow import fail_abandoned_analyses
+        with self.Session() as db:
+            self.assertEqual(fail_abandoned_analyses(db),1)
+            self.assertEqual(fail_abandoned_analyses(db),0)
+            rows=db.query(models.AIAnalysis).order_by(models.AIAnalysis.id).all()
+            self.assertEqual([r.status for r in rows],['completed','failed','pending'])
+            self.assertEqual(rows[0].distress_score,78)
+            self.assertIsNone(rows[1].distress_score)
+
     def test_counsellor_and_trivial_messages_not_analyzed(self):
         self.assertEqual(self.send('How are you feeling?',3,'counsellor').status_code,200)
         for content in ('hi','okay','thanks','Thank you!','👍','...'):

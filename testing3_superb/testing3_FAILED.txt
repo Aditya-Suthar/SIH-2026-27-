@@ -1,0 +1,20 @@
+INCOMPLETE RUN: do not report partial results as Testing 3. No sample was skipped.
+
+Traceback (most recent call last):
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 720, in main
+    write_json(out / 'testing3_run_metadata.json', metadata)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 310, in write_json
+    temporary.write_text(json.dumps(obj, indent=2, ensure_ascii=False), encoding='utf-8')
+                         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\json\encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type set is not JSON serializable

@@ -46,7 +46,7 @@ def source_rows(db, case_ids, now):
 def case_view(case, rows, reviews, indicators, now, assessment=None):
     state = current_state(case)
     # Read preserved sources even when the historical case projection is empty.
-    if state['score'] is None:
+    if state['score'] is None and state['source'] in (None, 'legacy_case'):
         successful = max((r for r in rows if valid(r)), key=lambda r:(utc(r.created_at), r.id), default=None)
         if successful is not None:
             state.update(score=successful.distress_score, risk=successful.risk_level,
@@ -97,7 +97,7 @@ def monitoring_indicators(db: Session=Depends(get_db),current_user: dict=Depends
     _, query = professional_cases(db,current_user); cases=query.all()
     ids=[c.id for c in cases]; lookup={c.id:c.case_id for c in cases}
     rows=db.query(models.MonitoringIndicator).filter(models.MonitoringIndicator.case_id.in_(ids),models.MonitoringIndicator.reviewed_at.is_(None)).order_by(models.MonitoringIndicator.created_at.desc()).all() if ids else []
-    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'source_record_id':r.analysis_id if r.source=='text_ai' else r.assessment_id,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
+    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'assessment_id':r.assessment_id,'ai_analysis_id':r.analysis_id,'source_record_id':r.analysis_id if r.source=='text_ai' else r.assessment_id,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
 
 
 @router.post('/monitoring/indicators/{indicator_id}/review')
@@ -125,14 +125,26 @@ def monitoring_detail(case_id: str,indicator_id: int | None=Query(default=None,g
     history = valid_source_query(db).filter(models.AIAnalysis.case_id == case.id).order_by(models.AIAnalysis.created_at.desc(), models.AIAnalysis.id.desc()).limit(201).all()
     result['history'] = [AnalysisOut.model_validate(row).model_dump(mode='json') for row in reversed(history[:200])]
     result['history_limited'] = len(history) > 200
+    assessments = db.query(models.Assessment).filter_by(case_id=case.id).order_by(
+        models.Assessment.created_at, models.Assessment.id).all()
+    sessions = {s.assessment_id:s for s in db.query(models.QuestionnaireSession).filter_by(case_id=case.id)}
+    def questionnaire_evidence(a):
+        session = sessions.get(a.id)
+        observed = state_utc(session.completed_at if session and session.completed_at else a.created_at)
+        return {'id':a.id,'score':a.distress_score,'risk':normalized_risk(a.risk_level),
+                'observed_at':observed.isoformat() if observed else None,
+                'safety_override':bool(a.self_harm_thoughts >= 3 or (session and session.safety_flags))}
+    result['questionnaire_history'] = [questionnaire_evidence(a) for a in assessments]
+    result['current_questionnaire'] = result['questionnaire_history'][-1] if assessments else None
     result['selected_evidence'] = None
     if indicator_id is not None:
         indicator = db.query(models.MonitoringIndicator).filter_by(id=indicator_id,case_id=case.id).first()
         if indicator is None: raise HTTPException(404,'Indicator not found for this case')
-        assessment = db.get(models.Assessment, indicator.assessment_id) if indicator.assessment_id else None
-        analysis = valid_source_query(db).filter(models.AIAnalysis.id==indicator.analysis_id).first() if indicator.analysis_id else None
+        assessment = db.query(models.Assessment).filter_by(id=indicator.assessment_id,case_id=case.id).first() if indicator.assessment_id else None
+        analysis = valid_source_query(db).filter(models.AIAnalysis.id==indicator.analysis_id,models.AIAnalysis.case_id==case.id).first() if indicator.analysis_id else None
         safety_override = bool(assessment is not None and indicator.severity=='URGENT'
-                               and assessment.self_harm_thoughts >= 3)
+                               and (assessment.self_harm_thoughts >= 3 or
+                                    (sessions.get(assessment.id) and sessions[assessment.id].safety_flags)))
         result['selected_evidence'] = {
             'id':indicator.id, 'score_snapshot':indicator.current_score,
             'severity':indicator.severity, 'source':indicator.source,

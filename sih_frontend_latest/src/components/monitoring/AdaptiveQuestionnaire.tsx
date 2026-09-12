@@ -43,7 +43,7 @@ export function AdaptiveQuestionnaire({ note, disabled, onSaved }: {
   const load = useCallback(async () => {
     setLoading(true); setError("");
     try {
-      const data = await request<Questionnaire>("/api/victim/questionnaire");
+      const data = await request<Questionnaire>("/api/victim/questionnaire", {method:"POST"});
       setQuestionnaire(data); setQuestions(data.questions); setAnswers({}); setPhase("initial");
     } catch (e) { setError(e instanceof Error ? e.message : "Could not load the questionnaire."); }
     finally { setLoading(false); }

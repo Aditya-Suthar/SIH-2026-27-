@@ -130,9 +130,26 @@ class QuestionnaireMigrationTests(unittest.TestCase):
 
 
 class QuestionnaireApiTests(unittest.TestCase):
+    def test_get_does_not_start_questionnaire_and_no_note_has_no_analysis(self):
+        self.assertEqual(self.client.get('/api/victim/questionnaire').status_code,404)
+        with self.Session() as db:
+            self.assertEqual(db.query(models.QuestionnaireSession).count(),0)
+        payload=self.client.post('/api/victim/questionnaire').json()
+        request={'questionnaire_id':payload['questionnaire_id'],
+                 'answers':neutral_answers([BY_ID[q['id']] for q in payload['questions']])}
+        with patch('app.ai_service.analyze_distress',new=AsyncMock()) as analyze:
+            first=self.client.post('/api/victim/questionnaire/submit',json=request)
+            again=self.client.post('/api/victim/questionnaire/submit',json=request)
+        self.assertEqual(first.status_code,200,first.text)
+        self.assertEqual(again.status_code,200,again.text)
+        analyze.assert_not_awaited()
+        with self.Session() as db:
+            self.assertEqual(db.query(models.Assessment).count(),1)
+            self.assertEqual(db.query(models.AIAnalysis).count(),0)
+
     def test_note_after_safety_signal_is_saved_and_failure_is_durable(self):
         from app.ai_service import AIServiceUnavailable
-        payload = self.client.get('/api/victim/questionnaire').json()
+        payload = self.client.post('/api/victim/questionnaire').json()
         self.client.post('/api/victim/questionnaire/safety-signal', json={
             'questionnaire_id':payload['questionnaire_id'], 'question_id':'Q064', 'answer':1})
         answers = neutral_answers([BY_ID[q['id']] for q in payload['questions']])
@@ -151,7 +168,7 @@ class QuestionnaireApiTests(unittest.TestCase):
             self.assertIsNone(analysis.distress_score)
 
     def test_completed_submission_retry_returns_same_analysis(self):
-        payload = self.client.get('/api/victim/questionnaire').json()
+        payload = self.client.post('/api/victim/questionnaire').json()
         request = {'questionnaire_id':payload['questionnaire_id'],
                    'answers':neutral_answers([BY_ID[q['id']] for q in payload['questions']]),
                    'note':'I feel worried.'}
@@ -186,7 +203,7 @@ class QuestionnaireApiTests(unittest.TestCase):
         self.addCleanup(self.client.__exit__,None,None,None); self.addCleanup(self.engine.dispose)
 
     def test_get_submit_followup_and_persistence(self):
-        offered = self.client.get("/api/victim/questionnaire")
+        offered = self.client.post("/api/victim/questionnaire")
         self.assertEqual(offered.status_code,200,offered.text)
         payload = offered.json(); self.assertEqual((payload["age_group"],len(payload["questions"])),("18-24",12))
         immediate = self.client.post("/api/victim/questionnaire/safety-signal",json={
@@ -218,6 +235,6 @@ class QuestionnaireApiTests(unittest.TestCase):
             self.assertEqual(indicators[0].reason,"Critical safety override triggered by the questionnaire response.")
 
     def test_unselected_and_missing_core_rejected(self):
-        payload=self.client.get("/api/victim/questionnaire").json()
+        payload=self.client.post("/api/victim/questionnaire").json()
         bad=self.client.post("/api/victim/questionnaire/submit",json={"questionnaire_id":payload["questionnaire_id"],"answers":{"Q150":4}})
         self.assertEqual(bad.status_code,422)

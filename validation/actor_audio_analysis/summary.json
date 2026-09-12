@@ -1,0 +1,511 @@
+{
+  "total_files": 1440,
+  "total_minutes": 88.81595555555556,
+  "duration_range": [
+    2.9362708333333334,
+    5.2719375
+  ],
+  "formats": {
+    "48000 Hz / 1 ch / PCM_16": 1435,
+    "48000 Hz / 2 ch / PCM_16": 5
+  },
+  "clipped_files": [
+    "datasets\\Actor_10\\03-01-03-02-02-01-10.wav"
+  ],
+  "duplicates": 1,
+  "missing": [],
+  "unexpected": [],
+  "errors": [],
+  "actors": [
+    {
+      "actor": 1,
+      "clips": 60,
+      "mean_seconds": 3.7498559027777776,
+      "median_pitch_hz": 145.45454545454547,
+      "median_active_dbfs": -37.56507424849619,
+      "mean_low_energy_fraction": 0.6399772290233787,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 2,
+      "clips": 60,
+      "mean_seconds": 3.7876732638888897,
+      "median_pitch_hz": 246.21212121212122,
+      "median_active_dbfs": -34.27070221986442,
+      "mean_low_energy_fraction": 0.652570508202115,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 3,
+      "clips": 60,
+      "mean_seconds": 3.757088194444444,
+      "median_pitch_hz": 166.66666666666666,
+      "median_active_dbfs": -33.91577214462257,
+      "mean_low_energy_fraction": 0.6120934935076829,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 4,
+      "clips": 60,
+      "mean_seconds": 3.6302934027777782,
+      "median_pitch_hz": 296.2962962962963,
+      "median_active_dbfs": -31.174624674939068,
+      "mean_low_energy_fraction": 0.6526451508207658,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 5,
+      "clips": 60,
+      "mean_seconds": 3.735397222222223,
+      "median_pitch_hz": 150.472334682861,
+      "median_active_dbfs": -41.045397668898346,
+      "mean_low_energy_fraction": 0.6507368039193893,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 6,
+      "clips": 60,
+      "mean_seconds": 3.7854472222222224,
+      "median_pitch_hz": 260.2150537634409,
+      "median_active_dbfs": -41.80628653173493,
+      "mean_low_energy_fraction": 0.6058349965005149,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 7,
+      "clips": 60,
+      "mean_seconds": 3.7493010416666666,
+      "median_pitch_hz": 164.1156462585034,
+      "median_active_dbfs": -39.08004531109833,
+      "mean_low_energy_fraction": 0.607555065223872,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 8,
+      "clips": 60,
+      "mean_seconds": 3.7265003472222222,
+      "median_pitch_hz": 216.21621621621622,
+      "median_active_dbfs": -38.31730163583133,
+      "mean_low_energy_fraction": 0.6338103127249562,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 9,
+      "clips": 60,
+      "mean_seconds": 3.4884857638888884,
+      "median_pitch_hz": 108.84857460199926,
+      "median_active_dbfs": -48.969271152850254,
+      "mean_low_energy_fraction": 0.6222113054091352,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 10,
+      "clips": 60,
+      "mean_seconds": 3.747631944444444,
+      "median_pitch_hz": 235.2941176470588,
+      "median_active_dbfs": -30.914744347161953,
+      "mean_low_energy_fraction": 0.6030812673939724,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 11,
+      "clips": 60,
+      "mean_seconds": 3.4389930555555552,
+      "median_pitch_hz": 158.4313725490196,
+      "median_active_dbfs": -35.682699829965046,
+      "mean_low_energy_fraction": 0.6113493409262307,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 12,
+      "clips": 60,
+      "mean_seconds": 3.7531954861111116,
+      "median_pitch_hz": 230.25210084033614,
+      "median_active_dbfs": -35.275322615199904,
+      "mean_low_energy_fraction": 0.6173671491876784,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 13,
+      "clips": 60,
+      "mean_seconds": 3.3283246527777783,
+      "median_pitch_hz": 140.35087719298247,
+      "median_active_dbfs": -40.42909287552078,
+      "mean_low_energy_fraction": 0.6380821205445207,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 14,
+      "clips": 60,
+      "mean_seconds": 3.6792298611111116,
+      "median_pitch_hz": 266.6666666666667,
+      "median_active_dbfs": -39.06657421604648,
+      "mean_low_energy_fraction": 0.6604995033581219,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 15,
+      "clips": 60,
+      "mean_seconds": 3.499608333333333,
+      "median_pitch_hz": 142.85714285714286,
+      "median_active_dbfs": -35.114355027464136,
+      "mean_low_energy_fraction": 0.6318412285161554,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 16,
+      "clips": 60,
+      "mean_seconds": 3.7303927083333335,
+      "median_pitch_hz": 228.57142857142858,
+      "median_active_dbfs": -34.373198096239996,
+      "mean_low_energy_fraction": 0.6591693117851134,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 17,
+      "clips": 60,
+      "mean_seconds": 3.669779166666667,
+      "median_pitch_hz": 155.35444947209652,
+      "median_active_dbfs": -31.438765912610048,
+      "mean_low_energy_fraction": 0.6652690567255487,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 18,
+      "clips": 60,
+      "mean_seconds": 3.7493020833333333,
+      "median_pitch_hz": 250.0,
+      "median_active_dbfs": -34.84964680434612,
+      "mean_low_energy_fraction": 0.6404543610041471,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 19,
+      "clips": 60,
+      "mean_seconds": 3.8710913194444445,
+      "median_pitch_hz": 164.1156462585034,
+      "median_active_dbfs": -39.96688743918757,
+      "mean_low_energy_fraction": 0.6013458180540798,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 20,
+      "clips": 60,
+      "mean_seconds": 3.725944791666667,
+      "median_pitch_hz": 254.03225806451613,
+      "median_active_dbfs": -40.431384411999986,
+      "mean_low_energy_fraction": 0.6568486747358733,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 21,
+      "clips": 60,
+      "mean_seconds": 3.923363541666667,
+      "median_pitch_hz": 137.9515416243707,
+      "median_active_dbfs": -32.35304496275188,
+      "mean_low_energy_fraction": 0.6382307725020996,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 22,
+      "clips": 60,
+      "mean_seconds": 3.721496875,
+      "median_pitch_hz": 210.52631578947367,
+      "median_active_dbfs": -35.461298051127045,
+      "mean_low_energy_fraction": 0.6328599273423915,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 23,
+      "clips": 60,
+      "mean_seconds": 3.6141649305555554,
+      "median_pitch_hz": 175.84541062801932,
+      "median_active_dbfs": -34.39448065435021,
+      "mean_low_energy_fraction": 0.6700323522228387,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    },
+    {
+      "actor": 24,
+      "clips": 60,
+      "mean_seconds": 3.953394444444444,
+      "median_pitch_hz": 254.03225806451613,
+      "median_active_dbfs": -33.80202561160495,
+      "mean_low_energy_fraction": 0.6522765938066304,
+      "emotion_counts": {
+        "neutral": 4,
+        "calm": 8,
+        "happy": 8,
+        "sad": 8,
+        "angry": 8,
+        "fearful": 8,
+        "disgust": 8,
+        "surprised": 8
+      }
+    }
+  ],
+  "emotions": [
+    {
+      "emotion": "neutral",
+      "clips": 96,
+      "median_pitch_hz": 172.06290471785383,
+      "median_active_dbfs": -42.98834354569004,
+      "mean_seconds": 3.503152777777778
+    },
+    {
+      "emotion": "calm",
+      "clips": 192,
+      "median_pitch_hz": 160.0640256102441,
+      "median_active_dbfs": -44.95889251482639,
+      "mean_seconds": 3.7958062065972222
+    },
+    {
+      "emotion": "happy",
+      "clips": 192,
+      "median_pitch_hz": 235.2941176470588,
+      "median_active_dbfs": -31.833063557547927,
+      "mean_seconds": 3.6381825086805555
+    },
+    {
+      "emotion": "sad",
+      "clips": 192,
+      "median_pitch_hz": 195.1219512195122,
+      "median_active_dbfs": -40.26325310288349,
+      "mean_seconds": 3.694489583333333
+    },
+    {
+      "emotion": "angry",
+      "clips": 192,
+      "median_pitch_hz": 250.0,
+      "median_active_dbfs": -25.116045817008924,
+      "mean_seconds": 3.8714037543402777
+    },
+    {
+      "emotion": "fearful",
+      "clips": 192,
+      "median_pitch_hz": 258.06451612903226,
+      "median_active_dbfs": -29.89769505136142,
+      "mean_seconds": 3.574230902777778
+    },
+    {
+      "emotion": "disgust",
+      "clips": 192,
+      "median_pitch_hz": 195.1219512195122,
+      "median_active_dbfs": -36.983951905873795,
+      "mean_seconds": 3.941784722222222
+    },
+    {
+      "emotion": "surprised",
+      "clips": 192,
+      "median_pitch_hz": 242.42424242424244,
+      "median_active_dbfs": -33.753337299231404,
+      "mean_seconds": 3.487512044270833
+    }
+  ]
+}

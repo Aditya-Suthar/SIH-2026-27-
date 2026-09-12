@@ -1,0 +1,8 @@
+case_number,filename,actual,predicted,confidence,correct
+1,03-01-05-01-02-02-07.wav,angry,angry,100.0,True
+2,03-01-04-01-01-01-03.wav,sad,angry,99.5928704738617,False
+3,03-01-04-01-02-02-09.wav,sad,neutral,99.99984502792358,False
+4,03-01-03-02-01-01-09.wav,happy,happy,99.99998807907104,True
+5,03-01-01-01-02-02-19.wav,neutral,angry,97.22842574119568,False
+6,03-01-01-01-02-02-01.wav,neutral,neutral,73.07866215705872,True
+7,03-01-04-01-01-02-24.wav,sad,angry,99.94505047798157,False

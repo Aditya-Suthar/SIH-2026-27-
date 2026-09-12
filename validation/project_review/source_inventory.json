@@ -1,0 +1,1943 @@
+{
+  "files": [
+    {
+      "path": "evaluate_ravdess.py",
+      "lines": 314,
+      "sha256": "59b49c973ed526d8625db34393c07541e9c7aed72185b2881c73d6b23db073e5",
+      "definitions": [
+        "predict_file"
+      ]
+    },
+    {
+      "path": "evaluate_ravdess_testing2.py",
+      "lines": 591,
+      "sha256": "5049db4b613fb91750ffeec310d5e86334dafcedbfafabea97c34e9e82d85a6d",
+      "definitions": [
+        "normalize_label",
+        "predict_emotion"
+      ]
+    },
+    {
+      "path": "IMPLEMENTATION_REPORT.md",
+      "lines": 181,
+      "sha256": "c3b3d3b8f995c9c8528dfb560ac5cc1adc8d06c9ae46d2b93a3d823fe4c73b38"
+    },
+    {
+      "path": "README.md",
+      "lines": 136,
+      "sha256": "8e04b14d0f5cf1e2ae00f207c5d1f730d49616332c8fe20bda83d1e41ecf4e92"
+    },
+    {
+      "path": "START_HERE.md",
+      "lines": 95,
+      "sha256": "80c240f0cd8c982531b52b631469b88fee63c25cf43ce96a9bfbdab2a91110a2"
+    },
+    {
+      "path": "testing2_summary.txt",
+      "lines": 27,
+      "sha256": "6a44c9c1396c667f52df2954171a5c6993c86215175c501037042fb336e61721"
+    },
+    {
+      "path": "testing3_ser.py",
+      "lines": 784,
+      "sha256": "801e103fcca01e51197a5c107978897b14af69826190449ed66b2ad840566374",
+      "definitions": [
+        "filename_only",
+        "ravdess_label",
+        "canonical_label",
+        "sha256_file",
+        "json_safe",
+        "write_json",
+        "choose_samples",
+        "load_audio",
+        "load_predictor",
+        "summarize",
+        "save_plots",
+        "main"
+      ]
+    },
+    {
+      "path": "testing4_ser.py",
+      "lines": 2,
+      "sha256": "6ef0862a0a82c7c84bd38f7a3e0a5319816fda0294b110a6ec578c6e60305351",
+      "definitions": []
+    },
+    {
+      "path": "VOICE_IMPLEMENTATION.md",
+      "lines": 56,
+      "sha256": "de4ed455f2bc44173278c67f1a1ae02f2bc5dbaaf22e2244600e14f48d4d2a98"
+    },
+    {
+      "path": "sih_backend/README.md",
+      "lines": 32,
+      "sha256": "489c403a5958ddecf87fda1f8165659a2bff5594292a4ce611b7773a87a10444"
+    },
+    {
+      "path": "sih_backend/requirements.txt",
+      "lines": 19,
+      "sha256": "249de54cc13ecfb3b78d9eb4c4084b3cd50e9ab207dace4070561d346167b6fa"
+    },
+    {
+      "path": "sih_backend_latest/AI_PROMPT2.md",
+      "lines": 308,
+      "sha256": "a90fe1a03e1e4e71f9e7c0e0f376da505500d1a5c1885fb8271ef82d143259f5"
+    },
+    {
+      "path": "sih_backend_latest/AI_SETUP.md",
+      "lines": 191,
+      "sha256": "aa3f96e2e181d499764ccf2f374ce50d0c42adf8a9911115fef89e53959bc9f0"
+    },
+    {
+      "path": "sih_backend_latest/requirements.txt",
+      "lines": 15,
+      "sha256": "274715a9a8ed88fd0628eb09b600628625f145b663fcddd57f4da86c2482379a"
+    },
+    {
+      "path": "sih_backend_newai/AI_PROMPT2.md",
+      "lines": 308,
+      "sha256": "a90fe1a03e1e4e71f9e7c0e0f376da505500d1a5c1885fb8271ef82d143259f5"
+    },
+    {
+      "path": "sih_backend_newai/AI_SETUP.md",
+      "lines": 191,
+      "sha256": "aa3f96e2e181d499764ccf2f374ce50d0c42adf8a9911115fef89e53959bc9f0"
+    },
+    {
+      "path": "sih_backend_newai/emotion_test.py",
+      "lines": 32,
+      "sha256": "a113d4109066adf0d3dd3ececa9bd71f150123f76b26ac0991fe440f9067d23e",
+      "definitions": []
+    },
+    {
+      "path": "sih_backend_newai/requirements.txt",
+      "lines": 15,
+      "sha256": "8e3c85122774d17a27fdfcc488e5cdf9153e0a21a7aeb1d409a1d6de2234c9a1"
+    },
+    {
+      "path": "sih_backend_newai/speechbrain_test.py",
+      "lines": 11,
+      "sha256": "7a1daf6b71c38fcc4b459bfa952ef30d2a0cb242f9b81d2bf641b43e2e42dce1",
+      "definitions": []
+    },
+    {
+      "path": "sih_backend_newai/test_voice.py",
+      "lines": 40,
+      "sha256": "2c8fdbd6c6b5d01997a0bb0be3b0bddbb47ef402facb7c27d3649b7f8147589e",
+      "definitions": [
+        "predict_voice"
+      ]
+    },
+    {
+      "path": "sih_frontend/index.html",
+      "lines": 16,
+      "sha256": "fb2f8425dad317b27608ba34789253f6d497097c6c67a3ff05b4e9705d126a0f"
+    },
+    {
+      "path": "sih_frontend/package.json",
+      "lines": 42,
+      "sha256": "32bd04a0427038d924030a2b9f7699d39584db58bab52d6369cb5bd967a0ba3f"
+    },
+    {
+      "path": "sih_frontend/README.md",
+      "lines": 75,
+      "sha256": "4e3e3954304089029e89b232c93c0269e5d564191b9bd60d872b1233f99d8304"
+    },
+    {
+      "path": "sih_frontend/tailwind.config.ts",
+      "lines": 90,
+      "sha256": "9621e16e6c0cc8c0b5f6b8a7b33b7630588f29d1dd979000df45df6e922c7aab"
+    },
+    {
+      "path": "sih_frontend/tsconfig.app.json",
+      "lines": 26,
+      "sha256": "3d457a7a8dedf601eb6c7b3ffed88b7a8a4e3db9bf3575726028efd72b9bb9c1"
+    },
+    {
+      "path": "sih_frontend/tsconfig.json",
+      "lines": 7,
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "sih_frontend/tsconfig.node.json",
+      "lines": 23,
+      "sha256": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8"
+    },
+    {
+      "path": "sih_frontend/vite.config.ts",
+      "lines": 7,
+      "sha256": "e1eefd0ed1639c88d1213884ef760516884db9e168190e223fee6b063ad3e088"
+    },
+    {
+      "path": "sih_frontend_latest/index.html",
+      "lines": 16,
+      "sha256": "7a67619ec65338bfdeaa6c7c204ad060c94a6fa0bdc87983af715982e9d58767"
+    },
+    {
+      "path": "sih_frontend_latest/package.json",
+      "lines": 42,
+      "sha256": "32bd04a0427038d924030a2b9f7699d39584db58bab52d6369cb5bd967a0ba3f"
+    },
+    {
+      "path": "sih_frontend_latest/README.md",
+      "lines": 75,
+      "sha256": "2f607b084f914092bda1c89e638f4d475cf30f6ac5b271e46287bf06daad4e5d"
+    },
+    {
+      "path": "sih_frontend_latest/tailwind.config.ts",
+      "lines": 90,
+      "sha256": "9621e16e6c0cc8c0b5f6b8a7b33b7630588f29d1dd979000df45df6e922c7aab"
+    },
+    {
+      "path": "sih_frontend_latest/tsconfig.app.json",
+      "lines": 26,
+      "sha256": "b8f69b1194472161cb6fe8e9e19a0cc8abf97838e1c929e891bf8c6282eb44dd"
+    },
+    {
+      "path": "sih_frontend_latest/tsconfig.json",
+      "lines": 7,
+      "sha256": "ad28d132ee48d6e23917cf5827cace785d0fc01a44ca68b0dda51cc8c3fd3f52"
+    },
+    {
+      "path": "sih_frontend_latest/tsconfig.node.json",
+      "lines": 23,
+      "sha256": "a9e6c7f6fd3ec455a6fe1d4fbb83091e774b62fe116008ab6d8c5e1e88af4629"
+    },
+    {
+      "path": "sih_frontend_latest/vite.config.ts",
+      "lines": 7,
+      "sha256": "f58edcc886dbf642f0aad60dce0c36a378df3022aa88cec76592532b12d529cc"
+    },
+    {
+      "path": "sih_frontend_newai/index.html",
+      "lines": 16,
+      "sha256": "7a67619ec65338bfdeaa6c7c204ad060c94a6fa0bdc87983af715982e9d58767"
+    },
+    {
+      "path": "sih_frontend_newai/package.json",
+      "lines": 42,
+      "sha256": "32bd04a0427038d924030a2b9f7699d39584db58bab52d6369cb5bd967a0ba3f"
+    },
+    {
+      "path": "sih_frontend_newai/README.md",
+      "lines": 75,
+      "sha256": "2f607b084f914092bda1c89e638f4d475cf30f6ac5b271e46287bf06daad4e5d"
+    },
+    {
+      "path": "sih_frontend_newai/tailwind.config.ts",
+      "lines": 90,
+      "sha256": "9621e16e6c0cc8c0b5f6b8a7b33b7630588f29d1dd979000df45df6e922c7aab"
+    },
+    {
+      "path": "sih_frontend_newai/tsconfig.app.json",
+      "lines": 26,
+      "sha256": "b8f69b1194472161cb6fe8e9e19a0cc8abf97838e1c929e891bf8c6282eb44dd"
+    },
+    {
+      "path": "sih_frontend_newai/tsconfig.json",
+      "lines": 7,
+      "sha256": "ad28d132ee48d6e23917cf5827cace785d0fc01a44ca68b0dda51cc8c3fd3f52"
+    },
+    {
+      "path": "sih_frontend_newai/tsconfig.node.json",
+      "lines": 23,
+      "sha256": "a9e6c7f6fd3ec455a6fe1d4fbb83091e774b62fe116008ab6d8c5e1e88af4629"
+    },
+    {
+      "path": "sih_frontend_newai/vite.config.ts",
+      "lines": 7,
+      "sha256": "f58edcc886dbf642f0aad60dce0c36a378df3022aa88cec76592532b12d529cc"
+    },
+    {
+      "path": "sih_frontend_old/index.html",
+      "lines": 16,
+      "sha256": "7a67619ec65338bfdeaa6c7c204ad060c94a6fa0bdc87983af715982e9d58767"
+    },
+    {
+      "path": "sih_frontend_old/package.json",
+      "lines": 42,
+      "sha256": "32bd04a0427038d924030a2b9f7699d39584db58bab52d6369cb5bd967a0ba3f"
+    },
+    {
+      "path": "sih_frontend_old/README.md",
+      "lines": 75,
+      "sha256": "2f607b084f914092bda1c89e638f4d475cf30f6ac5b271e46287bf06daad4e5d"
+    },
+    {
+      "path": "sih_frontend_old/tailwind.config.ts",
+      "lines": 90,
+      "sha256": "9621e16e6c0cc8c0b5f6b8a7b33b7630588f29d1dd979000df45df6e922c7aab"
+    },
+    {
+      "path": "sih_frontend_old/tsconfig.app.json",
+      "lines": 26,
+      "sha256": "b8f69b1194472161cb6fe8e9e19a0cc8abf97838e1c929e891bf8c6282eb44dd"
+    },
+    {
+      "path": "sih_frontend_old/tsconfig.json",
+      "lines": 7,
+      "sha256": "ad28d132ee48d6e23917cf5827cace785d0fc01a44ca68b0dda51cc8c3fd3f52"
+    },
+    {
+      "path": "sih_frontend_old/tsconfig.node.json",
+      "lines": 23,
+      "sha256": "a9e6c7f6fd3ec455a6fe1d4fbb83091e774b62fe116008ab6d8c5e1e88af4629"
+    },
+    {
+      "path": "sih_frontend_old/vite.config.ts",
+      "lines": 7,
+      "sha256": "f58edcc886dbf642f0aad60dce0c36a378df3022aa88cec76592532b12d529cc"
+    },
+    {
+      "path": "Speech-Emotion-Recognition/check_mic.py",
+      "lines": 14,
+      "sha256": "37d9172d8ff8f19fe9b44c0b3e9a4d0c8e6c8ff9769defb2ea94c89221855335",
+      "definitions": []
+    },
+    {
+      "path": "Speech-Emotion-Recognition/README.md",
+      "lines": 64,
+      "sha256": "1680a376941d528b419a88259fa4ff80d1d2796422b903795b678b349da2c4aa"
+    },
+    {
+      "path": "Speech-Emotion-Recognition/requirements.txt",
+      "lines": 5,
+      "sha256": "2fd7e0cd64bf2f157c2fc15ef3f72f86e302455780cdee811c841cf252f867c3"
+    },
+    {
+      "path": "Speech-Emotion-Recognition/speech_emotion_recognition.py",
+      "lines": 738,
+      "sha256": "08c0c3fa6819ab98a2f5ea822023b0d972eb1c91591dab9eeec5abc0be084c0d",
+      "definitions": [
+        "pretty_label",
+        "audio_callback",
+        "calculate_rms",
+        "calculate_active_ratio",
+        "create_segments",
+        "predict_emotion",
+        "prediction_loop",
+        "user_input_function",
+        "update_plot"
+      ]
+    },
+    {
+      "path": "testing3_output/testing3_audio_audit.json",
+      "lines": 3666,
+      "sha256": "0a7c9513691800797c9350487a378b3dbc3284a5f88358c02e5c61ca409edb48"
+    },
+    {
+      "path": "testing3_output/testing3_manifest.json",
+      "lines": 1202,
+      "sha256": "6c20fb63f21c20c6a38b8ff7ef5490ad1f17ebf09c627e12107acb1077805239"
+    },
+    {
+      "path": "testing3_output/testing3_run_metadata.json",
+      "lines": 55,
+      "sha256": "d4a23058e70a2955a292708774d7c579660a3d1b69c1101c17b9eb8df6a56874"
+    },
+    {
+      "path": "testing3_output/testing3_summary.txt",
+      "lines": 265,
+      "sha256": "0c259077d67ee6b3d004f11ad2c4c83cf5bcb7dca82a0b63d92c058a07198006"
+    },
+    {
+      "path": "testing3_superb/testing3_audio_audit.json",
+      "lines": 3666,
+      "sha256": "0a7c9513691800797c9350487a378b3dbc3284a5f88358c02e5c61ca409edb48"
+    },
+    {
+      "path": "testing3_superb/testing3_FAILED.txt",
+      "lines": 20,
+      "sha256": "037b7d8c969da0eaeff4d713d39757482109f805e32084ea05b928026072761b"
+    },
+    {
+      "path": "testing3_superb/testing3_manifest.json",
+      "lines": 1202,
+      "sha256": "6c20fb63f21c20c6a38b8ff7ef5490ad1f17ebf09c627e12107acb1077805239"
+    },
+    {
+      "path": "testing3_superb/testing3_run_metadata.json",
+      "lines": 39,
+      "sha256": "c7e19d0a5c4c333b735bc339c7be600407cd33a441a9f8db4c91f51c76d92da4"
+    },
+    {
+      "path": "validation/analyze_actor_audio.py",
+      "lines": 55,
+      "sha256": "ee982cf023cfa9c5c19e78544b336ca4d4b06ddf1bbcfc8daa6fd8f97ca2e580",
+      "definitions": [
+        "write_csv"
+      ]
+    },
+    {
+      "path": "validation/backend-tests.txt",
+      "lines": 105,
+      "sha256": "6c7acbb43a7b842c33a9584ed7e73f5e8c436cf45ad60cd3d0ca52ab2cd5287f"
+    },
+    {
+      "path": "validation/frontend-build.txt",
+      "lines": 17,
+      "sha256": "63aaab2fcb039443ee273a23d826882a2e7d30a46065939d2e2e01f51409a6b2"
+    },
+    {
+      "path": "validation/voice-validation.txt",
+      "lines": 11,
+      "sha256": "a0552b065a88e32c050ae0b3fbb71e0eff4d6198838a4b7c511146fa6f1bc93b"
+    },
+    {
+      "path": "validation/actor_audio_analysis/cases_0_to_10_report.md",
+      "lines": 31,
+      "sha256": "635958216751f7869ef7c15fb535baee1d320350850e099139c4a25446f28d93"
+    },
+    {
+      "path": "validation/actor_audio_analysis/REPORT.md",
+      "lines": 92,
+      "sha256": "4dbcc5450cc2933f87a7d372fc3eaa40226f823f8d3b5e07ef25d1574d09f31e"
+    },
+    {
+      "path": "validation/actor_audio_analysis/summary.json",
+      "lines": 511,
+      "sha256": "9a1c6ea7e2cf265baa710c420158cb30e8ded42a35ef22720033175c87f1ba67"
+    },
+    {
+      "path": "sih_frontend_old/data/mockData.ts",
+      "lines": 173,
+      "sha256": "8ddbc1e6814562ec28793d318999699eb2bb7977eba68bb0b6da9085013f44fe"
+    },
+    {
+      "path": "sih_frontend_old/lib/utils.ts",
+      "lines": 6,
+      "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
+    },
+    {
+      "path": "sih_frontend_old/pages/AuthorityDashboard.tsx",
+      "lines": 173,
+      "sha256": "70a00a24d90377dcdf290ddc0377850d95d950b8a591a9d2af59badd40ce31d4"
+    },
+    {
+      "path": "sih_frontend_old/pages/ComingSoon.tsx",
+      "lines": 20,
+      "sha256": "0c84abce82a1f07714022101b6a5ea5fe1ce32545c51b8688db5815af0c8c85a"
+    },
+    {
+      "path": "sih_frontend_old/pages/CounsellorDashboard.tsx",
+      "lines": 553,
+      "sha256": "4720cedaded33a2bfb472ec2685db4695fbbdf9f72dd2881745624e684a0e3f0"
+    },
+    {
+      "path": "sih_frontend_old/pages/VictimDashboard.tsx",
+      "lines": 801,
+      "sha256": "0460b227a3162bb166df30d298514412e7faba262d5965243206cb48ac913ed9"
+    },
+    {
+      "path": "sih_frontend_old/src/App.css",
+      "lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sih_frontend_old/src/App.tsx",
+      "lines": 64,
+      "sha256": "2289deb41c82123f11e6da436472563c2ad44d8da46a217b6d1f27f346ad74a0"
+    },
+    {
+      "path": "sih_frontend_old/src/index.css",
+      "lines": 223,
+      "sha256": "c37421d60419d79357de4db1b97ca1652c81c7d474cb37f13d93ac0f4db66157"
+    },
+    {
+      "path": "sih_frontend_old/src/main.tsx",
+      "lines": 15,
+      "sha256": "e788a0574a59f4a8c9d1c4607e310601c1b84a37472145a25323910bf0690f7c"
+    },
+    {
+      "path": "sih_frontend_old/types/index.ts",
+      "lines": 58,
+      "sha256": "4408a5f2cf3536f1d5435b2565f5912551b3d2119725b7530967668683df56d8"
+    },
+    {
+      "path": "sih_frontend_old/src/components/Benefits.tsx",
+      "lines": 43,
+      "sha256": "0e2e4e49e1cad56643ca8af10cf028760b102f4b79ab32bd4fa5be56267f724f"
+    },
+    {
+      "path": "sih_frontend_old/src/components/Footer.tsx",
+      "lines": 46,
+      "sha256": "7c93567b9761da1bb8aed66078a394e19f503f39c3e1237b5857bf9fa80452e2"
+    },
+    {
+      "path": "sih_frontend_old/src/components/Hero.tsx",
+      "lines": 117,
+      "sha256": "26f4178b0982d76bc54586d5487fb8f3d08ab3f05324c21365eaa6d28748c86c"
+    },
+    {
+      "path": "sih_frontend_old/src/components/HowItWorks.tsx",
+      "lines": 50,
+      "sha256": "326b8788ac58e455e6d56ee5f56dc2540de1245f3d134333ff59784c0c349e60"
+    },
+    {
+      "path": "sih_frontend_old/src/components/Navbar.tsx",
+      "lines": 51,
+      "sha256": "683ca5464f26bccbcf7fc83f2cb24c12aeb011415636b759c87346d12814df49"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ProtectedRoute.tsx",
+      "lines": 39,
+      "sha256": "512cf0db0381f96b7e98803fd4108ebebbf974f9759561ef5409662c22f8fd56"
+    },
+    {
+      "path": "sih_frontend_old/src/components/RoleCards.tsx",
+      "lines": 53,
+      "sha256": "5b9d80896ba5c8b2cdea4107e5f3c80d3b3340e9fd341cd265320fc487e5b4b8"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/CaseDetails.tsx",
+      "lines": 186,
+      "sha256": "10b6585fb6263eb9ee50cd6ad9ceadef2263ced39e1b6788713333d13144ade1"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/Cases.tsx",
+      "lines": 250,
+      "sha256": "6a5eb70d08d134c052d66dd9b32eb838a2f2c69cd07c592b942421cfa92bd575"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/Home.css",
+      "lines": 700,
+      "sha256": "56c4af0bed9c2966bb423d508e5061d0e25d62b3c042f36f78ce5ccc45386ef1"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/Home.tsx",
+      "lines": 24,
+      "sha256": "7240f3d1ae82e6deafb346aff61be98fe3d8e792d14f4d19566fb076437a8014"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/Login.css",
+      "lines": 579,
+      "sha256": "757a237649b73f6d4bc92e080e217adb95daafe4a08ea413232bd1ba04fec649"
+    },
+    {
+      "path": "sih_frontend_old/src/pages/Login.tsx",
+      "lines": 316,
+      "sha256": "a88c0da1bde34fb46f6d7dfb80eae8d1b5fc25080ee16e9b747ba7b4787a0141"
+    },
+    {
+      "path": "sih_frontend_old/src/components/dashboard/CounsellorAvailabilityCard.tsx",
+      "lines": 61,
+      "sha256": "9c357d3da1199961fd4d7a03c51f0d205e8649c3af64c07b9cb9b6f6e25320c2"
+    },
+    {
+      "path": "sih_frontend_old/src/components/dashboard/DistressTrendCard.tsx",
+      "lines": 103,
+      "sha256": "35019a147839f138cf04a76845907124192fe5aaf9d83dafdb6e5d7f6ee70f07"
+    },
+    {
+      "path": "sih_frontend_old/src/components/dashboard/HighPriorityCasesTable.tsx",
+      "lines": 152,
+      "sha256": "55c3a28e81f957cef6634610483d9af4c70c5dd7aab847254b3791a9d6135b8f"
+    },
+    {
+      "path": "sih_frontend_old/src/components/dashboard/KpiCard.tsx",
+      "lines": 51,
+      "sha256": "71b2604e297abf16e3cad6db3f2e2635eadd8439b2cacf3d80042521b0dcaa2a"
+    },
+    {
+      "path": "sih_frontend_old/src/components/dashboard/RiskDistributionCard.tsx",
+      "lines": 83,
+      "sha256": "b99b44fc972d81a9e321932a10d3b333385117a8b6e2e251f1c08dad16da4895"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/DashboardLayout.tsx",
+      "lines": 19,
+      "sha256": "87d46365feac0916e3bbefc35a5b10f6daa7f247a99a9724b7024354c7d17f54"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/Sidebar.tsx",
+      "lines": 92,
+      "sha256": "019bc9127e6be334491e14055d7e93a52f50644657b0fdcd7922709f635bc0ac"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/Topbar.tsx",
+      "lines": 110,
+      "sha256": "95503920d38863b8a87dc9d78a97dd977613ef76d30d575292817a58da1bd5af"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "b4fdac8afc3aa47485ba192b0004fca2e3ff178b131adc6229e4ce6c12670278"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/badge.tsx",
+      "lines": 33,
+      "sha256": "9763a80511cef80ff87b87a069a0bf6e8ea0096325b275cef51e0887d4a322e9"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/button.tsx",
+      "lines": 49,
+      "sha256": "2a7e4e115915c100a39b777ddeab41717547cdf7130a27bdb27f9bd7160c9853"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/card.tsx",
+      "lines": 51,
+      "sha256": "f4b3c3a4e546ea59f86120cf697d1caccdd53fa376e128b4ece224b4246a0ea8"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/input.tsx",
+      "lines": 23,
+      "sha256": "7b9043cfb174a69e39e377b2a578141a3619d6940cfc80e9435bcb5d2d5a47bd"
+    },
+    {
+      "path": "sih_frontend_old/src/components/ui/separator.tsx",
+      "lines": 24,
+      "sha256": "c19d0233c52fb103fb2c6e98423e23bb82c5e1b6f2cf147c363cbe8a24657cfe"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "8f67587b569d66cf8f4840e5eec2aa065f9c1a694387c7a0231f26662e2a772f"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/badge.tsx",
+      "lines": 35,
+      "sha256": "156bca5c58d88af86fcfb8777db30f7e31c225c72aea9be71c2e0a74dc330e8b"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/button.tsx",
+      "lines": 49,
+      "sha256": "aa42a5b76b1bc71d37bbb6c55b891eca4da0234527d85e31d419051cb7dd6ad0"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/card.tsx",
+      "lines": 51,
+      "sha256": "d7e8cbe98b492047c36398af9ea7209263841e759e2b01e3aaeee90a258f0022"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/input.tsx",
+      "lines": 23,
+      "sha256": "29e556afe28193e16415896ca75f20a24fcdcff726acaefa3a396e3923813227"
+    },
+    {
+      "path": "sih_frontend_old/src/components/layout/ui/separator.tsx",
+      "lines": 23,
+      "sha256": "a68e9629b02dd826621ddc6b695d5a62ce1708ed127701f675272e3a3a53c6cc"
+    },
+    {
+      "path": "sih_frontend_newai/data/mockConversations.ts",
+      "lines": 32,
+      "sha256": "2a3a9483624f8aaf73660689ec06c1c72a74a83d708e3c0062ad10cbb816d46b"
+    },
+    {
+      "path": "sih_frontend_newai/data/mockData.ts",
+      "lines": 187,
+      "sha256": "30715458083b104bbda3b0937868f15564e1e707ca59bce5c6ed526fea741d52"
+    },
+    {
+      "path": "sih_frontend_newai/lib/utils.ts",
+      "lines": 6,
+      "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
+    },
+    {
+      "path": "sih_frontend_newai/pages/AuthorityDashboard.tsx",
+      "lines": 173,
+      "sha256": "70a00a24d90377dcdf290ddc0377850d95d950b8a591a9d2af59badd40ce31d4"
+    },
+    {
+      "path": "sih_frontend_newai/pages/ComingSoon.tsx",
+      "lines": 20,
+      "sha256": "0c84abce82a1f07714022101b6a5ea5fe1ce32545c51b8688db5815af0c8c85a"
+    },
+    {
+      "path": "sih_frontend_newai/pages/CounsellorDashboard.tsx",
+      "lines": 551,
+      "sha256": "bd83b7430df058af64718766108fe2088a896ca42f2fa67ba9693a570ea665b3"
+    },
+    {
+      "path": "sih_frontend_newai/pages/VictimDashboard.tsx",
+      "lines": 1040,
+      "sha256": "ab67bfaf7568aaf7c86fb38005b41438c01532eaeba0a0d77cb3716bbc29a681"
+    },
+    {
+      "path": "sih_frontend_newai/src/App.css",
+      "lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sih_frontend_newai/src/App.tsx",
+      "lines": 76,
+      "sha256": "e1432c12fe5922c629cd50bf7195394e500828f37cd0bd6ee19132d8c60fb832"
+    },
+    {
+      "path": "sih_frontend_newai/src/index.css",
+      "lines": 223,
+      "sha256": "c37421d60419d79357de4db1b97ca1652c81c7d474cb37f13d93ac0f4db66157"
+    },
+    {
+      "path": "sih_frontend_newai/src/main.tsx",
+      "lines": 15,
+      "sha256": "e788a0574a59f4a8c9d1c4607e310601c1b84a37472145a25323910bf0690f7c"
+    },
+    {
+      "path": "sih_frontend_newai/types/index.ts",
+      "lines": 74,
+      "sha256": "b9cff1b2b2e3e3a2ae9e7e38d76741c69181648c210097df8cd77304ecfe9b8b"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/Benefits.tsx",
+      "lines": 43,
+      "sha256": "0e2e4e49e1cad56643ca8af10cf028760b102f4b79ab32bd4fa5be56267f724f"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/Footer.tsx",
+      "lines": 46,
+      "sha256": "7c93567b9761da1bb8aed66078a394e19f503f39c3e1237b5857bf9fa80452e2"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/Hero.tsx",
+      "lines": 117,
+      "sha256": "26f4178b0982d76bc54586d5487fb8f3d08ab3f05324c21365eaa6d28748c86c"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/HowItWorks.tsx",
+      "lines": 50,
+      "sha256": "326b8788ac58e455e6d56ee5f56dc2540de1245f3d134333ff59784c0c349e60"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/Navbar.tsx",
+      "lines": 51,
+      "sha256": "683ca5464f26bccbcf7fc83f2cb24c12aeb011415636b759c87346d12814df49"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ProtectedRoute.tsx",
+      "lines": 39,
+      "sha256": "512cf0db0381f96b7e98803fd4108ebebbf974f9759561ef5409662c22f8fd56"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/RoleCards.tsx",
+      "lines": 53,
+      "sha256": "5b9d80896ba5c8b2cdea4107e5f3c80d3b3340e9fd341cd265320fc487e5b4b8"
+    },
+    {
+      "path": "sih_frontend_newai/src/hooks/useCounsellorMessages.ts",
+      "lines": 49,
+      "sha256": "be991a64d08eceecf2064b3805b0071ec3064dc98415c02fe151e1a14232c3c4"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/CaseDetails.tsx",
+      "lines": 186,
+      "sha256": "10b6585fb6263eb9ee50cd6ad9ceadef2263ced39e1b6788713333d13144ade1"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Cases.tsx",
+      "lines": 250,
+      "sha256": "6a5eb70d08d134c052d66dd9b32eb838a2f2c69cd07c592b942421cfa92bd575"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/CounsellorMessages.tsx",
+      "lines": 150,
+      "sha256": "e5610a56d95b0fb278c9c580bded4e79102446feea48e95303fa382397c39d4f"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Home.css",
+      "lines": 700,
+      "sha256": "56c4af0bed9c2966bb423d508e5061d0e25d62b3c042f36f78ce5ccc45386ef1"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Home.tsx",
+      "lines": 24,
+      "sha256": "7240f3d1ae82e6deafb346aff61be98fe3d8e792d14f4d19566fb076437a8014"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Login.css",
+      "lines": 579,
+      "sha256": "757a237649b73f6d4bc92e080e217adb95daafe4a08ea413232bd1ba04fec649"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Login.tsx",
+      "lines": 308,
+      "sha256": "717d0edb8ecaf86b9abfcf2692bed444667ecfb77fcdfdad1d92ed6e0b57d9f5"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Resources.tsx",
+      "lines": 147,
+      "sha256": "d84f72689eb567211bd00304d01200aaa03195042906719099f71826dac2e003"
+    },
+    {
+      "path": "sih_frontend_newai/src/pages/Sessions.tsx",
+      "lines": 286,
+      "sha256": "1f079d003c330c1b8fd19bfaff5d15b6c0cbb2cbda5ecc8e65e0606a2128ad10"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/dashboard/CounsellorAvailabilityCard.tsx",
+      "lines": 61,
+      "sha256": "9c357d3da1199961fd4d7a03c51f0d205e8649c3af64c07b9cb9b6f6e25320c2"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/dashboard/DistressTrendCard.tsx",
+      "lines": 103,
+      "sha256": "35019a147839f138cf04a76845907124192fe5aaf9d83dafdb6e5d7f6ee70f07"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/dashboard/HighPriorityCasesTable.tsx",
+      "lines": 152,
+      "sha256": "55c3a28e81f957cef6634610483d9af4c70c5dd7aab847254b3791a9d6135b8f"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/dashboard/KpiCard.tsx",
+      "lines": 51,
+      "sha256": "71b2604e297abf16e3cad6db3f2e2635eadd8439b2cacf3d80042521b0dcaa2a"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/dashboard/RiskDistributionCard.tsx",
+      "lines": 83,
+      "sha256": "b99b44fc972d81a9e321932a10d3b333385117a8b6e2e251f1c08dad16da4895"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/DashboardLayout.tsx",
+      "lines": 19,
+      "sha256": "87d46365feac0916e3bbefc35a5b10f6daa7f247a99a9724b7024354c7d17f54"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/Sidebar.tsx",
+      "lines": 95,
+      "sha256": "0f4fe3f660eec9bb188a4afbba8767c7fa8f1c1f617df60ab45827563f1e54fe"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/Topbar.tsx",
+      "lines": 110,
+      "sha256": "95503920d38863b8a87dc9d78a97dd977613ef76d30d575292817a58da1bd5af"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "b4fdac8afc3aa47485ba192b0004fca2e3ff178b131adc6229e4ce6c12670278"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/badge.tsx",
+      "lines": 33,
+      "sha256": "9763a80511cef80ff87b87a069a0bf6e8ea0096325b275cef51e0887d4a322e9"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/button.tsx",
+      "lines": 49,
+      "sha256": "2a7e4e115915c100a39b777ddeab41717547cdf7130a27bdb27f9bd7160c9853"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/card.tsx",
+      "lines": 51,
+      "sha256": "f4b3c3a4e546ea59f86120cf697d1caccdd53fa376e128b4ece224b4246a0ea8"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/input.tsx",
+      "lines": 23,
+      "sha256": "7b9043cfb174a69e39e377b2a578141a3619d6940cfc80e9435bcb5d2d5a47bd"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/ui/separator.tsx",
+      "lines": 24,
+      "sha256": "c19d0233c52fb103fb2c6e98423e23bb82c5e1b6f2cf147c363cbe8a24657cfe"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "8f67587b569d66cf8f4840e5eec2aa065f9c1a694387c7a0231f26662e2a772f"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/badge.tsx",
+      "lines": 35,
+      "sha256": "156bca5c58d88af86fcfb8777db30f7e31c225c72aea9be71c2e0a74dc330e8b"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/button.tsx",
+      "lines": 49,
+      "sha256": "aa42a5b76b1bc71d37bbb6c55b891eca4da0234527d85e31d419051cb7dd6ad0"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/card.tsx",
+      "lines": 51,
+      "sha256": "d7e8cbe98b492047c36398af9ea7209263841e759e2b01e3aaeee90a258f0022"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/input.tsx",
+      "lines": 23,
+      "sha256": "29e556afe28193e16415896ca75f20a24fcdcff726acaefa3a396e3923813227"
+    },
+    {
+      "path": "sih_frontend_newai/src/components/layout/ui/separator.tsx",
+      "lines": 23,
+      "sha256": "a68e9629b02dd826621ddc6b695d5a62ce1708ed127701f675272e3a3a53c6cc"
+    },
+    {
+      "path": "sih_frontend_latest/data/mockConversations.ts",
+      "lines": 32,
+      "sha256": "2a3a9483624f8aaf73660689ec06c1c72a74a83d708e3c0062ad10cbb816d46b"
+    },
+    {
+      "path": "sih_frontend_latest/data/mockData.ts",
+      "lines": 187,
+      "sha256": "30715458083b104bbda3b0937868f15564e1e707ca59bce5c6ed526fea741d52"
+    },
+    {
+      "path": "sih_frontend_latest/lib/utils.ts",
+      "lines": 6,
+      "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
+    },
+    {
+      "path": "sih_frontend_latest/pages/AuthorityDashboard.tsx",
+      "lines": 6,
+      "sha256": "479d2d790bdea6ec0cebd869ee29fe5360bf12b0141c342e1182e065700f4cd9"
+    },
+    {
+      "path": "sih_frontend_latest/pages/ComingSoon.tsx",
+      "lines": 20,
+      "sha256": "0c84abce82a1f07714022101b6a5ea5fe1ce32545c51b8688db5815af0c8c85a"
+    },
+    {
+      "path": "sih_frontend_latest/pages/CounsellorDashboard.tsx",
+      "lines": 24,
+      "sha256": "a7aa7a6b1659bdfae10449f4f50b6ca47de5a8db8be34f54893dba955b9f9d6a"
+    },
+    {
+      "path": "sih_frontend_latest/pages/VictimDashboard.tsx",
+      "lines": 571,
+      "sha256": "29cfa096ca386131d32426f347e6ac98ba22372c74185bb6ffb65842fba04257"
+    },
+    {
+      "path": "sih_frontend_latest/src/App.css",
+      "lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sih_frontend_latest/src/App.tsx",
+      "lines": 78,
+      "sha256": "9fdba58a5fc272ef640ae0d450afe7b919b040a85b475da7c2e1177e22fb72a4"
+    },
+    {
+      "path": "sih_frontend_latest/src/index.css",
+      "lines": 223,
+      "sha256": "c37421d60419d79357de4db1b97ca1652c81c7d474cb37f13d93ac0f4db66157"
+    },
+    {
+      "path": "sih_frontend_latest/src/main.tsx",
+      "lines": 15,
+      "sha256": "e788a0574a59f4a8c9d1c4607e310601c1b84a37472145a25323910bf0690f7c"
+    },
+    {
+      "path": "sih_frontend_latest/types/index.ts",
+      "lines": 74,
+      "sha256": "b9cff1b2b2e3e3a2ae9e7e38d76741c69181648c210097df8cd77304ecfe9b8b"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/Benefits.tsx",
+      "lines": 43,
+      "sha256": "0e2e4e49e1cad56643ca8af10cf028760b102f4b79ab32bd4fa5be56267f724f"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/Footer.tsx",
+      "lines": 46,
+      "sha256": "ca714e063d3c13fde8cd19e702065ccca31e7be6840d74398b5fa8a66c8e16bb"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/Hero.tsx",
+      "lines": 117,
+      "sha256": "229a668a064a186dc3252e480758dd2f9747edafeda840b4423f9617babb4738"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/HowItWorks.tsx",
+      "lines": 50,
+      "sha256": "326b8788ac58e455e6d56ee5f56dc2540de1245f3d134333ff59784c0c349e60"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/Navbar.tsx",
+      "lines": 51,
+      "sha256": "815a3f11b78914dcf317d54a989e08b8ffe9d760c1f18b5cb24adc9eff85c380"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ProtectedRoute.tsx",
+      "lines": 39,
+      "sha256": "512cf0db0381f96b7e98803fd4108ebebbf974f9759561ef5409662c22f8fd56"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/RoleCards.tsx",
+      "lines": 53,
+      "sha256": "2884256421b26cb12e715b46656b4190e2430f387a0241beccdba2ff3db61845"
+    },
+    {
+      "path": "sih_frontend_latest/src/hooks/useCounsellorMessages.ts",
+      "lines": 10,
+      "sha256": "4dbe3700e191f145f16dba713abf13a1e528209d24297cdbc62ec01f54c1f8a8"
+    },
+    {
+      "path": "sih_frontend_latest/src/lib/api.ts",
+      "lines": 40,
+      "sha256": "378bd0d15a755a014bd7b591b92240602caf170ed26f12880dbac32be4a97cc8"
+    },
+    {
+      "path": "sih_frontend_latest/src/lib/config.ts",
+      "lines": 1,
+      "sha256": "d03cfc9c2e86abddde28a7430d0ecf12968b080d4815f35b0dc9363fb99607a1"
+    },
+    {
+      "path": "sih_frontend_latest/src/lib/monitoring.ts",
+      "lines": 17,
+      "sha256": "94eb9b9b0faac7b2d2f67a14ee5cbd510ae818d6b60bcae864dc69a0f80d8cd7"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/CaseDetails.tsx",
+      "lines": 198,
+      "sha256": "6bc0017d4c6c1ddbb5e1ce47af260b2120d344a471525e55834839756d156840"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Cases.tsx",
+      "lines": 251,
+      "sha256": "781622aebf5e32c59f6045ec7eee0826b30e4b387bccd8753e0e6199262cc29d"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/CounsellorMessages.tsx",
+      "lines": 22,
+      "sha256": "65eb19360658e77afbb9326546a8180196291063ac8f803b65255c2799626035"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Home.css",
+      "lines": 700,
+      "sha256": "56c4af0bed9c2966bb423d508e5061d0e25d62b3c042f36f78ce5ccc45386ef1"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Home.tsx",
+      "lines": 24,
+      "sha256": "7240f3d1ae82e6deafb346aff61be98fe3d8e792d14f4d19566fb076437a8014"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Login.css",
+      "lines": 579,
+      "sha256": "757a237649b73f6d4bc92e080e217adb95daafe4a08ea413232bd1ba04fec649"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Login.tsx",
+      "lines": 259,
+      "sha256": "5066f4085a7d64a79256451fab9d9c779f95151f0dfcff64970bfa9caff9d78f"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Operations.tsx",
+      "lines": 28,
+      "sha256": "854ba92345367600addfcf1c3739c3d9439a3c5877166b8096a7b441f82b10f7"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Resources.tsx",
+      "lines": 147,
+      "sha256": "d84f72689eb567211bd00304d01200aaa03195042906719099f71826dac2e003"
+    },
+    {
+      "path": "sih_frontend_latest/src/pages/Sessions.tsx",
+      "lines": 13,
+      "sha256": "a3ba80dc5c6af649a134e76127d054683dd54bfe2ca67a4f2298cb6a2ca62cde"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/dashboard/CounsellorAvailabilityCard.tsx",
+      "lines": 61,
+      "sha256": "9c357d3da1199961fd4d7a03c51f0d205e8649c3af64c07b9cb9b6f6e25320c2"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/dashboard/DistressTrendCard.tsx",
+      "lines": 103,
+      "sha256": "35019a147839f138cf04a76845907124192fe5aaf9d83dafdb6e5d7f6ee70f07"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/dashboard/HighPriorityCasesTable.tsx",
+      "lines": 153,
+      "sha256": "735b0b8be7d27dec019cb32c5084f03846ba85925c4a314737474987662bc54a"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/dashboard/KpiCard.tsx",
+      "lines": 51,
+      "sha256": "71b2604e297abf16e3cad6db3f2e2635eadd8439b2cacf3d80042521b0dcaa2a"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/dashboard/RiskDistributionCard.tsx",
+      "lines": 83,
+      "sha256": "b99b44fc972d81a9e321932a10d3b333385117a8b6e2e251f1c08dad16da4895"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/DashboardLayout.tsx",
+      "lines": 24,
+      "sha256": "4ac9485cf998b461ac295e4553cc83098d0aa7d6afc7fbb39e45b2b04c6bc1fd"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/Sidebar.tsx",
+      "lines": 95,
+      "sha256": "0f4fe3f660eec9bb188a4afbba8767c7fa8f1c1f617df60ab45827563f1e54fe"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/Topbar.tsx",
+      "lines": 116,
+      "sha256": "fff6b329df2b93ae61f601a0d130ba445734c417c18e454a20c956cbca49321f"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/monitoring/AuthorityMonitoring.tsx",
+      "lines": 17,
+      "sha256": "d3ce0535f838f66376d3768b61d0bd1802ba461afb007564c792b5cb5c6c7aae"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/monitoring/CaseChat.tsx",
+      "lines": 69,
+      "sha256": "9dd12e53027abfbebd0fcfaa7b326a0585f5c1cdc0185d90cf804fd474c01b40"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/monitoring/CaseMonitoring.tsx",
+      "lines": 47,
+      "sha256": "d018692fe659fe929ba11389c1dc84b9b14dcaf910d54aa4e081c435ad5bead6"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/monitoring/PriorityQueue.tsx",
+      "lines": 35,
+      "sha256": "7d3f99d9fd72366cbba663642ee2d832535a69b3a81553c593a77999c26e7094"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/monitoring/VictimCheckIns.tsx",
+      "lines": 15,
+      "sha256": "b0c7bba92be975a662a87014d7b42c5bf090fea01ca1f4175c906a4265209d41"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "b4fdac8afc3aa47485ba192b0004fca2e3ff178b131adc6229e4ce6c12670278"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/badge.tsx",
+      "lines": 33,
+      "sha256": "9763a80511cef80ff87b87a069a0bf6e8ea0096325b275cef51e0887d4a322e9"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/button.tsx",
+      "lines": 49,
+      "sha256": "2a7e4e115915c100a39b777ddeab41717547cdf7130a27bdb27f9bd7160c9853"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/card.tsx",
+      "lines": 51,
+      "sha256": "f4b3c3a4e546ea59f86120cf697d1caccdd53fa376e128b4ece224b4246a0ea8"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/input.tsx",
+      "lines": 23,
+      "sha256": "7b9043cfb174a69e39e377b2a578141a3619d6940cfc80e9435bcb5d2d5a47bd"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/ui/separator.tsx",
+      "lines": 24,
+      "sha256": "c19d0233c52fb103fb2c6e98423e23bb82c5e1b6f2cf147c363cbe8a24657cfe"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "8f67587b569d66cf8f4840e5eec2aa065f9c1a694387c7a0231f26662e2a772f"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/badge.tsx",
+      "lines": 35,
+      "sha256": "156bca5c58d88af86fcfb8777db30f7e31c225c72aea9be71c2e0a74dc330e8b"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/button.tsx",
+      "lines": 49,
+      "sha256": "aa42a5b76b1bc71d37bbb6c55b891eca4da0234527d85e31d419051cb7dd6ad0"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/card.tsx",
+      "lines": 51,
+      "sha256": "d7e8cbe98b492047c36398af9ea7209263841e759e2b01e3aaeee90a258f0022"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/input.tsx",
+      "lines": 23,
+      "sha256": "29e556afe28193e16415896ca75f20a24fcdcff726acaefa3a396e3923813227"
+    },
+    {
+      "path": "sih_frontend_latest/src/components/layout/ui/separator.tsx",
+      "lines": 23,
+      "sha256": "a68e9629b02dd826621ddc6b695d5a62ce1708ed127701f675272e3a3a53c6cc"
+    },
+    {
+      "path": "sih_frontend/data/mockConversations.ts",
+      "lines": 32,
+      "sha256": "2a3a9483624f8aaf73660689ec06c1c72a74a83d708e3c0062ad10cbb816d46b"
+    },
+    {
+      "path": "sih_frontend/data/mockData.ts",
+      "lines": 187,
+      "sha256": "30715458083b104bbda3b0937868f15564e1e707ca59bce5c6ed526fea741d52"
+    },
+    {
+      "path": "sih_frontend/lib/utils.ts",
+      "lines": 6,
+      "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
+    },
+    {
+      "path": "sih_frontend/pages/AuthorityDashboard.tsx",
+      "lines": 173,
+      "sha256": "70a00a24d90377dcdf290ddc0377850d95d950b8a591a9d2af59badd40ce31d4"
+    },
+    {
+      "path": "sih_frontend/pages/ComingSoon.tsx",
+      "lines": 20,
+      "sha256": "0c84abce82a1f07714022101b6a5ea5fe1ce32545c51b8688db5815af0c8c85a"
+    },
+    {
+      "path": "sih_frontend/pages/CounsellorDashboard.tsx",
+      "lines": 551,
+      "sha256": "bd83b7430df058af64718766108fe2088a896ca42f2fa67ba9693a570ea665b3"
+    },
+    {
+      "path": "sih_frontend/pages/VictimDashboard.tsx",
+      "lines": 800,
+      "sha256": "486db3b220718331ddbe127d7cbf1d4da492c3cf323eecdceba35273920389e8"
+    },
+    {
+      "path": "sih_frontend/src/App.css",
+      "lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sih_frontend/src/App.tsx",
+      "lines": 76,
+      "sha256": "e1432c12fe5922c629cd50bf7195394e500828f37cd0bd6ee19132d8c60fb832"
+    },
+    {
+      "path": "sih_frontend/src/index.css",
+      "lines": 223,
+      "sha256": "c37421d60419d79357de4db1b97ca1652c81c7d474cb37f13d93ac0f4db66157"
+    },
+    {
+      "path": "sih_frontend/src/main.tsx",
+      "lines": 15,
+      "sha256": "e788a0574a59f4a8c9d1c4607e310601c1b84a37472145a25323910bf0690f7c"
+    },
+    {
+      "path": "sih_frontend/types/index.ts",
+      "lines": 74,
+      "sha256": "b9cff1b2b2e3e3a2ae9e7e38d76741c69181648c210097df8cd77304ecfe9b8b"
+    },
+    {
+      "path": "sih_frontend/src/components/Benefits.tsx",
+      "lines": 43,
+      "sha256": "0e2e4e49e1cad56643ca8af10cf028760b102f4b79ab32bd4fa5be56267f724f"
+    },
+    {
+      "path": "sih_frontend/src/components/Footer.tsx",
+      "lines": 46,
+      "sha256": "7c93567b9761da1bb8aed66078a394e19f503f39c3e1237b5857bf9fa80452e2"
+    },
+    {
+      "path": "sih_frontend/src/components/Hero.tsx",
+      "lines": 117,
+      "sha256": "26f4178b0982d76bc54586d5487fb8f3d08ab3f05324c21365eaa6d28748c86c"
+    },
+    {
+      "path": "sih_frontend/src/components/HowItWorks.tsx",
+      "lines": 50,
+      "sha256": "326b8788ac58e455e6d56ee5f56dc2540de1245f3d134333ff59784c0c349e60"
+    },
+    {
+      "path": "sih_frontend/src/components/Navbar.tsx",
+      "lines": 51,
+      "sha256": "683ca5464f26bccbcf7fc83f2cb24c12aeb011415636b759c87346d12814df49"
+    },
+    {
+      "path": "sih_frontend/src/components/ProtectedRoute.tsx",
+      "lines": 39,
+      "sha256": "512cf0db0381f96b7e98803fd4108ebebbf974f9759561ef5409662c22f8fd56"
+    },
+    {
+      "path": "sih_frontend/src/components/RoleCards.tsx",
+      "lines": 53,
+      "sha256": "5b9d80896ba5c8b2cdea4107e5f3c80d3b3340e9fd341cd265320fc487e5b4b8"
+    },
+    {
+      "path": "sih_frontend/src/hooks/useCounsellorMessages.ts",
+      "lines": 49,
+      "sha256": "be991a64d08eceecf2064b3805b0071ec3064dc98415c02fe151e1a14232c3c4"
+    },
+    {
+      "path": "sih_frontend/src/pages/CaseDetails.tsx",
+      "lines": 186,
+      "sha256": "10b6585fb6263eb9ee50cd6ad9ceadef2263ced39e1b6788713333d13144ade1"
+    },
+    {
+      "path": "sih_frontend/src/pages/Cases.tsx",
+      "lines": 250,
+      "sha256": "6a5eb70d08d134c052d66dd9b32eb838a2f2c69cd07c592b942421cfa92bd575"
+    },
+    {
+      "path": "sih_frontend/src/pages/CounsellorMessages.tsx",
+      "lines": 150,
+      "sha256": "e5610a56d95b0fb278c9c580bded4e79102446feea48e95303fa382397c39d4f"
+    },
+    {
+      "path": "sih_frontend/src/pages/Home.css",
+      "lines": 700,
+      "sha256": "56c4af0bed9c2966bb423d508e5061d0e25d62b3c042f36f78ce5ccc45386ef1"
+    },
+    {
+      "path": "sih_frontend/src/pages/Home.tsx",
+      "lines": 24,
+      "sha256": "7240f3d1ae82e6deafb346aff61be98fe3d8e792d14f4d19566fb076437a8014"
+    },
+    {
+      "path": "sih_frontend/src/pages/Login.css",
+      "lines": 579,
+      "sha256": "757a237649b73f6d4bc92e080e217adb95daafe4a08ea413232bd1ba04fec649"
+    },
+    {
+      "path": "sih_frontend/src/pages/Login.tsx",
+      "lines": 308,
+      "sha256": "717d0edb8ecaf86b9abfcf2692bed444667ecfb77fcdfdad1d92ed6e0b57d9f5"
+    },
+    {
+      "path": "sih_frontend/src/pages/Resources.tsx",
+      "lines": 147,
+      "sha256": "d84f72689eb567211bd00304d01200aaa03195042906719099f71826dac2e003"
+    },
+    {
+      "path": "sih_frontend/src/pages/Sessions.tsx",
+      "lines": 286,
+      "sha256": "1f079d003c330c1b8fd19bfaff5d15b6c0cbb2cbda5ecc8e65e0606a2128ad10"
+    },
+    {
+      "path": "sih_frontend/src/components/dashboard/CounsellorAvailabilityCard.tsx",
+      "lines": 61,
+      "sha256": "9c357d3da1199961fd4d7a03c51f0d205e8649c3af64c07b9cb9b6f6e25320c2"
+    },
+    {
+      "path": "sih_frontend/src/components/dashboard/DistressTrendCard.tsx",
+      "lines": 103,
+      "sha256": "35019a147839f138cf04a76845907124192fe5aaf9d83dafdb6e5d7f6ee70f07"
+    },
+    {
+      "path": "sih_frontend/src/components/dashboard/HighPriorityCasesTable.tsx",
+      "lines": 152,
+      "sha256": "55c3a28e81f957cef6634610483d9af4c70c5dd7aab847254b3791a9d6135b8f"
+    },
+    {
+      "path": "sih_frontend/src/components/dashboard/KpiCard.tsx",
+      "lines": 51,
+      "sha256": "71b2604e297abf16e3cad6db3f2e2635eadd8439b2cacf3d80042521b0dcaa2a"
+    },
+    {
+      "path": "sih_frontend/src/components/dashboard/RiskDistributionCard.tsx",
+      "lines": 83,
+      "sha256": "b99b44fc972d81a9e321932a10d3b333385117a8b6e2e251f1c08dad16da4895"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/DashboardLayout.tsx",
+      "lines": 19,
+      "sha256": "87d46365feac0916e3bbefc35a5b10f6daa7f247a99a9724b7024354c7d17f54"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/Sidebar.tsx",
+      "lines": 95,
+      "sha256": "0f4fe3f660eec9bb188a4afbba8767c7fa8f1c1f617df60ab45827563f1e54fe"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/Topbar.tsx",
+      "lines": 110,
+      "sha256": "95503920d38863b8a87dc9d78a97dd977613ef76d30d575292817a58da1bd5af"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "b4fdac8afc3aa47485ba192b0004fca2e3ff178b131adc6229e4ce6c12670278"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/badge.tsx",
+      "lines": 33,
+      "sha256": "9763a80511cef80ff87b87a069a0bf6e8ea0096325b275cef51e0887d4a322e9"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/button.tsx",
+      "lines": 49,
+      "sha256": "2a7e4e115915c100a39b777ddeab41717547cdf7130a27bdb27f9bd7160c9853"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/card.tsx",
+      "lines": 51,
+      "sha256": "f4b3c3a4e546ea59f86120cf697d1caccdd53fa376e128b4ece224b4246a0ea8"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/input.tsx",
+      "lines": 23,
+      "sha256": "7b9043cfb174a69e39e377b2a578141a3619d6940cfc80e9435bcb5d2d5a47bd"
+    },
+    {
+      "path": "sih_frontend/src/components/ui/separator.tsx",
+      "lines": 24,
+      "sha256": "c19d0233c52fb103fb2c6e98423e23bb82c5e1b6f2cf147c363cbe8a24657cfe"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/avatar.tsx",
+      "lines": 40,
+      "sha256": "8f67587b569d66cf8f4840e5eec2aa065f9c1a694387c7a0231f26662e2a772f"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/badge.tsx",
+      "lines": 35,
+      "sha256": "156bca5c58d88af86fcfb8777db30f7e31c225c72aea9be71c2e0a74dc330e8b"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/button.tsx",
+      "lines": 49,
+      "sha256": "aa42a5b76b1bc71d37bbb6c55b891eca4da0234527d85e31d419051cb7dd6ad0"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/card.tsx",
+      "lines": 51,
+      "sha256": "d7e8cbe98b492047c36398af9ea7209263841e759e2b01e3aaeee90a258f0022"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/input.tsx",
+      "lines": 23,
+      "sha256": "29e556afe28193e16415896ca75f20a24fcdcff726acaefa3a396e3923813227"
+    },
+    {
+      "path": "sih_frontend/src/components/layout/ui/separator.tsx",
+      "lines": 23,
+      "sha256": "a68e9629b02dd826621ddc6b695d5a62ce1708ed127701f675272e3a3a53c6cc"
+    },
+    {
+      "path": "sih_backend_newai/app/ai.py",
+      "lines": 22,
+      "sha256": "3e20690b4df426493d050e5c0d6b2d2c0c46966e3d2f5722049f76963bf3bc4e",
+      "definitions": [
+        "require_ai_test_enabled",
+        "analyze"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/ai_history.py",
+      "lines": 89,
+      "sha256": "9028f92dbf5c82d31326c2a99d34cd258f9beefc639267cacf89a2df11ae80f0",
+      "definitions": [
+        "AnalysisOut",
+        "AnalysisHistory",
+        "authenticated_account",
+        "case_analysis_history"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/ai_service.py",
+      "lines": 189,
+      "sha256": "e691ca65cc2889804bf37df8767abab952ba3751de58db447f5dd7f39c5d844c",
+      "definitions": [
+        "AnalysisRequest",
+        "DistressIndicators",
+        "DistressResult",
+        "AIServiceUnavailable",
+        "InvalidProviderResponse",
+        "ProviderConfig",
+        "provider_configs",
+        "parse_indicators",
+        "_attempt",
+        "analyze_distress"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/ai_workflow.py",
+      "lines": 65,
+      "sha256": "202302b36a50204b8c23f39a00b280ecc4ac0f0dfc09b9cd7f8efeba0fdedd12",
+      "definitions": [
+        "analyze_saved_check_in"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/auth.py",
+      "lines": 181,
+      "sha256": "e7d2dca840f29f970632a9445aee4c0b95652a01c5233bb31c82834f45695f3d",
+      "definitions": [
+        "create_access_token",
+        "get_current_user",
+        "require_role",
+        "victim_test",
+        "counsellor_test",
+        "authority_test",
+        "register_user",
+        "login_user"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/cases.py",
+      "lines": 303,
+      "sha256": "3165908bdcfc886806e2226f81853f594fc3de20781fae7a9cb7434bae0fa6a9",
+      "definitions": [
+        "get_cases",
+        "get_case",
+        "get_users",
+        "get_victim_dashboard",
+        "calculate_distress_score",
+        "submit_assessment"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/database.py",
+      "lines": 22,
+      "sha256": "eab6b4bc9418d647139f0604e5f2f0cee6cfe9ad8ac886ce9286babb186bfc8f",
+      "definitions": [
+        "get_db"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/main.py",
+      "lines": 37,
+      "sha256": "9e2f8214fe9730b0fbab181115602b77aa4da2c6e7b377631ddb8099764affdf",
+      "definitions": [
+        "root"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/migrate_ai_prompt2.py",
+      "lines": 32,
+      "sha256": "e5a442c8bcd1fea48c06135cd83fe553e7a653b17d9f3d5251ea0a428c9d323a",
+      "definitions": [
+        "upgrade"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/models.py",
+      "lines": 128,
+      "sha256": "5be2017ccee36d750d2b76203e24d08bff985fd88d4bc698eecde6f9294bdffa",
+      "definitions": [
+        "User",
+        "Case",
+        "Assessment",
+        "AIAnalysis"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/schemas.py",
+      "lines": 60,
+      "sha256": "6acb5ff82f52ac7faba45d456372ec129dea142282bb84c25390fa5e76d6b17d",
+      "definitions": [
+        "VictimDashboardOut",
+        "UserRegister",
+        "UserLogin",
+        "UserOut",
+        "CaseOut",
+        "AssessmentCreate"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/seed_cases.py",
+      "lines": 184,
+      "sha256": "53dff2fd7f9d2e3ed9b17f78523f686084f1bb78f58c89c1668869e666c9b16d",
+      "definitions": [
+        "get_or_create_counsellor",
+        "seed_cases_for_counsellor",
+        "main"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/voice.py",
+      "lines": 90,
+      "sha256": "0a68e9665955b4a5cca4c6c6e7bcb38f181a5c04fde36cbe2640284fdcfffc88",
+      "definitions": [
+        "transcribe_voice"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/app/voice_service.py",
+      "lines": 140,
+      "sha256": "a7134c744ccf2f7c16e8fa9c9917a94ee292994662a97a359c6e25e14c05ac35",
+      "definitions": [
+        "transcribe_voice"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/tests/test_ai.py",
+      "lines": 240,
+      "sha256": "befbcb4e41d973d88f12dbf4361d1b86ebb2d67d64fc2b0a7c2706ad2730bd8d",
+      "definitions": [
+        "reply",
+        "ServiceTests",
+        "EndpointTests"
+      ]
+    },
+    {
+      "path": "sih_backend_newai/tests/test_ai_workflow.py",
+      "lines": 345,
+      "sha256": "8727ab97e2d59203a96f44de859e61a0f7ebfa5412aa1372369f1e5c1017aa86",
+      "definitions": [
+        "load_backend",
+        "WorkflowTests",
+        "MigrationTests"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/ai.py",
+      "lines": 22,
+      "sha256": "3e20690b4df426493d050e5c0d6b2d2c0c46966e3d2f5722049f76963bf3bc4e",
+      "definitions": [
+        "require_ai_test_enabled",
+        "analyze"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/ai_history.py",
+      "lines": 101,
+      "sha256": "1901f57b7b5510ac78363814d9709b1b23694a25994d7930f7ac70d0ce3052cb",
+      "definitions": [
+        "AnalysisOut",
+        "AnalysisHistory",
+        "authenticated_account",
+        "case_analysis_history",
+        "valid_source_query"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/ai_service.py",
+      "lines": 189,
+      "sha256": "e691ca65cc2889804bf37df8767abab952ba3751de58db447f5dd7f39c5d844c",
+      "definitions": [
+        "AnalysisRequest",
+        "DistressIndicators",
+        "DistressResult",
+        "AIServiceUnavailable",
+        "InvalidProviderResponse",
+        "ProviderConfig",
+        "provider_configs",
+        "parse_indicators",
+        "_attempt",
+        "analyze_distress"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/ai_workflow.py",
+      "lines": 65,
+      "sha256": "202302b36a50204b8c23f39a00b280ecc4ac0f0dfc09b9cd7f8efeba0fdedd12",
+      "definitions": [
+        "analyze_saved_check_in"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/auth.py",
+      "lines": 197,
+      "sha256": "91af35a71916c1abe9dc2333ee5cf9f218341d78d052ab07e615df94f5dcfe21",
+      "definitions": [
+        "create_access_token",
+        "get_current_user",
+        "require_role",
+        "victim_test",
+        "counsellor_test",
+        "authority_test",
+        "register_user",
+        "login_user"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/cases.py",
+      "lines": 307,
+      "sha256": "5d0e1da72d0b2f554dd281002837b83b466e54fb5c019377df0df551acb4ab73",
+      "definitions": [
+        "get_cases",
+        "get_case",
+        "get_users",
+        "get_victim_dashboard",
+        "calculate_distress_score",
+        "submit_assessment"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/chat.py",
+      "lines": 116,
+      "sha256": "accdcdcb609b0104fca1b8b08aed82cf58f1c08d83519b91a3f383f05bdadf1f",
+      "definitions": [
+        "chat_case",
+        "eligible_message",
+        "SendMessage",
+        "MessageOut",
+        "list_messages",
+        "send_message"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/database.py",
+      "lines": 29,
+      "sha256": "bdd23c851a687c9cbc55d228c1d9cf075ceaa5e95f1e052668dad9e90c27604c",
+      "definitions": [
+        "get_db"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/main.py",
+      "lines": 41,
+      "sha256": "8ae81b171a6a1ef1dd284d29c1cdd94025a6004dbc6ab0abf95971e49794d667",
+      "definitions": [
+        "root"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/manage.py",
+      "lines": 26,
+      "sha256": "aac959f417455f4b50db5d96bcbb121f0654b40d6c645ac6131e6cd1e2cabf6e",
+      "definitions": [
+        "main"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/migrate_ai_prompt2.py",
+      "lines": 32,
+      "sha256": "e5a442c8bcd1fea48c06135cd83fe553e7a653b17d9f3d5251ea0a428c9d323a",
+      "definitions": [
+        "upgrade"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/migrate_ai_prompt3.py",
+      "lines": 45,
+      "sha256": "3455edbfdf3f6c4dd2ca01ae96a2eda7e7735665a1e70816538766190f26ae7e",
+      "definitions": [
+        "upgrade"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/migrate_final.py",
+      "lines": 12,
+      "sha256": "5e6962fb1b49d402472887b0b9bd8456da4183e557ae8d16ed26bdf1fde8d7e9",
+      "definitions": [
+        "upgrade"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/models.py",
+      "lines": 188,
+      "sha256": "7bb5ac74a668096a39203a22438dc1788b16e0e578615dd29ba5b397dfebe094",
+      "definitions": [
+        "User",
+        "Case",
+        "Assessment",
+        "AIAnalysis",
+        "CaseMessage",
+        "AnalysisReview",
+        "SupportSession",
+        "SupportRequest"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/monitoring.py",
+      "lines": 139,
+      "sha256": "83e42b01d16c62e6144bf4360638b9458baaf118301af73e778734cd95872db8",
+      "definitions": [
+        "professional_cases",
+        "source_rows",
+        "case_view",
+        "all_views",
+        "monitoring_cases",
+        "monitoring_detail",
+        "ReviewRequest",
+        "review_case",
+        "monitoring_summary",
+        "victim_checkins"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/monitoring_rules.py",
+      "lines": 77,
+      "sha256": "31442ff6235cf6de0503e0c20888a0599ad87800ad37a32a96d285025c41b7f3",
+      "definitions": [
+        "utc",
+        "valid",
+        "trend",
+        "prioritize"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/operations.py",
+      "lines": 168,
+      "sha256": "323c8a7e28721b146abfce76b761aae78eb76f246cfa8480454d5ca49f312b01",
+      "definitions": [
+        "scope",
+        "new_victim_case",
+        "ensure_case",
+        "counsellors",
+        "CaseUpdate",
+        "assign",
+        "sessions",
+        "SessionCreate",
+        "create_session",
+        "SessionUpdate",
+        "update_session",
+        "RequestCreate",
+        "create_request",
+        "requests",
+        "RequestUpdate",
+        "review_request"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/schemas.py",
+      "lines": 70,
+      "sha256": "d3b965eba1aa67a8cbbc12b14ef85cc77fae4e44f8919558f93ed21d6850bb9f",
+      "definitions": [
+        "VictimDashboardOut",
+        "UserRegister",
+        "UserLogin",
+        "UserOut",
+        "CaseOut",
+        "AssessmentCreate"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/seed_cases.py",
+      "lines": 184,
+      "sha256": "53dff2fd7f9d2e3ed9b17f78523f686084f1bb78f58c89c1668869e666c9b16d",
+      "definitions": [
+        "get_or_create_counsellor",
+        "seed_cases_for_counsellor",
+        "main"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/seed_demo.py",
+      "lines": 36,
+      "sha256": "404b60b07316ccb6b1b33306f486460d7d3a51919c482783e9999be7303607fd",
+      "definitions": [
+        "main"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/voice.py",
+      "lines": 89,
+      "sha256": "7ec6101afc5723ddc2bfca303b641968db5ad3be3001e1a2fed8bab13031a291",
+      "definitions": [
+        "transcribe_voice"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/app/voice_service.py",
+      "lines": 64,
+      "sha256": "497bd0604f89bb87e6a32ba39a588a3651f408f091d5e5c6b3278c7785b0bdd1",
+      "definitions": [
+        "VoiceTranscriptionError",
+        "get_whisper_model",
+        "transcribe_audio"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/tests/test_ai.py",
+      "lines": 240,
+      "sha256": "befbcb4e41d973d88f12dbf4361d1b86ebb2d67d64fc2b0a7c2706ad2730bd8d",
+      "definitions": [
+        "reply",
+        "ServiceTests",
+        "EndpointTests"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/tests/test_ai_workflow.py",
+      "lines": 345,
+      "sha256": "9b36eb3efb8866c18b14e3f69b40d4adc166936f53f3a7ef08740942d4ec95fc",
+      "definitions": [
+        "load_backend",
+        "WorkflowTests",
+        "MigrationTests"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/tests/test_monitoring.py",
+      "lines": 256,
+      "sha256": "669b8af809718a62ec2989bbb8aa614d440c8ef907d3c786f253aba1d2c618d8",
+      "definitions": [
+        "points",
+        "RuleTests",
+        "ChatMonitoringTests"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/tests/test_operations.py",
+      "lines": 64,
+      "sha256": "80d1c9deed36d930fcf1e9da4130be04b014d482f1581ae04dc1f7140058c4d1",
+      "definitions": [
+        "OperationsTests"
+      ]
+    },
+    {
+      "path": "sih_backend_latest/tests/test_voice.py",
+      "lines": 84,
+      "sha256": "ccc021ffb92814c5c240aa5621e6cc91a52da23882782058e88678af37c0dea3",
+      "definitions": [
+        "VoiceEndpointTests"
+      ]
+    },
+    {
+      "path": "sih_backend/app/auth.py",
+      "lines": 187,
+      "sha256": "54f58aea4f36a8deabb501f0593f48068c3260a7dc21625b091c035aa326cb40",
+      "definitions": [
+        "create_access_token",
+        "get_current_user",
+        "require_role",
+        "victim_test",
+        "counsellor_test",
+        "authority_test",
+        "register_user",
+        "login_user"
+      ]
+    },
+    {
+      "path": "sih_backend/app/cases.py",
+      "lines": 271,
+      "sha256": "a61589bee7cf190d64dbac54af0aad7fac8d1dd7a3bfa6122b67441e8cc6a94f",
+      "definitions": [
+        "get_cases",
+        "get_case",
+        "get_users",
+        "get_victim_dashboard",
+        "calculate_distress_score",
+        "submit_assessment"
+      ]
+    },
+    {
+      "path": "sih_backend/app/database.py",
+      "lines": 32,
+      "sha256": "26a97922fe3b48cc7a5c66da1e7a64ce6c61ed657980ad54642c482b648f0d57",
+      "definitions": [
+        "get_db"
+      ]
+    },
+    {
+      "path": "sih_backend/app/main.py",
+      "lines": 47,
+      "sha256": "ee061a82e0b7bf61dbbd72529c7faba7bc4bd056cf53c67cbc7bfe55a4fc4316",
+      "definitions": [
+        "lifespan",
+        "root"
+      ]
+    },
+    {
+      "path": "sih_backend/app/models.py",
+      "lines": 85,
+      "sha256": "5b836e776f3e3bd973720dc6b0c7ed673639457ee2d25db657a5f5524d5d0770",
+      "definitions": [
+        "User",
+        "Case",
+        "Assessment"
+      ]
+    },
+    {
+      "path": "sih_backend/app/schemas.py",
+      "lines": 51,
+      "sha256": "36a6d7013245add81a46245957b34b3d392060c0a9d7e5fa3efc0d82d3296e92",
+      "definitions": [
+        "VictimDashboardOut",
+        "UserRegister",
+        "UserLogin",
+        "UserOut",
+        "CaseOut",
+        "AssessmentCreate"
+      ]
+    },
+    {
+      "path": "sih_backend/app/seed_cases.py",
+      "lines": 184,
+      "sha256": "c7b925b6e9b1c82104790e464cfb074a4927725ca715d222c33d2ef34f276bfa",
+      "definitions": [
+        "get_or_create_counsellor",
+        "seed_cases_for_counsellor",
+        "main"
+      ]
+    }
+  ],
+  "syntax_errors": []
+}

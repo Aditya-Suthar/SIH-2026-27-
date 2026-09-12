@@ -1,0 +1,16 @@
+{
+  "synthetic_assessment_status": 200,
+  "assessment_result": {
+    "message": "Assessment submitted successfully",
+    "distressScore": 12,
+    "riskLevel": "Critical"
+  },
+  "monitoring_status": 200,
+  "monitoring_result": {
+    "category": "UNASSESSED",
+    "score": null,
+    "alerts": [],
+    "needs_review": false,
+    "latest_attempt_status": "none"
+  }
+}

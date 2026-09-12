@@ -160,6 +160,10 @@ class EndpointTests(unittest.TestCase):
         cls.engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
         with patch('sqlalchemy.create_engine', return_value=cls.engine):
             cls.main = importlib.import_module('app.main')
+        # Discovery may have imported the app earlier. Always initialize this
+        # test's isolated engine rather than relying on import side effects.
+        from app.database import Base
+        Base.metadata.create_all(cls.engine)
         from app.auth import create_access_token
         cls.headers = {'Authorization': 'Bearer ' + create_access_token({'user_id': 1, 'role': 'victim'})}
 

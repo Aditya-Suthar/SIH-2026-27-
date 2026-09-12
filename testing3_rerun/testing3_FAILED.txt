@@ -1,0 +1,76 @@
+INCOMPLETE RUN: do not report partial results as Testing 3. No sample was skipped.
+
+Traceback (most recent call last):
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 755, in main
+    predicted, confidence = predictor(waveform)
+                            ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 556, in predict
+    values = np.asarray(probabilities(waveform), dtype=np.float64)
+                        ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 543, in probabilities
+    result = model.audio_probabilities(tensor)
+  File "C:\Users\s9416\OneDrive\Desktop\SIH CODE\SIH-2026-27-\testing3_ser.py", line 521, in audio_probabilities
+    features = self.mods.wav2vec2(waveform)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\speechbrain\integrations\huggingface\wav2vec2.py", line 156, in forward
+    return self.extract_features(wav, wav_lens)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\speechbrain\integrations\huggingface\wav2vec2.py", line 182, in extract_features
+    out = self.model(
+        wav,
+        attention_mask=padding_mask,
+        output_hidden_states=self.output_all_hiddens,
+    )
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\utils\generic.py", line 1068, in wrapper
+    output = func(self, *args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\utils\output_capturing.py", line 286, in wrapper
+    outputs = func(self, *args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\models\wav2vec2\modeling_wav2vec2.py", line 1293, in forward
+    encoder_outputs = self.encoder(
+        hidden_states,
+        attention_mask=attention_mask,
+        **kwargs,
+    )
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\models\wav2vec2\modeling_wav2vec2.py", line 692, in forward
+    hidden_states = layer(hidden_states, attention_mask=attention_mask, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\modeling_layers.py", line 109, in __call__
+    return super().__call__(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\models\wav2vec2\modeling_wav2vec2.py", line 606, in forward
+    hidden_states = hidden_states + self.feed_forward(hidden_states)
+                                    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\transformers\models\wav2vec2\modeling_wav2vec2.py", line 569, in forward
+    hidden_states = self.intermediate_dense(hidden_states)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\s9416\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\linear.py", line 134, in forward
+    return F.linear(input, self.weight, self.bias)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
