@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, JSON, DateTime, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean, JSON, Date, DateTime, Float, CheckConstraint, Index, UniqueConstraint
 from .database import Base
 
 
@@ -20,6 +20,8 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
 
     role = Column(String(20), nullable=False)
+    # Optional for legacy accounts; required before a victim starts questionnaire v2.
+    date_of_birth = Column(Date, nullable=True)
 
 
 class Case(Base):
@@ -60,6 +62,18 @@ class Case(Base):
 
     state = Column(String(100), nullable=False)
 
+    # One authoritative current distress/risk projection. Source records remain
+    # immutable in assessments/ai_analyses; these columns only identify which
+    # latest successful observation every dashboard should display.
+    latest_distress_score = Column(Integer, nullable=True)
+    latest_risk_source = Column(String(32), nullable=True)
+    latest_state_at = Column(DateTime(timezone=True), nullable=True)
+    # Logical source IDs. Kept without database FKs to avoid circular core-table
+    # dependencies during additive upgrades of legacy schemas.
+    latest_assessment_id = Column(Integer, nullable=True)
+    latest_analysis_id = Column(Integer, nullable=True)
+    legacy_risk_level = Column(String(20), nullable=True)
+
 class Assessment(Base):
     __tablename__ = "assessments"
 
@@ -87,6 +101,32 @@ class Assessment(Base):
 
     # Optional check-in text; stored once on its original assessment.
     note = Column(Text, nullable=True)
+
+
+class QuestionnaireSession(Base):
+    """Versioned adaptive selection and derived answers; legacy assessments remain intact."""
+    __tablename__ = "questionnaire_sessions"
+    __table_args__ = (
+        CheckConstraint("status IN ('pending','followup','completed')", name="ck_questionnaire_status"),
+        Index("ix_questionnaire_victim_history", "victim_id", "created_at", "id"),
+    )
+    id = Column(String(36), primary_key=True)
+    victim_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    case_id = Column(Integer, ForeignKey("cases.id"), nullable=False, index=True)
+    assessment_id = Column(Integer, ForeignKey("assessments.id"), nullable=True, unique=True)
+    questionnaire_version = Column(String(16), nullable=False)
+    scoring_version = Column(String(16), nullable=False)
+    age_group = Column(String(8), nullable=False)
+    selected_question_ids = Column(JSON, nullable=False)
+    triggered_follow_up_ids = Column(JSON, nullable=False, default=list)
+    answers = Column(JSON, nullable=False, default=dict)
+    domain_scores = Column(JSON, nullable=True)
+    questionnaire_score = Column(Float, nullable=True)
+    safety_flags = Column(JSON, nullable=False, default=list)
+    explanation = Column(JSON, nullable=True)
+    status = Column(String(16), nullable=False, default="pending")
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+    completed_at = Column(DateTime(timezone=True), nullable=True)
 
 
 class AIAnalysis(Base):
@@ -159,6 +199,25 @@ class AnalysisReview(Base):
     analysis_id = Column(Integer, ForeignKey('ai_analyses.id'), nullable=False)
     reviewer_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     reviewed_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+
+
+class MonitoringIndicator(Base):
+    """Auditable, deduplicated human-review signal; never a support request."""
+    __tablename__ = 'monitoring_indicators'
+    __table_args__ = (UniqueConstraint('case_id', 'fingerprint', name='uq_monitoring_indicator_event'),
+                      Index('ix_monitoring_indicator_queue', 'case_id', 'reviewed_at', 'created_at'))
+    id = Column(Integer, primary_key=True)
+    case_id = Column(Integer, ForeignKey('cases.id'), nullable=False)
+    source = Column(String(32), nullable=False)  # questionnaire, questionnaire_trend, text_ai
+    severity = Column(String(16), nullable=False)
+    fingerprint = Column(String(160), nullable=False)
+    reason = Column(String(500), nullable=False)
+    current_score = Column(Integer, nullable=True)
+    trend = Column(String(32), nullable=True)
+    analysis_id = Column(Integer, ForeignKey('ai_analyses.id'), nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+    reviewed_by = Column(Integer, ForeignKey('users.id'), nullable=True)
+    reviewed_at = Column(DateTime(timezone=True), nullable=True)
 
 
 class SupportSession(Base):

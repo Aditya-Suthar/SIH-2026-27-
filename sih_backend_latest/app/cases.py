@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
@@ -10,6 +10,7 @@ from .auth import get_current_user
 from . import models, schemas
 from .ai_history import authenticated_account
 from .ai_workflow import analyze_saved_check_in
+from .case_state import current_state, ensure_indicator, update_from_assessment
 
 
 # Router for all API-related endpoints
@@ -55,7 +56,7 @@ def get_cases(
     return [
         schemas.CaseOut(
             caseId=c.case_id,
-            riskLevel=c.risk_level,
+            riskLevel=current_state(c)['risk_display'],
             assignedCounsellor=c.assigned_counsellor,
             lastAssessment=c.last_assessment,
             interventionStatus=c.intervention_status,
@@ -106,7 +107,7 @@ def get_case(
 
     return schemas.CaseOut(
         caseId=case.case_id,
-        riskLevel=case.risk_level,
+        riskLevel=current_state(case)['risk_display'],
         assignedCounsellor=case.assigned_counsellor,
         lastAssessment=case.last_assessment,
         interventionStatus=case.intervention_status,
@@ -190,16 +191,37 @@ def get_victim_dashboard(
         if counsellor:
             counsellor_name = counsellor.name
 
+    latest_assessment = (
+        db.query(models.Assessment)
+        .filter_by(case_id=case.id)
+        .order_by(models.Assessment.id.desc())
+        .first()
+    )
+    recent_history = recent_assessment_history(db, case.id, datetime.now(timezone.utc))
+    history = historical_distress(recent_history)
+
     # Return victim dashboard data
     return schemas.VictimDashboardOut(
         caseId=case.case_id,
         riskLevel=case.risk_level,
-        distressScore=(db.query(models.Assessment).filter_by(case_id=case.id).order_by(models.Assessment.id.desc()).first().distress_score if db.query(models.Assessment).filter_by(case_id=case.id).first() else None),
+        distressScore=latest_assessment.distress_score if latest_assessment else None,
+        historicalScore=history['score'],
+        recentTrend=history['trend'] if recent_history else None,
+        recentScores=[{'score': row['score'], 'createdAt': row['created_at']} for row in reversed(recent_history)],
         assignedCounsellor=counsellor_name,
         caseStage=case.intervention_status,
+        dateOfBirth=authenticated_account(db, current_user).date_of_birth,
     )
 
-def calculate_distress_score(data):
+HISTORY_LOOKBACK_DAYS = 4
+HISTORY_MAX_CHECK_INS = 4
+HISTORY_WEIGHTS = (0.4, 0.3, 0.2, 0.1)  # Newest to oldest.
+SIGNIFICANT_TREND_POINTS = 10
+RISING_TREND_BONUS = 5
+
+
+def questionnaire_distress_score(data):
+    """Keep the existing six-question questionnaire calculation unchanged."""
     total = (
         data.mood
         + data.anxiety
@@ -210,9 +232,12 @@ def calculate_distress_score(data):
     )
 
     # 6 questions, each 0-4 → max raw score = 24
-    score = round((total / 24) * 100)
+    return round((total / 24) * 100)
 
-    if data.self_harm_thoughts >= 3:
+
+def risk_level_for_score(score, self_harm_thoughts):
+    """Use existing thresholds, preserving the self-harm safety override."""
+    if self_harm_thoughts >= 3:
         risk_level = "Critical"
     elif score >= 75:
         risk_level = "Critical"
@@ -223,7 +248,74 @@ def calculate_distress_score(data):
     else:
         risk_level = "Low"
 
-    return score, risk_level
+    return risk_level
+
+
+def parse_assessment_timestamp(value):
+    """Read legacy naive ISO strings and current UTC ISO strings as UTC."""
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except (AttributeError, TypeError, ValueError):
+        return None
+    return parsed.replace(tzinfo=parsed.tzinfo or timezone.utc).astimezone(timezone.utc)
+
+
+def recent_assessment_history(db, case_id, now):
+    """Return at most four prior questionnaire scores for this case in four days."""
+    cutoff = now - timedelta(days=HISTORY_LOOKBACK_DAYS)
+    rows = (
+        db.query(models.Assessment)
+        .filter(models.Assessment.case_id == case_id)
+        .order_by(models.Assessment.id.desc())
+        .limit(100)
+        .all()
+    )
+    history = []
+    for row in rows:
+        created_at = parse_assessment_timestamp(row.created_at)
+        if created_at is None or not cutoff <= created_at < now:
+            continue
+        history.append({'score': row.distress_score, 'created_at': created_at.isoformat()})
+        if len(history) == HISTORY_MAX_CHECK_INS:
+            break
+    return history
+
+
+def historical_distress(history):
+    """Weight newest scores most heavily and classify their end-to-end movement."""
+    if not history:
+        return {'score': None, 'trend': 'stable', 'delta': 0}
+    weights = HISTORY_WEIGHTS[:len(history)]
+    denominator = sum(weights)
+    score = round(sum(row['score'] * weight for row, weight in zip(history, weights)) / denominator, 1)
+    delta = history[0]['score'] - history[-1]['score']
+    trend = ('rising' if delta >= SIGNIFICANT_TREND_POINTS else
+             'falling' if delta <= -SIGNIFICANT_TREND_POINTS else 'stable')
+    return {'score': score, 'trend': trend, 'delta': delta}
+
+
+def calculate_distress_score(data, history):
+    """Combine unchanged questionnaire score with a bounded historical component."""
+    current_score = questionnaire_distress_score(data)
+    historical = historical_distress(history)
+    # With no prior check-in, use today's score as the history baseline so a
+    # first submission remains exactly the existing questionnaire result.
+    history_score = historical['score'] if historical['score'] is not None else current_score
+    escalation_bonus = RISING_TREND_BONUS if historical['trend'] == 'rising' else 0
+    final_score = min(100, max(0, round(
+        current_score * 0.8 + history_score * 0.2 + escalation_bonus
+    )))
+    risk_level = risk_level_for_score(final_score, data.self_harm_thoughts)
+    metadata = {
+        'currentScore': current_score,
+        'historicalScore': historical['score'],
+        'finalScore': final_score,
+        'recentTrend': historical['trend'],
+        'trendDelta': historical['delta'],
+        'escalationBonus': escalation_bonus,
+        'recentScores': list(reversed(history)),
+    }
+    return final_score, risk_level, metadata
 
 @router.post("/victim/assessment")
 def submit_assessment(
@@ -253,7 +345,9 @@ def submit_assessment(
             detail="No case found for this victim"
         )
 
-    score, risk_level = calculate_distress_score(assessment)
+    now = datetime.now(timezone.utc)
+    history = recent_assessment_history(db, case.id, now)
+    score, risk_level, distress_metadata = calculate_distress_score(assessment, history)
 
     new_assessment = models.Assessment(
         case_id=case.id,
@@ -265,19 +359,19 @@ def submit_assessment(
         self_harm_thoughts=assessment.self_harm_thoughts,
         distress_score=score,
         risk_level=risk_level,
-        created_at=datetime.now().isoformat(),
+        created_at=now.isoformat(),
         note=assessment.note,
     )
 
     db.add(new_assessment)
 
-    case.risk_level = risk_level
-    case.last_assessment = datetime.now().strftime("%Y-%m-%d %H:%M")
-
     try:
+        db.flush()
+        update_from_assessment(case, new_assessment, now)
+        case.last_assessment = now.strftime("%Y-%m-%d %H:%M")
+        ensure_indicator(db, case)
         analysis_id = None
         if assessment.note is not None:
-            db.flush()  # Database-generated source ID, never a client-supplied ID.
             analysis = models.AIAnalysis(
                 assessment_id=new_assessment.id,
                 case_id=case.id,
@@ -300,6 +394,7 @@ def submit_assessment(
         "message": "Assessment submitted successfully",
         "distressScore": score,
         "riskLevel": risk_level,
+        "distressMetadata": distress_metadata,
     }
     if analysis_id is not None:
         status = analyze_saved_check_in(db, analysis_id, assessment.note)

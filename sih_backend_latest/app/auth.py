@@ -133,7 +133,8 @@ def register_user(
         name=data.name,
         email=data.email,
         password_hash=pwd_context.hash(data.password),
-        role=data.role
+        role=data.role,
+        date_of_birth=data.date_of_birth,
     )
 
     db.add(new_user)

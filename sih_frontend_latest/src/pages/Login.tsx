@@ -15,6 +15,7 @@ function Login() {
   const [signupName, setSignupName] = useState("")
   const [signupEmail, setSignupEmail] = useState("")
   const [signupPassword, setSignupPassword] = useState("")
+  const [signupDateOfBirth, setSignupDateOfBirth] = useState("")
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,6 +76,7 @@ function Login() {
         email: signupEmail,
         password: signupPassword,
         role: "victim",
+        date_of_birth: signupDateOfBirth,
       }),
     })
 
@@ -184,6 +186,12 @@ function Login() {
               onChange={(e) => setSignupPassword(e.target.value)}
               required
             />
+            </div>
+
+            <div className="input-field">
+              <i className="fas fa-calendar"></i>
+              <input type="date" aria-label="Date of birth" value={signupDateOfBirth}
+                onChange={(e) => setSignupDateOfBirth(e.target.value)} required />
             </div>
 
             <div className="input-field">

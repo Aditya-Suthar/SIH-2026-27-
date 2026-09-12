@@ -1,11 +1,9 @@
-"""Apply prior AI migrations and create additive support tables before app workers."""
+"""Apply the complete additive schema before app workers."""
 from .database import engine
-from .migrate_ai_prompt3 import upgrade as prior_upgrade
-from .models import Base
+from .migrate_questionnaire_v2 import upgrade as questionnaire_upgrade
 
 def upgrade(bind):
-    prior_upgrade(bind)
-    Base.metadata.create_all(bind)
+    questionnaire_upgrade(bind)
 
 if __name__ == '__main__':
     upgrade(engine)

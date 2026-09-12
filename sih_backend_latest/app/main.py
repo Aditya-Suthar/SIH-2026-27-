@@ -6,6 +6,7 @@ from .operations import router as operations_router
 from .chat import router as chat_router
 from .monitoring import router as monitoring_router
 from .voice import router as voice_router
+from .questionnaire import router as questionnaire_router
 from .ai_history import router as ai_history_router
 from .ai import router as ai_router
 from .auth import router as auth_router
@@ -34,6 +35,7 @@ app.include_router(operations_router)
 app.include_router(chat_router)
 app.include_router(monitoring_router)
 app.include_router(voice_router)
+app.include_router(questionnaire_router)
 
 
 @app.get("/")

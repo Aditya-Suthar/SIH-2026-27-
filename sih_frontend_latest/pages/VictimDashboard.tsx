@@ -20,9 +20,9 @@ import { Button } from "../src/components/ui/button";
 import { Input } from "../src/components/ui/input";
 import { CaseChat } from "../src/components/monitoring/CaseChat";
 import { VictimCheckIns } from "../src/components/monitoring/VictimCheckIns";
+import { AdaptiveQuestionnaire } from "../src/components/monitoring/AdaptiveQuestionnaire";
 import { Avatar, AvatarFallback } from "../src/components/ui/avatar";
 import { cn } from "../lib/utils";
-type WellbeingMood = "Stable" | "Anxious" | "Distressed" | "Unsafe";
 type RiskLevel = "Low" | "Moderate" | "High" | "Critical";
 type VictimDashboardData = {
   caseId: string;
@@ -30,16 +30,11 @@ type VictimDashboardData = {
   distressScore: number | null;
   assignedCounsellor: string;
   caseStage: string;
+  dateOfBirth: string | null;
 };
 
 
 
-const moodOptions: { value: WellbeingMood; tone: string }[] = [
-  { value: "Stable", tone: "border-success/40 text-success hover:bg-success/10" },
-  { value: "Anxious", tone: "border-warning/40 text-warning hover:bg-warning/10" },
-  { value: "Distressed", tone: "border-orange-500/40 text-orange-600 hover:bg-orange-500/10" },
-  { value: "Unsafe", tone: "border-danger/40 text-danger hover:bg-danger/10" },
-];
 
 export default function VictimDashboard() {
   const [showCounsellorChat, setShowCounsellorChat] = useState(false);
@@ -47,9 +42,11 @@ export default function VictimDashboard() {
   const [dashboardData, setDashboardData] =
   useState<VictimDashboardData | null>(null);
 
-  const [selectedMood, setSelectedMood] = useState<WellbeingMood | null>(null);
   const [note, setNote] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [birthDate,setBirthDate]=useState("");
+  const [profileBusy,setProfileBusy]=useState(false);
+  const [profileError,setProfileError]=useState("");
+  const [isSubmitting] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [voiceNotice, setVoiceNotice] = useState("");
@@ -62,25 +59,6 @@ export default function VictimDashboard() {
   const [requestRevision,setRequestRevision]=useState(0);
   async function requestSupport(kind:string){setRequestBusy(true);try{await api("/api/support-requests",{method:"POST",body:JSON.stringify({kind})});setRequestNotice("Request saved for staff follow-up. This is not an emergency dispatch service.");setRequestRevision(v=>v+1);}catch(e){setRequestNotice((e as Error).message);}finally{setRequestBusy(false);}}
   
-const [assessment, setAssessment] = useState({
-  mood: 0,
-  anxiety: 0,
-  sleep: 0,
-  hopelessness: 0,
-  social_withdrawal: 0,
-  self_harm_thoughts: 0,
-});
-
-const updateAssessment = (
-  field: keyof typeof assessment,
-  value: number
-) => {
-  setAssessment((prev) => ({
-    ...prev,
-    [field]: value,
-  }));
-};
-
 const transcribeRecording = async (audioBlob: Blob) => {
   setIsTranscribing(true);
   setVoiceNotice("Transcribing your recording locally...");
@@ -179,63 +157,6 @@ const handleVoiceRecording = async () => {
   }
 };
 
-const submitAssessment = async () => {
-  if (isSubmitting || isRecording || isTranscribing) return;
-  setIsSubmitting(true);
-  try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      alert("You are not logged in");
-      return;
-    }
-
-    const response = await fetch(
-      API_BASE_URL + "/api/victim/assessment",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ ...assessment, note: note.trim() || null }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Assessment failed: ${response.status}`);
-    }
-
-    const result = await response.json();
-    setDashboardData((prev) =>
-  prev
-    ? {
-        ...prev,
-        distressScore: result.distressScore,
-        riskLevel: result.riskLevel,
-      }
-    : prev
-);
-
-    setNote("");
-    setCheckInRevision(value => value + 1);
-    const analysisNotice = result.ai_analysis?.status === "failed"
-      ? " Your text was saved, but its AI analysis is unavailable."
-      : result.ai_analysis?.status === "pending"
-        ? " Your text was saved; its AI analysis is not complete."
-        : "";
-    alert(
-      `Your check-in was saved.${analysisNotice}`
-    );
-  } catch (error) {
-    console.error(error);
-    alert("Could not submit assessment");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-
 useEffect(() => () => {
   const recorder = mediaRecorderRef.current;
   if (recorder && recorder.state !== "inactive") {
@@ -303,173 +224,6 @@ useEffect(()=>{let active=true;async function load(){try{await api('/api/victim/
         </CardHeader>
 
             <CardContent className="space-y-5">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-foreground">
-                  How low or distressed has your mood felt today?
-                </p>
-
-                <div className="flex gap-2">
-                  {[0, 1, 2, 3, 4].map((value) => (
-                    <Button
-                      key={value}
-                      type="button"
-                      variant={assessment.mood === value ? "default" : "outline"}
-                      onClick={() => updateAssessment("mood", value)}
-                    >
-                      {value}
-                    </Button>
-                  ))}
-                </div>
-
-                <p className="text-xs text-muted-foreground">
-                  0 = Not at all · 4 = Extremely
-                </p>
-              </div>
-            <div className="space-y-2">
-  <p className="text-sm font-medium text-foreground">
-    How anxious or worried have you felt today?
-  </p>
-
-  <div className="flex gap-2">
-    {[0, 1, 2, 3, 4].map((value) => (
-      <Button
-        key={value}
-        type="button"
-        variant={assessment.anxiety === value ? "default" : "outline"}
-        onClick={() => updateAssessment("anxiety", value)}
-      >
-        {value}
-      </Button>
-    ))}
-  </div>
-
-  <p className="text-xs text-muted-foreground">
-    0 = Not at all · 4 = Extremely
-  </p>
-</div>
-
-<div className="space-y-2">
-  <p className="text-sm font-medium text-foreground">
-    How much has your sleep been disturbed recently?
-  </p>
-
-  <div className="flex gap-2">
-    {[0, 1, 2, 3, 4].map((value) => (
-      <Button
-        key={value}
-        type="button"
-        variant={assessment.sleep === value ? "default" : "outline"}
-        onClick={() => updateAssessment("sleep", value)}
-      >
-        {value}
-      </Button>
-    ))}
-  </div>
-
-  <p className="text-xs text-muted-foreground">
-    0 = Not at all · 4 = Extremely
-  </p>
-</div>
-
-<div className="space-y-2">
-  <p className="text-sm font-medium text-foreground">
-    How hopeless or discouraged have you felt recently?
-  </p>
-
-  <div className="flex gap-2">
-    {[0, 1, 2, 3, 4].map((value) => (
-      <Button
-        key={value}
-        type="button"
-        variant={
-          assessment.hopelessness === value ? "default" : "outline"
-        }
-        onClick={() => updateAssessment("hopelessness", value)}
-      >
-        {value}
-      </Button>
-    ))}
-  </div>
-
-  <p className="text-xs text-muted-foreground">
-    0 = Not at all · 4 = Extremely
-  </p>
-</div>
-
-<div className="space-y-2">
-  <p className="text-sm font-medium text-foreground">
-    How much have you avoided people or social interaction recently?
-  </p>
-
-  <div className="flex gap-2">
-    {[0, 1, 2, 3, 4].map((value) => (
-      <Button
-        key={value}
-        type="button"
-        variant={
-          assessment.social_withdrawal === value
-            ? "default"
-            : "outline"
-        }
-        onClick={() =>
-          updateAssessment("social_withdrawal", value)
-        }
-      >
-        {value}
-      </Button>
-    ))}
-  </div>
-
-  <p className="text-xs text-muted-foreground">
-    0 = Not at all · 4 = Extremely
-  </p>
-</div>
-
-<div className="space-y-2">
-  <p className="text-sm font-medium text-foreground">
-    Have you had thoughts of harming yourself recently?
-  </p>
-
-  <div className="flex gap-2">
-    {[0, 1, 2, 3, 4].map((value) => (
-      <Button
-        key={value}
-        type="button"
-        variant={
-          assessment.self_harm_thoughts === value
-            ? "default"
-            : "outline"
-        }
-        onClick={() =>
-          updateAssessment("self_harm_thoughts", value)
-        }
-      >
-        {value}
-      </Button>
-    ))}
-  </div>
-
-  <p className="text-xs text-muted-foreground">
-    0 = Never · 1 = Rarely · 2 = Sometimes · 3 = Often · 4 = Very often
-  </p>
-</div>
-
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {moodOptions.map((mood) => (
-              <button
-                key={mood.value}
-                onClick={() => setSelectedMood(mood.value)}
-                className={cn(
-                  "rounded-lg border bg-card px-3 py-3 text-sm font-medium transition-colors",
-                  mood.tone,
-                  selectedMood === mood.value && "ring-2 ring-ring"
-                )}
-              >
-                {mood.value}
-              </button>
-            ))}
-          </div>
-
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground">
               Optional text check-in
@@ -508,13 +262,13 @@ useEffect(()=>{let active=true;async function load(){try{await api('/api/victim/
             Audio is sent to the Sahas backend for local Whisper transcription, used only to produce the editable transcript, and not stored by the voice endpoint.
           </p>
 
-          <Button
-          className="w-full sm:w-auto"
-          onClick={submitAssessment}
-          disabled={isSubmitting || isRecording || isTranscribing}
-        >
-          {isSubmitting ? "Submitting..." : "Submit Check-in"}
-        </Button>
+          {!dashboardData.dateOfBirth ? <div className="space-y-3 rounded-lg border p-4">
+            <p className="text-sm font-medium">Add your date of birth to prepare age-appropriate questions</p>
+            <p className="text-xs text-muted-foreground">Your age changes question wording and context. It never adds distress points.</p>
+            <Input type="date" value={birthDate} onChange={e=>setBirthDate(e.target.value)} disabled={profileBusy}/>
+            {profileError&&<p role="alert" className="text-sm text-danger">{profileError}</p>}
+            <Button type="button" disabled={!birthDate||profileBusy} onClick={async()=>{setProfileBusy(true);setProfileError("");try{await api('/api/victim/profile',{method:'PUT',body:JSON.stringify({date_of_birth:birthDate})});setDashboardData(old=>old?{...old,dateOfBirth:birthDate}:old);}catch(e){setProfileError((e as Error).message);}finally{setProfileBusy(false);}}}>{profileBusy?'Saving…':'Save date of birth'}</Button>
+          </div> : <AdaptiveQuestionnaire note={note} disabled={isRecording||isTranscribing} onSaved={(result)=>{setDashboardData(old=>old?{...old,distressScore:Math.round(result.questionnaire_score),riskLevel:result.risk_level as RiskLevel}:old);setNote("");setCheckInRevision(value=>value+1);}} />}
         </CardContent>
       </Card>
 
