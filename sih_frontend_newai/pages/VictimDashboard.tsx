@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../src/lib/config";
 import {
   useEffect,
   useRef,
@@ -307,8 +308,10 @@ const transcribeRecording = async (
       "voice-check-in.webm"
     );
 
+    if (!API_BASE_URL) throw new Error("Set VITE_API_BASE_URL to the HTTPS backend URL and rebuild the frontend.");
+    const voiceUrl = `${API_BASE_URL}/api/victim/voice/transcribe`;
     const response = await fetch(
-      "http://127.0.0.1:8000/api/victim/voice/transcribe",
+      voiceUrl,
       {
         method: "POST",
 
@@ -319,17 +322,15 @@ const transcribeRecording = async (
 
         body: formData,
       }
-    );
+    ).catch(() => { throw new Error(`Voice request could not reach ${voiceUrl}. No HTTP status is available; check backend availability, HTTPS, and CORS for ${window.location.origin}.`); });
 
     const result =
-      await response.json();
+      await response.json().catch(() => null);
 
     if (!response.ok) {
-      throw new Error(
-        result.detail ||
-        "Voice transcription failed"
-      );
+      throw new Error(`Voice request failed (HTTP ${response.status}): ${typeof result?.detail === "string" ? result.detail : response.statusText || "Check backend deployment logs."}`);
     }
+    if (typeof result?.transcript !== "string") throw new Error("Voice API returned an invalid response. Check the backend URL.");
 
     // ================================================
     // THIS IS THE IMPORTANT PART:

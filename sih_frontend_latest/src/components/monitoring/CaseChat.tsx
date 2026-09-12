@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Send, MessageCircle, Mic, RefreshCw, Square, LoaderCircle } from "lucide-react";
 import { api } from "../../lib/api";
-import { API_BASE_URL } from "../../lib/config";
+import { transcribeVoice } from "../../lib/voice";
 import { dateTime } from "../../lib/monitoring";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 
 type Message = { id: number; sender_role: string; content: string; created_at: string; client_message_id: string };
 type MessagePage = { items: Message[]; has_more: boolean };
-type VoiceResult = { transcript: string; language: string | null; language_probability: number | null };
 
 const recordingMimeTypes = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus", "audio/ogg", "audio/mp4"];
 
@@ -80,24 +79,7 @@ export function CaseChat({ caseId }: { caseId: string }) {
     }
     const controller = new AbortController(); transcriptionRequest.current = controller;
     try {
-      const response = await fetch(`${API_BASE_URL}/api/victim/voice/transcribe`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": mimeType },
-        body: audio,
-        signal: controller.signal,
-      });
-      const payload = await response.json().catch(() => null) as VoiceResult | { detail?: string } | null;
-      if (!response.ok) {
-        const detail = typeof payload === "object" && payload && "detail" in payload && typeof payload.detail === "string" ? payload.detail : "";
-        const message = response.status === 401 ? "Your session expired. Please sign in again."
-          : response.status === 403 ? "Voice transcription is available only to victims."
-          : response.status === 413 ? "The recording is too large. Please make a shorter recording."
-          : response.status === 415 ? "This browser recorded an unsupported audio format."
-          : detail || "Could not convert voice to text. Please try again.";
-        throw new Error(message);
-      }
-      const transcript = typeof payload === "object" && payload && "transcript" in payload && typeof payload.transcript === "string" ? payload.transcript.trim() : "";
-      if (!transcript) throw new Error("No speech could be detected. Please try recording again.");
+      const { transcript } = await transcribeVoice(audio.type ? audio : new Blob([audio], { type: mimeType }), controller.signal);
       if (alive.current) {
         setDraft(current => {
           const separator = current && !/\s$/.test(current) ? " " : "";

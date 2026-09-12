@@ -10,7 +10,8 @@ from fastapi import (
 )
 
 from .auth import get_current_user
-from .voice_service import transcribe_audio
+from .voice_service import VoiceTranscriptionError, transcribe_audio
+from starlette.concurrency import run_in_threadpool
 
 
 router = APIRouter(
@@ -70,7 +71,10 @@ async def transcribe_voice(
             temp_file.write(audio_bytes)
             temporary_path = temp_file.name
 
-        result = transcribe_audio(temporary_path)
+        try:
+            result = await run_in_threadpool(transcribe_audio, temporary_path)
+        except VoiceTranscriptionError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
 
         if not result["transcript"]:
             raise HTTPException(

@@ -1,4 +1,4 @@
-import {API_BASE_URL} from "../src/lib/config";
+import {transcribeVoice} from "../src/lib/voice";
 import {Link} from "react-router-dom";
 import {api} from "../src/lib/api";
 import {SupportRequests} from "../src/pages/Operations";
@@ -61,28 +61,10 @@ export default function VictimDashboard() {
   
 const transcribeRecording = async (audioBlob: Blob) => {
   setIsTranscribing(true);
-  setVoiceNotice("Transcribing your recording locally...");
+  setVoiceNotice("Transcribing your recording...");
   try {
-    const token = localStorage.getItem("access_token");
-    if (!token) throw new Error("Please sign in again.");
-
-    const response = await fetch(API_BASE_URL + "/api/victim/voice/transcribe", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": audioBlob.type || "audio/webm",
-      },
-      body: audioBlob,
-    });
-
-    const result = await response.json().catch(() => null);
-    if (!response.ok) {
-      const detail = typeof result?.detail === "string" ? result.detail : "Could not transcribe the recording.";
-      throw new Error(detail);
-    }
-
-    const transcript = typeof result?.transcript === "string" ? result.transcript.trim() : "";
-    if (!transcript) throw new Error("No speech could be detected. Please try again.");
+    const result = await transcribeVoice(audioBlob);
+    const transcript = result.transcript;
 
     setNote(transcript);
     const language = typeof result?.language === "string" ? result.language.toUpperCase() : "speech";

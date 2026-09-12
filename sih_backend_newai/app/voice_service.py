@@ -1,140 +1,96 @@
+"""Local speech-to-text service for victim voice check-ins.
+
+The audio is decoded and transcribed with faster-whisper. No audio or transcript is
+persisted here; persistence happens only if the victim later submits the editable
+transcript through the existing assessment workflow.
+"""
+from functools import lru_cache
+import logging
 import os
-import tempfile
+from pathlib import Path
+from threading import Lock
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    File,
-    HTTPException,
-    UploadFile,
-)
-
-from .auth import get_current_user
-from .voice_service import transcribe_audio
+logger = logging.getLogger(__name__)
+_inference_lock = Lock()
 
 
-router = APIRouter(
-    prefix="/api/victim/voice",
-    tags=["voice"],
-)
+class VoiceTranscriptionError(RuntimeError):
+    """Controlled error for unavailable/failed local transcription."""
 
 
-MAX_AUDIO_BYTES = 15 * 1024 * 1024
+@lru_cache(maxsize=1)
+def get_whisper_model():
+    """Load the configured Whisper model once and reuse it between requests."""
+    try:
+        from faster_whisper import WhisperModel
+    except (ImportError, OSError) as exc:
+        logger.exception("Whisper native runtime could not be imported")
+        raise VoiceTranscriptionError(
+            "Voice transcription runtime is unavailable on this server. Check faster-whisper installation and native library compatibility in deployment logs."
+        ) from exc
 
-
-ALLOWED_TYPES = {
-    "audio/webm": ".webm",
-    "audio/wav": ".wav",
-    "audio/x-wav": ".wav",
-    "audio/mpeg": ".mp3",
-    "audio/mp4": ".mp4",
-    "audio/ogg": ".ogg",
-}
-
-
-@router.post("/transcribe")
-async def transcribe_voice(
-    audio: UploadFile = File(...),
-    current_user: dict = Depends(get_current_user),
-):
-    # --------------------------------------------------
-    # Security
-    # --------------------------------------------------
-
-    if current_user.get("role") != "victim":
-        raise HTTPException(
-            status_code=403,
-            detail="Only victims can submit voice check-ins",
-        )
-
-    content_type = (
-        audio.content_type or ""
-    ).split(";", 1)[0].lower()
-
-    if content_type not in ALLOWED_TYPES:
-        raise HTTPException(
-            status_code=415,
-            detail=f"Unsupported audio format: {content_type}",
-        )
-
-    # --------------------------------------------------
-    # Read uploaded audio
-    # --------------------------------------------------
-
-    audio_bytes = await audio.read()
-
-    if not audio_bytes:
-        raise HTTPException(
-            status_code=400,
-            detail="Empty audio recording",
-        )
-
-    if len(audio_bytes) > MAX_AUDIO_BYTES:
-        raise HTTPException(
-            status_code=413,
-            detail="Audio recording is too large",
-        )
-
-    suffix = ALLOWED_TYPES[content_type]
-
-    temporary_path = None
+    model_name = os.getenv("WHISPER_MODEL", "small").strip() or "small"
+    device = os.getenv("WHISPER_DEVICE", "cpu").strip() or "cpu"
+    compute_type = os.getenv("WHISPER_COMPUTE_TYPE", "int8").strip() or "int8"
 
     try:
-        # --------------------------------------------------
-        # Whisper needs an actual temporary audio file
-        # --------------------------------------------------
+        return WhisperModel(
+            model_name, device=device, compute_type=compute_type,
+            download_root=os.getenv("WHISPER_DOWNLOAD_ROOT") or None,
+            local_files_only=os.getenv("WHISPER_LOCAL_FILES_ONLY", "false").lower() == "true",
+            cpu_threads=int(os.getenv("WHISPER_CPU_THREADS", "2")),
+            num_workers=1,
+        )
+    except Exception as exc:
+        logger.exception("Whisper model initialization failed")
+        raise VoiceTranscriptionError(
+            "Voice transcription model could not be loaded. Check deployed model files, cache permissions, download access, device configuration, and memory in backend logs."
+        ) from exc
 
-        with tempfile.NamedTemporaryFile(
-            delete=False,
-            suffix=suffix,
-        ) as temporary_file:
 
-            temporary_file.write(audio_bytes)
+def transcribe_audio(audio_path: str) -> dict:
+    # Prevent simultaneous cold loads and overlapping inference memory spikes.
+    if not _inference_lock.acquire(blocking=False):
+        raise VoiceTranscriptionError("Voice transcription is busy. Please try again shortly.")
+    try:
+        return _transcribe_audio(audio_path)
+    finally:
+        _inference_lock.release()
 
-            temporary_path = (
-                temporary_file.name
-            )
 
-        # --------------------------------------------------
-        # Run faster-whisper
-        # --------------------------------------------------
+def _transcribe_audio(audio_path: str) -> dict:
+    """Transcribe one temporary audio file and return safe metadata."""
+    path = Path(audio_path)
+    if not path.is_file():
+        raise VoiceTranscriptionError("Audio recording is unavailable.")
 
-        result = transcribe_audio(
-            temporary_path
+    model = get_whisper_model()
+
+    try:
+        segments, info = model.transcribe(
+            str(path),
+            language="en",
+            task="transcribe",
+            beam_size=5,
+            vad_filter=True,
+            condition_on_previous_text=False,
         )
 
-        transcript = result[
-            "transcript"
-        ]
+        parts = []
 
-        if not transcript:
-            raise HTTPException(
-                status_code=422,
-                detail=(
-                    "No speech could be detected. "
-                    "Please try recording again."
-                ),
-            )
+        for segment in segments:
+            text = segment.text.strip()
+            if text:
+                parts.append(text)
 
-        # Prevent feeding arbitrarily large text
-        # into the existing AI check-in workflow.
-        transcript = transcript[:4000]
+        transcript = " ".join(parts).strip()
 
-        return {
-            "transcript": transcript,
-            "language": result["language"],
-            "language_probability":
-                result["language_probability"],
-        }
+    except Exception as exc:
+        logger.exception("Whisper decoding or inference failed")
+        raise VoiceTranscriptionError("Voice transcription failed during audio decoding or inference. Check backend logs for the runtime reason.") from exc
 
-    finally:
-
-        if (
-            temporary_path
-            and os.path.exists(
-                temporary_path
-            )
-        ):
-            os.remove(
-                temporary_path
-            )
+    return {
+        "transcript": transcript,
+        "language": getattr(info, "language", None),
+        "language_probability": getattr(info, "language_probability", None),
+    }

@@ -1,5 +1,6 @@
 """Authenticated, victim-only local voice transcription endpoint."""
 import os
+import logging
 import tempfile
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -57,9 +58,13 @@ async def transcribe_voice(
 
     temporary_path = None
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temporary_file:
-            temporary_file.write(audio_bytes)
-            temporary_path = temporary_file.name
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temporary_file:
+                temporary_path = temporary_file.name
+                temporary_file.write(audio_bytes)
+        except OSError as exc:
+            logging.getLogger(__name__).exception("Voice temporary audio storage failed")
+            raise HTTPException(status_code=503, detail="Voice recording could not be staged. Check writable temporary storage and disk space on the backend.") from exc
 
         try:
             result = await run_in_threadpool(transcribe_audio, temporary_path)
