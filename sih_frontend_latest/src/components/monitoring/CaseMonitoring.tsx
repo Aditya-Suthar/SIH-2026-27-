@@ -3,14 +3,15 @@ import { AnalysisHistory } from "./AnalysisHistory";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Activity, CheckCheck } from "lucide-react";
 import { useRemote, api } from "../../lib/api";
-import { dateTime, words, priorityTone, riskTone } from "../../lib/monitoring";
+import { dateTime, displayedTimeZone, words, priorityTone, riskTone } from "../../lib/monitoring";
 import type { MonitoringCase, Analysis } from "../../lib/monitoring";
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-export function CaseMonitoring({ caseId }: { caseId: string }) {
-  const { data, error, loading, refresh } = useRemote<MonitoringCase & { history: Analysis[]; history_limited: boolean }>(`/api/cases/${encodeURIComponent(caseId)}/monitoring`);
+export function CaseMonitoring({ caseId, indicatorId }: { caseId: string; indicatorId?: string | null }) {
+  const indicatorQuery = indicatorId ? `?indicator_id=${encodeURIComponent(indicatorId)}` : "";
+  const { data, error, loading, refresh } = useRemote<MonitoringCase & { history: Analysis[]; history_limited: boolean }>(`/api/cases/${encodeURIComponent(caseId)}/monitoring${indicatorQuery}`);
   const [reviewing, setReviewing] = useState(false); const [reviewError, setReviewError] = useState("");
   async function review() {
     if (!data?.latest_analysis) return;
@@ -25,8 +26,16 @@ export function CaseMonitoring({ caseId }: { caseId: string }) {
   const omitted = data.history.length - points.length;
   return <div className="space-y-4">
     {error && <p role="alert" className="text-sm text-warning">{error} Showing the last loaded data.</p>}
+    {data.selected_evidence && <Card>
+      <CardHeader><div className="flex flex-wrap items-center justify-between gap-3"><CardTitle>Selected historical evidence</CardTitle><Badge variant={data.selected_evidence.severity === "URGENT" ? "danger" : "orange"}>{data.selected_evidence.severity}</Badge></div><p className="text-xs text-muted-foreground">Indicator #{data.selected_evidence.id} · {dateTime(data.selected_evidence.created_at)} · {displayedTimeZone()}</p></CardHeader>
+      <CardContent className="space-y-3">
+        <div className="grid gap-4 sm:grid-cols-3"><div><p className="text-xs text-muted-foreground">Evidence score</p><p className="mt-1 text-3xl font-semibold">{data.selected_evidence.score_snapshot ?? "—"}<span className="text-sm font-normal text-muted-foreground">{data.selected_evidence.score_snapshot !== null ? " / 100" : " Score unavailable"}</span></p></div><div><p className="text-xs text-muted-foreground">Severity</p><p className="mt-2 font-medium">{data.selected_evidence.severity}</p></div><div><p className="text-xs text-muted-foreground">Source</p><p className="mt-2 font-medium capitalize">{words(data.selected_evidence.source)}</p></div></div>
+        <div className="rounded-lg bg-secondary/50 p-4"><p className="text-sm font-semibold">Triggering rule</p><p className="mt-2 text-sm">{data.selected_evidence.triggering_rule}</p></div>
+        <p className="text-sm text-muted-foreground">{data.selected_evidence.assessment ? `Linked assessment #${data.selected_evidence.assessment.id}` : data.selected_evidence.analysis ? `Linked analysis #${data.selected_evidence.analysis.id}` : "No linked assessment or analysis."} · {data.selected_evidence.reviewed ? `Reviewed${data.selected_evidence.reviewed_at ? ` ${dateTime(data.selected_evidence.reviewed_at)}` : ""}` : "Awaiting review"}</p>
+      </CardContent>
+    </Card>}
     <Card>
-      <CardHeader><div className="flex flex-wrap items-center justify-between gap-3"><CardTitle><Activity className="mr-2 inline h-4 w-4 text-primary" />AI monitoring</CardTitle><Badge variant={priorityTone[data.category]}>{data.category === "UNASSESSED" ? "Not yet assessed" : `${data.category} priority`}</Badge></div><p className="text-xs text-muted-foreground">Decision support for human review. These indicators are not a diagnosis.</p></CardHeader>
+      <CardHeader><div className="flex flex-wrap items-center justify-between gap-3"><CardTitle><Activity className="mr-2 inline h-4 w-4 text-primary" />Current case state</CardTitle><Badge variant={priorityTone[data.category]}>{data.category === "UNASSESSED" ? "Not yet assessed" : `${data.category} priority`}</Badge></div><p className="text-xs text-muted-foreground">As of {dateTime(data.current_state_at)} · {displayedTimeZone()}. Decision support for human review.</p></CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-3"><div><p className="text-xs text-muted-foreground">{data.current_source === "questionnaire" ? "Questionnaire score" : "Latest distress indicator"}</p><p className="mt-1 text-3xl font-semibold">{data.current_score ?? "—"}<span className="text-sm font-normal text-muted-foreground">{data.current_score !== null ? " / 100" : " Score unavailable"}</span></p></div><div><p className="text-xs text-muted-foreground">Risk indicator</p><Badge className="mt-2" variant={riskTone(data.current_risk)}>{data.current_risk ?? "Unassessed"}</Badge></div><div><p className="text-xs text-muted-foreground">Historical trend</p><p className="mt-2 text-base font-medium capitalize">{words(data.trend.state)}</p></div></div>
         <p className="text-sm text-muted-foreground">{data.current_source === "questionnaire" ? "Questionnaire score" : data.current_source === "text_ai" ? "Text AI score" : "No scored source available"}{data.current_source === "text_ai" && data.questionnaire_score != null ? ` · Questionnaire score: ${data.questionnaire_score} / 100` : ""}</p>

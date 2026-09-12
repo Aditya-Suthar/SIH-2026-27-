@@ -105,7 +105,8 @@ def record_safety_signal(data: schemas.QuestionnaireSafetySignal, db: Session = 
     result = score_answers(merged); session.answers = merged; session.safety_flags = result["safety_flags"]
     values = assessment_values(result)
     if session.assessment_id is None:
-        assessment = models.Assessment(case_id=case.id, distress_score=round(result["questionnaire_score"]),
+        score = result["questionnaire_score"]
+        assessment = models.Assessment(case_id=case.id, distress_score=round(score) if score is not None else None,
             risk_level=result["risk_level"], created_at=datetime.now(timezone.utc).isoformat(), note=None, **values)
         db.add(assessment); db.flush(); session.assessment_id = assessment.id
     else:
@@ -161,14 +162,16 @@ def submit_questionnaire(data: schemas.QuestionnaireSubmit, db: Session = Depend
     session.completed_at = None if waiting else datetime.now(timezone.utc)
     values = assessment_values(result)
     if session.assessment_id is None:
-        assessment = models.Assessment(case_id=case.id, distress_score=round(result["questionnaire_score"]),
+        score = result["questionnaire_score"]
+        assessment = models.Assessment(case_id=case.id, distress_score=round(score) if score is not None else None,
             risk_level=result["risk_level"], created_at=datetime.now(timezone.utc).isoformat(),
             note=data.note, **values)
         db.add(assessment); db.flush(); session.assessment_id = assessment.id
     else:
         assessment = db.get(models.Assessment, session.assessment_id)
         for key,value in values.items(): setattr(assessment,key,value)
-        assessment.distress_score = round(result["questionnaire_score"])
+        score = result["questionnaire_score"]
+        assessment.distress_score = round(score) if score is not None else None
         assessment.risk_level = result["risk_level"]
         if data.note is not None and not db.query(models.AIAnalysis).filter_by(assessment_id=assessment.id).first():
             assessment.note = data.note

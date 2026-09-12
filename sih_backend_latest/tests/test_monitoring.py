@@ -110,8 +110,50 @@ class ChatMonitoringTests(unittest.TestCase):
     def send(self,content='I feel afraid and cannot sleep.',uid=1,role='victim',case='CASE-10',key=None):
         return self.client.post(f'/api/cases/{case}/messages',json={'content':content,'client_message_id':key or str(uuid4())},headers=self.headers(uid,role))
 
-    def detail(self,uid=3,role='counsellor',case='CASE-10'):
-        return self.client.get(f'/api/cases/{case}/monitoring',headers=self.headers(uid,role))
+    def detail(self,uid=3,role='counsellor',case='CASE-10',indicator_id=None):
+        suffix = f'?indicator_id={indicator_id}' if indicator_id is not None else ''
+        return self.client.get(f'/api/cases/{case}/monitoring{suffix}',headers=self.headers(uid,role))
+
+    def test_selected_indicators_keep_historical_scores_separate_from_current_state(self):
+        with self.Session.begin() as db:
+            case = db.get(models.Case, 10)
+            first = models.Assessment(case_id=10,mood=2,anxiety=2,sleep=0,hopelessness=4,
+                social_withdrawal=0,self_harm_thoughts=0,distress_score=66,risk_level='High',
+                created_at='2026-09-12T19:03:08+00:00')
+            second = models.Assessment(case_id=10,mood=2,anxiety=2,sleep=0,hopelessness=3,
+                social_withdrawal=0,self_harm_thoughts=4,distress_score=48,risk_level='Critical',
+                created_at='2026-09-12T20:03:18+00:00')
+            db.add_all((first,second)); db.flush()
+            db.add_all((
+                models.MonitoringIndicator(case_id=10,source='questionnaire',assessment_id=first.id,
+                    severity='HIGH',fingerprint=f'authoritative:questionnaire:{first.id}',
+                    reason='Current authoritative risk is High (66/100).',current_score=66,
+                    created_at=datetime(2026,9,12,19,3,8,tzinfo=timezone.utc)),
+                models.MonitoringIndicator(case_id=10,source='questionnaire',assessment_id=second.id,
+                    severity='URGENT',fingerprint=f'authoritative:questionnaire:{second.id}',
+                    reason='Critical safety override triggered by the questionnaire response.',current_score=48,
+                    created_at=datetime(2026,9,12,20,3,18,tzinfo=timezone.utc)),
+            )); db.flush()
+            indicator_ids = [row.id for row in db.query(models.MonitoringIndicator).order_by(models.MonitoringIndicator.id)]
+            case.risk_level='Critical'; case.latest_distress_score=48; case.latest_risk_source='questionnaire'
+            case.latest_state_at=datetime(2026,9,12,20,3,18,tzinfo=timezone.utc)
+            case.latest_assessment_id=second.id
+
+        with self.Session() as db:
+            before = db.query(models.MonitoringIndicator).count()
+        high = self.detail(5,'authority',indicator_id=indicator_ids[0])
+        critical = self.detail(5,'authority',indicator_id=indicator_ids[1])
+        self.assertEqual(high.status_code,200,high.text); self.assertEqual(critical.status_code,200,critical.text)
+        self.assertEqual((high.json()['selected_evidence']['id'],high.json()['selected_evidence']['score_snapshot']),
+                         (indicator_ids[0],66))
+        self.assertEqual((critical.json()['selected_evidence']['id'],critical.json()['selected_evidence']['score_snapshot']),
+                         (indicator_ids[1],48))
+        self.assertEqual(high.json()['current_score'],48); self.assertEqual(critical.json()['current_score'],48)
+        self.assertTrue(critical.json()['selected_evidence']['safety_override'])
+        self.assertEqual(critical.json()['selected_evidence']['triggering_rule'],
+                         'Critical safety override triggered by the questionnaire response.')
+        self.client.get('/api/monitoring/indicators',headers=self.headers(5,'authority'))
+        with self.Session() as db: self.assertEqual(db.query(models.MonitoringIndicator).count(),before)
 
     def test_victim_chat_saved_before_analysis_and_linked(self):
         async def analyze(message):

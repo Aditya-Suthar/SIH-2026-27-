@@ -1,6 +1,6 @@
 """Scoped monitoring views and acknowledgement; reads never invoke AI."""
 from datetime import datetime, timezone, timedelta
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
@@ -11,7 +11,7 @@ from .database import get_db
 from . import models
 from .ai_history import authenticated_account, valid_source_query, AnalysisOut
 from .monitoring_rules import prioritize, valid, utc
-from .case_state import current_state, ensure_indicator, normalized_risk, utc as state_utc
+from .case_state import current_state, normalized_risk, utc as state_utc
 
 router = APIRouter(prefix='/api', tags=['AI monitoring'])
 
@@ -92,19 +92,12 @@ def all_views(db, cases):
     return sorted(items,key=lambda x:(rank[x['category']],-(x['score'] or 0),x['case_id']))
 
 
-def refresh_questionnaire_indicators(db, cases):
-    """Compatibility refresh; normal writes create authoritative indicators."""
-    for case in cases:
-        ensure_indicator(db, case)
-    db.commit()
-
-
 @router.get('/monitoring/indicators')
 def monitoring_indicators(db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
-    _, query = professional_cases(db,current_user); cases=query.all(); refresh_questionnaire_indicators(db,cases)
+    _, query = professional_cases(db,current_user); cases=query.all()
     ids=[c.id for c in cases]; lookup={c.id:c.case_id for c in cases}
     rows=db.query(models.MonitoringIndicator).filter(models.MonitoringIndicator.case_id.in_(ids),models.MonitoringIndicator.reviewed_at.is_(None)).order_by(models.MonitoringIndicator.created_at.desc()).all() if ids else []
-    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
+    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'source_record_id':r.analysis_id if r.source=='text_ai' else r.assessment_id,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
 
 
 @router.post('/monitoring/indicators/{indicator_id}/review')
@@ -124,7 +117,7 @@ def monitoring_cases(db: Session=Depends(get_db),current_user: dict=Depends(get_
 
 
 @router.get('/cases/{case_id}/monitoring')
-def monitoring_detail(case_id: str,db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
+def monitoring_detail(case_id: str,indicator_id: int | None=Query(default=None,gt=0),db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
     _, query = professional_cases(db,current_user)
     case = query.filter(models.Case.case_id==case_id).first()
     if case is None: raise HTTPException(404,'Case not found')
@@ -132,6 +125,28 @@ def monitoring_detail(case_id: str,db: Session=Depends(get_db),current_user: dic
     history = valid_source_query(db).filter(models.AIAnalysis.case_id == case.id).order_by(models.AIAnalysis.created_at.desc(), models.AIAnalysis.id.desc()).limit(201).all()
     result['history'] = [AnalysisOut.model_validate(row).model_dump(mode='json') for row in reversed(history[:200])]
     result['history_limited'] = len(history) > 200
+    result['selected_evidence'] = None
+    if indicator_id is not None:
+        indicator = db.query(models.MonitoringIndicator).filter_by(id=indicator_id,case_id=case.id).first()
+        if indicator is None: raise HTTPException(404,'Indicator not found for this case')
+        assessment = db.get(models.Assessment, indicator.assessment_id) if indicator.assessment_id else None
+        analysis = valid_source_query(db).filter(models.AIAnalysis.id==indicator.analysis_id).first() if indicator.analysis_id else None
+        safety_override = bool(assessment is not None and indicator.severity=='URGENT'
+                               and assessment.self_harm_thoughts >= 3)
+        result['selected_evidence'] = {
+            'id':indicator.id, 'score_snapshot':indicator.current_score,
+            'severity':indicator.severity, 'source':indicator.source,
+            'source_record_id':indicator.analysis_id if indicator.source=='text_ai' else indicator.assessment_id,
+            'created_at':utc(indicator.created_at).isoformat(),
+            'triggering_rule':('Critical safety override triggered by the questionnaire response.'
+                               if safety_override else indicator.reason),
+            'safety_override':safety_override,
+            'assessment':({'id':assessment.id,'distress_score':assessment.distress_score,
+                           'risk_level':normalized_risk(assessment.risk_level)} if assessment else None),
+            'analysis':AnalysisOut.model_validate(analysis).model_dump(mode='json') if analysis else None,
+            'reviewed':indicator.reviewed_at is not None,
+            'reviewed_at':utc(indicator.reviewed_at).isoformat() if indicator.reviewed_at else None,
+        }
     return result
 
 

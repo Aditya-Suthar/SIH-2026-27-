@@ -119,13 +119,15 @@ def score_answers(answers: dict[str, int]):
                      for domain in numerators if denominators[domain]}
     general = [(score, DOMAIN_WEIGHTS[domain]) for domain,score in domain_scores.items()
                if domain in DOMAIN_WEIGHTS]
-    overall = round(sum(score*weight for score,weight in general)/sum(weight for _,weight in general), 1) if general else 0.0
+    # Safety-only partial submissions have no numerical questionnaire score.
+    # Keep that distinct from a legitimately calculated zero.
+    overall = round(sum(score*weight for score,weight in general)/sum(weight for _,weight in general), 1) if general else None
     contributions.sort(key=lambda row:(-row["weighted_severity"], row["question_id"]))
     severe = set(safety_flags)
     if severe & {"Q065","Q066","Q067","Q068","Q069","Q070","Q071"}: risk = "Critical"
-    elif "Q064" in severe or overall >= 75: risk = "Critical"
-    elif overall >= 50: risk = "High"
-    elif overall >= 25: risk = "Moderate"
+    elif "Q064" in severe or (overall is not None and overall >= 75): risk = "Critical"
+    elif overall is not None and overall >= 50: risk = "High"
+    elif overall is not None and overall >= 25: risk = "Moderate"
     else: risk = "Low"
     return {"questionnaire_score":overall, "domain_scores":domain_scores,
             "safety_flags":safety_flags, "risk_level":risk,

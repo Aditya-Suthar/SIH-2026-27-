@@ -96,10 +96,13 @@ def indicator_values(case, state=None):
     return {
         "source": source,
         "severity": "URGENT" if risk == "critical" else "HIGH",
-        "fingerprint": f"authoritative:{source}:{source_id}:{risk}:{state['score']}",
+        # A source record has one indicator. Questionnaire assessments can be
+        # updated while follow-ups are collected, so score cannot identify it.
+        "fingerprint": f"authoritative:{source}:{source_id}",
         "reason": f"Current authoritative risk is {display_risk(risk)}{score_text}.",
         "current_score": state["score"],
         "analysis_id": state["analysis_id"],
+        "assessment_id": state["assessment_id"] if source == "questionnaire" else None,
     }
 
 
@@ -107,11 +110,36 @@ def ensure_indicator(db, case):
     values = indicator_values(case)
     if values is None:
         return None
-    existing = db.query(models.MonitoringIndicator).filter_by(
-        case_id=case.id, fingerprint=values["fingerprint"]
-    ).first()
+    source_id = values["analysis_id"] if values["source"] == "text_ai" else values["assessment_id"]
+    existing = None
+    if source_id is not None:
+        source_column = (models.MonitoringIndicator.analysis_id if values["source"] == "text_ai"
+                         else models.MonitoringIndicator.assessment_id)
+        existing = db.query(models.MonitoringIndicator).filter(
+            models.MonitoringIndicator.case_id == case.id,
+            models.MonitoringIndicator.source == values["source"],
+            source_column == source_id,
+        ).order_by(models.MonitoringIndicator.id).first()
+    if existing is None:
+        existing = db.query(models.MonitoringIndicator).filter_by(
+            case_id=case.id, fingerprint=values["fingerprint"]
+        ).first()
     if existing is not None:
+        # The same in-progress questionnaire may gain a calculated score after
+        # its immediate safety signal. Update its one snapshot atomically.
+        for key, value in values.items():
+            setattr(existing, key, value)
+        if (values["source"] == "questionnaire" and values["severity"] == "URGENT"
+                and values["assessment_id"] is not None):
+            assessment = db.get(models.Assessment, values["assessment_id"])
+            if assessment is not None and assessment.self_harm_thoughts >= 3:
+                existing.reason = "Critical safety override triggered by the questionnaire response."
         return existing
+    if (values["source"] == "questionnaire" and values["severity"] == "URGENT"
+            and values["assessment_id"] is not None):
+        assessment = db.get(models.Assessment, values["assessment_id"])
+        if assessment is not None and assessment.self_harm_thoughts >= 3:
+            values["reason"] = "Critical safety override triggered by the questionnaire response."
     row = models.MonitoringIndicator(case_id=case.id, trend=None, **values)
     db.add(row)
     db.flush()

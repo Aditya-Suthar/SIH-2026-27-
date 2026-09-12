@@ -195,6 +195,8 @@ class QuestionnaireApiTests(unittest.TestCase):
         with self.Session() as db:
             self.assertEqual(db.get(models.Case,1).risk_level,"Critical")
             self.assertEqual(db.query(models.Assessment).count(),1)
+            self.assertIsNone(db.query(models.Assessment).one().distress_score)
+            self.assertIsNone(db.query(models.MonitoringIndicator).one().current_score)
         answers = {}
         for question in payload["questions"]:
             answers[question["id"]] = 1 if question["response_type"] in ("yes_no","safety_yes_no") and question["reverse_scored"] else 0
@@ -209,6 +211,11 @@ class QuestionnaireApiTests(unittest.TestCase):
             session=db.get(models.QuestionnaireSession,payload["questionnaire_id"])
             self.assertEqual(session.status,"completed"); self.assertEqual(session.safety_flags,["Q064"])
             self.assertEqual(db.query(models.Assessment).count(),1)
+            indicators=db.query(models.MonitoringIndicator).all()
+            self.assertEqual(len(indicators),1)
+            self.assertEqual(indicators[0].assessment_id,session.assessment_id)
+            self.assertEqual(indicators[0].current_score,db.get(models.Assessment,session.assessment_id).distress_score)
+            self.assertEqual(indicators[0].reason,"Critical safety override triggered by the questionnaire response.")
 
     def test_unselected_and_missing_core_rejected(self):
         payload=self.client.get("/api/victim/questionnaire").json()

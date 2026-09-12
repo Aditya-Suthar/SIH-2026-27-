@@ -1,6 +1,6 @@
 import {API_BASE_URL} from "../lib/config";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -23,6 +23,8 @@ const riskBadgeVariant: Record<
 
 export default function CaseDetails() {
   const { caseId } = useParams();
+  const [searchParams] = useSearchParams();
+  const indicatorId = searchParams.get("indicator");
   const navigate = useNavigate();
 
   const [caseData, setCaseData] = useState<PriorityCase | null>(null);
@@ -190,7 +192,7 @@ export default function CaseDetails() {
         </CardContent>
       </Card>
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-        <CaseMonitoring key={`monitor-${caseData.caseId}`} caseId={caseData.caseId} />
+        <CaseMonitoring key={`monitor-${caseData.caseId}-${indicatorId ?? "current"}`} caseId={caseData.caseId} indicatorId={indicatorId} />
         {(localStorage.getItem("role") === "counsellor" || localStorage.getItem("role") === "victim") && <CaseChat key={`chat-${caseData.caseId}`} caseId={caseData.caseId} />}
       </div>
     </div>

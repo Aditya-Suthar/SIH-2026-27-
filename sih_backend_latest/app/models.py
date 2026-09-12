@@ -93,7 +93,9 @@ class Assessment(Base):
     social_withdrawal = Column(Integer, nullable=False)
     self_harm_thoughts = Column(Integer, nullable=False)
 
-    distress_score = Column(Integer, nullable=False)
+    # Null while an urgent safety response has been persisted before the full
+    # questionnaire has enough scored answers. Zero remains a real score.
+    distress_score = Column(Integer, nullable=True)
 
     risk_level = Column(String(20), nullable=False)
 
@@ -215,6 +217,7 @@ class MonitoringIndicator(Base):
     current_score = Column(Integer, nullable=True)
     trend = Column(String(32), nullable=True)
     analysis_id = Column(Integer, ForeignKey('ai_analyses.id'), nullable=True)
+    assessment_id = Column(Integer, ForeignKey('assessments.id'), nullable=True)
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
     reviewed_by = Column(Integer, ForeignKey('users.id'), nullable=True)
     reviewed_at = Column(DateTime(timezone=True), nullable=True)

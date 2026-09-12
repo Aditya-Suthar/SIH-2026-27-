@@ -14,8 +14,17 @@ export type MonitoringCase = {
   latest_attempt_status: string; latest_activity: string | null; needs_review: boolean; stale: boolean;
   review: { analysis_id: number; reviewer_id: number; reviewed_at: string } | null;
   trend: { state: string; days: number; change: number | null; slope_per_day: number | null; explanation: string };
+  selected_evidence: SelectedEvidence | null;
+};
+export type SelectedEvidence = {
+  id: number; score_snapshot: number | null; severity: string; source: string;
+  source_record_id: number | null; created_at: string; triggering_rule: string;
+  safety_override: boolean; reviewed: boolean; reviewed_at: string | null;
+  assessment: { id: number; distress_score: number | null; risk_level: string | null } | null;
+  analysis: Analysis | null;
 };
 export const priorityTone = { URGENT: "danger", HIGH: "orange", MEDIUM: "warning", NORMAL: "success", UNASSESSED: "default" } as const;
 export const riskTone = (risk: string | null | undefined) => risk === "critical" ? "danger" : risk === "high" ? "orange" : risk === "medium" ? "warning" : risk === "low" ? "success" : "default";
 export const words = (value: string) => value.replaceAll("_", " ");
 export const dateTime = (value: string | null) => value ? new Date(value).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", year: "numeric" }) : "No activity yet";
+export const displayedTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
