@@ -59,6 +59,7 @@ class UserOut(BaseModel):
 
 class CaseOut(BaseModel):
     caseId: str
+    victimName: str
     riskLevel: str
     assignedCounsellor: str
     lastAssessment: str

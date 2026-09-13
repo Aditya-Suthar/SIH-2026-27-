@@ -1,4 +1,5 @@
-import {API_BASE_URL} from "../lib/config";
+import { getCase } from "../lib/cases";
+import { CaseIdentity } from "../components/CaseIdentity";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -49,21 +50,7 @@ export default function CaseDetails() {
           return;
         }
 
-        const response = await fetch(
-          `${API_BASE_URL}/api/cases/${caseId}`,
-          {
-            signal: controller.signal,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch case: ${response.status}`);
-        }
-
-        const data: PriorityCase = await response.json();
+        const data = await getCase(caseId, controller.signal);
 
         if(active)setCaseData(data);
       } catch (err) {
@@ -105,7 +92,7 @@ export default function CaseDetails() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            Case {caseData.caseId}
+            <CaseIdentity caseId={caseData.caseId} victimName={caseData.victimName} />
           </h1>
 
           <p className="mt-1 text-sm text-muted-foreground">

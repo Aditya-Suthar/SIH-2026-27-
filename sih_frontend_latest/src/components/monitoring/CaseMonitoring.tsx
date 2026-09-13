@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CaseIdentity } from "../CaseIdentity";
 import { AnalysisHistory } from "./AnalysisHistory";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Activity, CheckCheck } from "lucide-react";
@@ -27,6 +28,7 @@ export function CaseMonitoring({ caseId, indicatorId }: { caseId: string; indica
   const attempt = data.latest_attempt;
   const omitted = data.history.filter(row => row.status !== "completed" || row.distress_score === null).length;
   return <div className="space-y-4">
+    <CaseIdentity caseId={data.case_id} victimName={data.victim_name} />
     {error && <p role="alert" className="text-sm text-warning">{error} Showing the last loaded data.</p>}
     {data.selected_evidence && <Card>
       <CardHeader><div className="flex flex-wrap items-center justify-between gap-3"><CardTitle>Selected historical evidence</CardTitle><Badge variant={data.selected_evidence.severity === "URGENT" ? "danger" : "orange"}>{data.selected_evidence.severity}</Badge></div><p className="text-xs text-muted-foreground">Indicator #{data.selected_evidence.id} · {dateTime(data.selected_evidence.created_at)} · {displayedTimeZone()}</p></CardHeader>

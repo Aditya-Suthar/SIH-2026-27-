@@ -7,6 +7,7 @@ export type Analysis = {
   error_message?: string | null;
 };
 export type MonitoringCase = {
+  victim_name: string;
   current_questionnaire?: QuestionnaireEvidence | null;
   questionnaire_history?: QuestionnaireEvidence[];
   case_id: string; assigned_counsellor: string; category: "URGENT" | "HIGH" | "MEDIUM" | "NORMAL" | "UNASSESSED";

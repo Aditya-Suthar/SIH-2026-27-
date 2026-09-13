@@ -12,6 +12,7 @@ from . import models
 from .ai_history import authenticated_account, valid_source_query, AnalysisOut
 from .monitoring_rules import prioritize, valid, utc
 from .case_state import current_state, normalized_risk, utc as state_utc
+from .case_identity import victim_names
 
 router = APIRouter(prefix='/api', tags=['AI monitoring'])
 
@@ -87,7 +88,9 @@ def all_views(db, cases):
     for row in indicator_rows: indicators[row.case_id].append(row)
     assessment_ids = db.query(func.max(models.Assessment.id)).filter(models.Assessment.case_id.in_(ids)).group_by(models.Assessment.case_id)
     assessments = {a.case_id:a for a in db.query(models.Assessment).filter(models.Assessment.id.in_(assessment_ids)).all()}
-    items = [case_view(c,grouped[c.id],reviews,indicators[c.id],now,assessments.get(c.id)) for c in cases]
+    names = victim_names(db, cases)
+    items = [dict(case_view(c,grouped[c.id],reviews,indicators[c.id],now,assessments.get(c.id)),
+                  victim_name=names[c.id]) for c in cases]
     rank = {'URGENT':0,'HIGH':1,'MEDIUM':2,'NORMAL':3,'UNASSESSED':4}
     return sorted(items,key=lambda x:(rank[x['category']],-(x['score'] or 0),x['case_id']))
 
@@ -96,8 +99,9 @@ def all_views(db, cases):
 def monitoring_indicators(db: Session=Depends(get_db),current_user: dict=Depends(get_current_user)):
     _, query = professional_cases(db,current_user); cases=query.all()
     ids=[c.id for c in cases]; lookup={c.id:c.case_id for c in cases}
+    names = victim_names(db, cases)
     rows=db.query(models.MonitoringIndicator).filter(models.MonitoringIndicator.case_id.in_(ids),models.MonitoringIndicator.reviewed_at.is_(None)).order_by(models.MonitoringIndicator.created_at.desc()).all() if ids else []
-    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'assessment_id':r.assessment_id,'ai_analysis_id':r.analysis_id,'source_record_id':r.analysis_id if r.source=='text_ai' else r.assessment_id,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
+    return {'items':[{'id':r.id,'case_id':lookup[r.case_id],'victim_name':names[r.case_id],'severity':r.severity,'source':r.source,'reason':r.reason,'current_score':r.current_score,'trend':r.trend,'assessment_id':r.assessment_id,'ai_analysis_id':r.analysis_id,'source_record_id':r.analysis_id if r.source=='text_ai' else r.assessment_id,'created_at':utc(r.created_at).isoformat(),'reviewed':False} for r in rows]}
 
 
 @router.post('/monitoring/indicators/{indicator_id}/review')

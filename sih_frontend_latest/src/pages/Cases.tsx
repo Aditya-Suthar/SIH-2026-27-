@@ -1,4 +1,6 @@
-import {API_BASE_URL} from "../lib/config";
+import { getCases } from "../lib/cases";
+import { filterCases } from "../lib/caseIdentity";
+import { CaseIdentity } from "../components/CaseIdentity";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
@@ -37,37 +39,20 @@ export default function Cases() {
   const [statusFilter, setStatusFilter] = useState("All");
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchCases = async () => {
       try {
-        const token = localStorage.getItem("access_token");
-
-        if (!token) {
-          setError("No authentication token found");
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(API_BASE_URL + "/api/cases", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch cases: ${response.status}`);
-        }
-
-        const data: PriorityCase[] = await response.json();
-        setCases(data);
+        const data = await getCases(controller.signal);
+        if (!controller.signal.aborted) setCases(data);
       } catch (err) {
-        console.error(err);
-        setError("Could not load cases");
+        if (!controller.signal.aborted) setError(err instanceof Error ? err.message : "Could not load cases");
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     fetchCases();
+    return () => controller.abort();
   }, []);
 
   // Built from the real data returned by the API, rather than a hardcoded
@@ -79,23 +64,8 @@ export default function Cases() {
     return ["All", ...unique];
   }, [cases]);
 
-  const filteredCases = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    return cases.filter((c) => {
-      const matchesSearch =
-        query.length === 0 ||
-        c.caseId.toLowerCase().includes(query) ||
-        c.assignedCounsellor.toLowerCase().includes(query);
-
-      const matchesRisk = riskFilter === "All" || c.riskLevel === riskFilter;
-
-      const matchesStatus =
-        statusFilter === "All" || c.interventionStatus === statusFilter;
-
-      return matchesSearch && matchesRisk && matchesStatus;
-    });
-  }, [cases, search, riskFilter, statusFilter]);
+  const filteredCases = useMemo(() => filterCases(cases, search, riskFilter, statusFilter),
+    [cases, search, riskFilter, statusFilter]);
 
   const hasActiveFilters =
     search.trim().length > 0 || riskFilter !== "All" || statusFilter !== "All";
@@ -131,7 +101,8 @@ export default function Cases() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by Case ID or Counsellor"
+              aria-label="Search by victim name, Case ID or counsellor"
+              placeholder="Search name, Case ID or counsellor"
               className="w-full flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:max-w-xs"
             />
 
@@ -179,7 +150,7 @@ export default function Cases() {
               <table className="w-full min-w-[720px] border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    <th className="py-2.5 pr-4">Case ID</th>
+                    <th className="py-2.5 pr-4">Case</th>
                     <th className="py-2.5 pr-4">Risk Level</th>
                     <th className="py-2.5 pr-4">Assigned Counsellor</th>
                     <th className="py-2.5 pr-4">Last Assessment</th>
@@ -195,7 +166,7 @@ export default function Cases() {
                       className="border-b border-border last:border-0"
                     >
                       <td className="py-3 pr-4 font-medium text-foreground">
-                        {c.caseId}
+                        <CaseIdentity caseId={c.caseId} victimName={c.victimName} />
                       </td>
 
                       <td className="py-3 pr-4">

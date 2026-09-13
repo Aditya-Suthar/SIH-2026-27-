@@ -1,4 +1,5 @@
-import {API_BASE_URL} from "../../lib/config";
+import { getCases } from "../../lib/cases";
+import { CaseIdentity } from "../CaseIdentity";
 import { useEffect, useState } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
@@ -25,28 +26,7 @@ export function HighPriorityCasesTable() {
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const token = localStorage.getItem("access_token")
-
-        if (!token) {
-          setError("No authentication token found")
-          setLoading(false)
-          return
-        }
-
-        const response = await fetch(
-          API_BASE_URL + "/api/cases",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch cases: ${response.status}`)
-        }
-
-        const data: PriorityCase[] = await response.json()
+        const data = await getCases()
 
       setCases(data)
       } catch (err) {
@@ -88,7 +68,7 @@ export function HighPriorityCasesTable() {
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  <th className="py-2.5 pr-4">Case ID</th>
+                  <th className="py-2.5 pr-4">Case</th>
                   <th className="py-2.5 pr-4">Risk Level</th>
                   <th className="py-2.5 pr-4">Assigned Counsellor</th>
                   <th className="py-2.5 pr-4">Last Assessment</th>
@@ -104,7 +84,7 @@ export function HighPriorityCasesTable() {
                     className="border-b border-border last:border-0"
                   >
                     <td className="py-3 pr-4 font-medium text-foreground">
-                      {c.caseId}
+                      <CaseIdentity caseId={c.caseId} victimName={c.victimName} />
                     </td>
 
                     <td className="py-3 pr-4">

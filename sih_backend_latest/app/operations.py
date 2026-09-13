@@ -10,6 +10,7 @@ from .auth import get_current_user
 from .ai_history import authenticated_account
 from .monitoring_rules import utc
 from . import models
+from .case_identity import victim_names
 
 router = APIRouter(prefix='/api', tags=['Support operations'])
 
@@ -85,7 +86,11 @@ def sessions(db:Session=Depends(get_db),claims:dict=Depends(get_current_user)):
     rows=db.query(models.SupportSession,models.Case).join(models.Case).filter(models.Case.id.in_(query.with_entities(models.Case.id)))
     if user.role=='victim':rows=rows.filter(models.SupportSession.victim_id==user.id)
     if user.role=='counsellor':rows=rows.filter(models.SupportSession.counsellor_id==user.id)
-    return {'items':[{'id':s.id,'case_id':c.case_id,'counsellor':c.assigned_counsellor,'starts_at':utc(s.starts_at).isoformat(),'duration_minutes':s.duration_minutes,'status':s.status} for s,c in rows.order_by(models.SupportSession.starts_at.desc()).limit(200)]}
+    rows = rows.order_by(models.SupportSession.starts_at.desc()).limit(200).all()
+    names = victim_names(db, [c for _, c in rows]) if user.role != 'victim' else {}
+    return {'items':[{'id':s.id,'case_id':c.case_id,
+                     **({'victim_name':names[c.id]} if user.role != 'victim' else {}),
+                     'counsellor':c.assigned_counsellor,'starts_at':utc(s.starts_at).isoformat(),'duration_minutes':s.duration_minutes,'status':s.status} for s,c in rows]}
 
 
 class SessionCreate(BaseModel):
@@ -150,7 +155,11 @@ def requests(db:Session=Depends(get_db),claims:dict=Depends(get_current_user)):
     user,query=scope(db,claims)
     rows=db.query(models.SupportRequest,models.Case).join(models.Case).filter(models.Case.id.in_(query.with_entities(models.Case.id)))
     if user.role=='victim':rows=rows.filter(models.SupportRequest.victim_id==user.id)
-    return {'items':[{'id':r.id,'case_id':c.case_id,'kind':r.kind,'status':r.status,'created_at':utc(r.created_at).isoformat(),'reviewed_by':r.reviewed_by,'reviewed_at':utc(r.reviewed_at).isoformat() if r.reviewed_at else None} for r,c in rows.order_by(models.SupportRequest.id.desc()).limit(200)]}
+    rows = rows.order_by(models.SupportRequest.id.desc()).limit(200).all()
+    names = victim_names(db, [c for _, c in rows]) if user.role != 'victim' else {}
+    return {'items':[{'id':r.id,'case_id':c.case_id,
+                     **({'victim_name':names[c.id]} if user.role != 'victim' else {}),
+                     'kind':r.kind,'status':r.status,'created_at':utc(r.created_at).isoformat(),'reviewed_by':r.reviewed_by,'reviewed_at':utc(r.reviewed_at).isoformat() if r.reviewed_at else None} for r,c in rows]}
 
 
 class RequestUpdate(BaseModel):

@@ -30,6 +30,8 @@ export interface RiskDistributionItem {
 
 export interface PriorityCase {
   caseId: string;
+  // Optional for older payloads/demo fixtures; the current API always supplies it.
+  victimName?: string;
   riskLevel: RiskLevel;
   assignedCounsellor: string;
   lastAssessment: string;

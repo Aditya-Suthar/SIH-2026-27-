@@ -11,6 +11,7 @@ from . import models, schemas
 from .ai_history import authenticated_account
 from .ai_workflow import analyze_saved_check_in
 from .case_state import current_state, ensure_indicator, update_from_assessment
+from .case_identity import victim_names
 
 
 # Router for all API-related endpoints
@@ -51,11 +52,13 @@ def get_cases(
 
     # Execute the query and retrieve the cases
     cases = query.all()
+    names = victim_names(db, cases)
 
     # Convert database Case objects into the API response format
     return [
         schemas.CaseOut(
             caseId=c.case_id,
+            victimName=names[c.id],
             riskLevel=current_state(c)['risk_display'],
             assignedCounsellor=c.assigned_counsellor,
             lastAssessment=c.last_assessment,
@@ -107,6 +110,7 @@ def get_case(
 
     return schemas.CaseOut(
         caseId=case.case_id,
+        victimName=victim_names(db, [case])[case.id],
         riskLevel=current_state(case)['risk_display'],
         assignedCounsellor=case.assigned_counsellor,
         lastAssessment=case.last_assessment,

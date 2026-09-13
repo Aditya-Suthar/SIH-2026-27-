@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CaseIdentity } from "../CaseIdentity";
 import { ArrowUpRight, ShieldCheck, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
@@ -16,7 +17,7 @@ export function PriorityQueue({ items, onRefresh, emptyMessage = "No cases are a
       {items.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">{emptyMessage}</p>}
       {items.map(item => <article key={item.case_id} className={`rounded-xl border p-4 sm:p-5 ${item.category === "URGENT" ? "border-danger/30 bg-danger/[0.025]" : "border-border"}`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2"><Link to={`/cases/${encodeURIComponent(item.case_id)}`} className="text-base font-semibold text-primary hover:underline">{item.case_id}</Link><Badge variant={priorityTone[item.category]}>{item.category === "UNASSESSED" ? "Not yet assessed" : item.category}</Badge>
+          <div className="flex flex-wrap items-center gap-2"><Link to={`/cases/${encodeURIComponent(item.case_id)}`} className="text-base hover:underline"><CaseIdentity caseId={item.case_id} victimName={item.victim_name} /></Link><Badge variant={priorityTone[item.category]}>{item.category === "UNASSESSED" ? "Not yet assessed" : item.category}</Badge>
           {item.needs_review ? <Badge variant="warning">Review recommended</Badge> : item.review ? <Badge variant="success"><ShieldCheck className="h-3 w-3" /> Reviewed</Badge> : null}</div>
           <Link className="inline-flex items-center gap-1 text-sm font-medium text-primary" to={`/cases/${encodeURIComponent(item.case_id)}`}>Open workspace <ArrowUpRight className="h-4 w-4" /></Link>
         </div>
