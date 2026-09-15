@@ -69,7 +69,7 @@ if (localStorage.getItem("role") === "victim") {
 }
 
   return (
-    <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-card/80 px-4 py-3 backdrop-blur sm:px-6">
+    <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-border bg-card/90 px-4 py-3 shadow-[0_1px_0_hsl(var(--border)/.5)] backdrop-blur sm:px-6">
       <Link to={`/${role}`} className="font-bold text-primary">SAHAS</Link>
       <select aria-label="Navigate" defaultValue="" onChange={e=>{if(e.target.value)navigate(e.target.value);e.target.value='';}} className="max-w-36 rounded border bg-card p-2 text-sm lg:hidden"><option value="">Menu</option>{nav.map(i=><option value={i.path} key={i.path}>{i.label}</option>)}</select>
       {role!=="victim"&&<form className="relative hidden w-full max-w-sm md:block" onSubmit={e=>{e.preventDefault();const value=String(new FormData(e.currentTarget).get('case')||'').trim();if(value)navigate(`/cases/${encodeURIComponent(value)}`);}}><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/><Input name="case" aria-label="Open case by ID" placeholder="Enter case ID and press Enter" className="pl-9"/></form>}
